@@ -18,50 +18,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Safe Buddy Admin',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+      title: 'Safe Buddy Admin Dashboard',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const AdminDashboard(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String _firestoreStatus = 'Not tested';
+class _AdminDashboardState extends State<AdminDashboard> {
+  String _status = '';
+  User? _user;
 
-  Future<void> testFirestore() async {
-    try {
-      await FirebaseFirestore.instance.collection('admin_tests').doc('sample').set({
-        'title': 'Safe Buddy Admin Test',
-        'timestamp': FieldValue.serverTimestamp(),
-        'status': 'active',
-      });
-      print('Data written to Firestore');
-      DocumentSnapshot doc = await FirebaseFirestore.instance
-          .collection('admin_tests')
-          .doc('sample')
-          .get();
-      if (doc.exists) {
-        setState(() {
-          _firestoreStatus = 'Firestore: ${doc['title']}';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _firestoreStatus = 'Firestore error: $e';
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
   }
 
-  Future<void> testAuth() async {
+  Future<void> _signIn() async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
@@ -69,39 +50,76 @@ class _MyHomePageState extends State<MyHomePage> {
         password: 'Test123456',
       );
       setState(() {
-        _firestoreStatus = 'Logged in: ${userCredential.user?.email}';
+        _user = userCredential.user;
+        _status = 'Signed in as ${_user?.email}';
       });
-      print('Authentication successful for ${userCredential.user?.email}');
     } catch (e) {
       setState(() {
-        _firestoreStatus = 'Auth error: $e';
+        _status = 'Sign in error: $e';
       });
-      print('Authentication error: $e');
     }
+  }
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    setState(() {
+      _user = null;
+      _status = 'Signed out';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Safe Buddy Admin'),
+        title: const Text('Admin Dashboard'),
+        actions: [
+          _user == null
+              ? IconButton(
+            icon: const Icon(Icons.login),
+            onPressed: _signIn,
+          )
+              : IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _signOut,
+          ),
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_firestoreStatus),
-            ElevatedButton(
-              onPressed: testFirestore,
-              child: const Text('Test Firestore'),
+      body: Column(
+        children: [
+          if (_status.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(_status),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: testAuth,
-              child: const Text('Test Authentication'),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Error loading users'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final docs = snapshot.data?.docs ?? [];
+                if (docs.isEmpty) {
+                  return const Center(child: Text('No users found.'));
+                }
+                return ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final data = docs[index].data() as Map<String, dynamic>;
+                    return ListTile(
+                      leading: const Icon(Icons.person),
+                      title: Text(data['email'] ?? 'No email'),
+                    );
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
