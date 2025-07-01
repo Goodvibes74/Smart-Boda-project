@@ -31,13 +31,12 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _firestoreStatus = 'Not tested'; // Reused for auth status
+  String _firestoreStatus = 'Not tested';
 
-  // Existing Firestore test (unchanged)
   Future<void> testFirestore() async {
     try {
       await FirebaseFirestore.instance.collection('admin_tests').doc('sample').set({
@@ -62,7 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // New Authentication test
   Future<void> testAuth() async {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
