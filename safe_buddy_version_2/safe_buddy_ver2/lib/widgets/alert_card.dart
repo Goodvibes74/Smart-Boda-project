@@ -26,8 +26,8 @@ class AlertCard extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text('Locate'),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  child: Text('Locate'),
                 ),
                 SizedBox(width: 8),
                 TextButton(

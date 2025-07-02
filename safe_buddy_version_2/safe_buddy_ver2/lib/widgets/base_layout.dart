@@ -5,7 +5,7 @@ import 'sidebar.dart'; // Import the HoverSidebar
 class BaseLayout extends StatelessWidget {
   final Widget child;
 
-  BaseLayout({required this.child});
+  const BaseLayout({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

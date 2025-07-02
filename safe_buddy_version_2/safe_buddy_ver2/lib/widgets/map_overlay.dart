@@ -25,7 +25,8 @@ class MapOverlay extends StatelessWidget {
           left: 16,
           child: Container(
             padding: EdgeInsets.all(16),
-            color: Colors.black.withOpacity(0.7),
+            color: Colors.black.withAlpha((0.7 * 255).toInt()),
+            // .withOpacity is deprecated; use .withAlpha for 70% opacity (0.7 * 255 = 178)
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

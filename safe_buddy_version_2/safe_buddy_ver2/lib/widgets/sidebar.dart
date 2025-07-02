@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HoverSidebar extends StatefulWidget {
+  const HoverSidebar({super.key});
+
   @override
   _HoverSidebarState createState() => _HoverSidebarState();
 }
