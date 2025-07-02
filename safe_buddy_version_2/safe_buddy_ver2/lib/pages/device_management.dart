@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/device_list_widget.dart';
+
 
 class DeviceManagerPage extends StatelessWidget {
   const DeviceManagerPage({super.key});
@@ -8,7 +8,6 @@ class DeviceManagerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Device Manager')),
-      body: DeviceListWidget(),
-    );
+      );
   }
 }
