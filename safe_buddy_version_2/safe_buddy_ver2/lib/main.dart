@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'theme.dart';
-
+import 'widgets/base_layout.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -22,28 +22,11 @@ class SafeBuddyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Safe Buddy',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
+      home: BaseLayout(child: Container()),
       debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Safe Buddy Home'),
-      ),
-      body: const Center(
-        child: Text('Welcome to Safe Buddy!'),
-      ),
     );
   }
 }
