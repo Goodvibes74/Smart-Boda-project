@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics - Smart Boda Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Smart Boda</h2>
+    <div class="nav-tabs">
+      <button class="nav-tab" onclick="location.href='site.html'">Home</button>
+      <button class="nav-tab active">Analytics</button>
+      <button class="nav-tab" onclick="location.href='management.html'">Management</button>
+    </div>
+  </div>
+  <h1 style="text-align: left;">Overall Analytics</h1>
+  <div id="analytics-panel">
+    <!-- Analytics content will be loaded here (reuse previous analytics panel and logic, but for all units) -->
+  </div>
+  <div class="dashboard-insights">
+    <div class="insight-card">
+      <div class="insight-title">Peak Hour</div>
+      <div class="insight-value" id="peak-hour">Loading...</div>
+      <div class="insight-desc">Hour of day with most data submissions.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Avg. Speed (Simulated)</div>
+      <div class="insight-value" id="avg-speed">Loading...</div>
+      <div class="insight-desc">Estimated average speed across all units.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Total Distance (Simulated)</div>
+      <div class="insight-value" id="total-distance">Loading...</div>
+      <div class="insight-desc">Estimated total distance covered by all units.</div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    if(localStorage.getItem('sb_logged_in')!=='1') window.location.href = 'login.html';
+    // Simulate 10 units, each using the same ThingSpeak channel
+    const NUM_UNITS = 10;
+    async function fetchUnitData(unit) {
+      // Use the same ThingSpeak channel for all units
+      const CHANNEL_ID = "3001035";
+      const READ_API_KEY = "RI4Q6J38OQU6LEXA";
+      let data = [];
+      for (let field = 1; field <= 5; field++) {
+        const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/fields/${field}.json?api_key=${READ_API_KEY}&results=20`;
+        const res = await fetch(url);
+        const json = await res.json();
+        data.push(json.feeds.map(feed => parseFloat(feed[`field${field}`])));
+      }
+      return data;
+    }
+    async function runOverallAnalytics() {
+      // Simulate fetching data for all units (same data, but could randomize for demo)
+      let allUnits = [];
+      for(let i=0;i<NUM_UNITS;i++) {
+        allUnits.push(await fetchUnitData(i+1));
+      }
+      // Calculate overall averages, hotspots, etc.
+      // Example: average acceleration magnitude across all units
+      let accMags = [];
+      allUnits.forEach(unit => {
+        let accX = unit[2], accY = unit[3], accZ = unit[4];
+        for(let i=0;i<accX.length;i++) {
+          const ax = accX[i]||0, ay = accY[i]||0, az = accZ[i]||0;
+          accMags.push(Math.sqrt(ax*ax + ay*ay + az*az));
+        }
+      });
+      let avgAcc = accMags.reduce((a,b)=>a+b,0)/accMags.length;
+      // Example: most common lat/lng (hotspot)
+      let locs = {};
+      allUnits.forEach(unit => {
+        let lat = unit[0], lng = unit[1];
+        for(let i=0;i<lat.length;i++) {
+          const key = `${lat[i]?.toFixed(3)},${lng[i]?.toFixed(3)}`;
+          locs[key] = (locs[key]||0)+1;
+        }
+      });
+      let maxLoc = '', maxLocCount = 0;
+      for(const k in locs) if(locs[k]>maxLocCount) { maxLoc=k; maxLocCount=locs[k]; }
+      // Render analytics
+      document.getElementById('analytics-panel').innerHTML = `
+        <div class="analytics-pane">
+          <div class="analytics-cards">
+            <div class="insight-card"><div class="insight-title">Avg. Acceleration</div><div class="insight-value">${avgAcc.toFixed(2)} m/s²</div><div class="insight-desc">Average acceleration magnitude across all units.</div></div>
+            <div class="insight-card"><div class="insight-title">Hotspot</div><div class="insight-value">${maxLoc}</div><div class="insight-desc">Most common location across all units.</div></div>
+            <div class="insight-card"><div class="insight-title">Units Reporting</div><div class="insight-value">${NUM_UNITS}</div><div class="insight-desc">Number of active units collecting data.</div></div>
+          </div>
+          <div class="analytics-charts">
+            <h2>Acceleration Magnitude Distribution</h2>
+            <canvas id="accMagChart"></canvas>
+          </div>
+        </div>
+      `;
+      // Chart
+      new Chart(document.getElementById('accMagChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: accMags.map((_,i)=>i+1),
+          datasets: [{
+            label: 'Acc. Magnitude',
+            data: accMags,
+            backgroundColor: '#1976d2',
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#1976d2' } } },
+          scales: { x: { ticks: { color: '#888' } }, y: { ticks: { color: '#888' } } }
+        }
+      });
+    }
+    runOverallAnalytics();
+    // Simulate extra insights
+    document.getElementById('peak-hour').textContent = '14:00';
+    document.getElementById('avg-speed').textContent = '38.2 km/h';
+    document.getElementById('total-distance').textContent = '124.6 km';
+  </script>
+</body>
+</html>

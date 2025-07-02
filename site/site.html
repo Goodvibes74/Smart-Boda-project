@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Boda Project Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg style="display:none">
+    <use href="icons.svg#icon-home"/>
+    <use href="icons.svg#icon-analytics"/>
+    <use href="icons.svg#icon-management"/>
+  </svg>
+  <div class="sidebar">
+    <h2>Smart Boda</h2>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="location.href='site.html'">Home</button>
+      <button class="nav-tab" onclick="location.href='analytics.html'">Analytics</button>
+      <button class="nav-tab" onclick="location.href='management.html'">Management</button>
+    </div>
+  </div>
+  <h1 style="text-align: left;">Active Units</h1>
+  <div class="units-list">
+    <!-- Units will be rendered here -->
+  </div>
+  <div class="dashboard-insights">
+    <div class="insight-card">
+      <div class="insight-title">Total Data Points</div>
+      <div class="insight-value" id="total-data-points">Loading...</div>
+      <div class="insight-desc">Sum of all data points collected by all units.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Most Active Unit</div>
+      <div class="insight-value" id="most-active-unit">Loading...</div>
+      <div class="insight-desc">Unit with the most recent data submission.</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Fleet Health</div>
+      <div class="insight-value" id="fleet-health">Loading...</div>
+      <div class="insight-desc">Percentage of units reporting in the last hour.</div>
+    </div>
+  </div>
+  <script>
+    if(localStorage.getItem('sb_logged_in')!=='1') window.location.href = 'login.html';
+    // Simulate 10 active units
+    const units = Array.from({length:10}, (_,i)=>({id:i+1, name:`Boda Unit #${i+1}`, status:'Active', lastSeen:'2025-07-02 12:0'+i}));
+    const list = document.querySelector('.units-list');
+    units.forEach(unit => {
+      const card = document.createElement('div');
+      card.className = 'unit-card';
+      card.innerHTML = `<div class='unit-title'>${unit.name}</div>
+        <div class='unit-status'>Status: <span class='active-dot'></span> ${unit.status}</div>
+        <div class='unit-last'>Last Seen: ${unit.lastSeen}</div>`;
+      card.onclick = () => window.location.href = `unit-analytics.html?unit=${unit.id}`;
+      list.appendChild(card);
+    });
+    // Dashboard insights (simulate)
+    document.getElementById('total-data-points').textContent = (10*20*5).toLocaleString();
+    document.getElementById('most-active-unit').textContent = 'Boda Unit #10';
+    document.getElementById('fleet-health').textContent = '100%';
+  </script>
+</body>
+</html>

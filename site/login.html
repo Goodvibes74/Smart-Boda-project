@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Smart Boda Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>Smart Boda Login</h2>
+    <form id="login-form">
+      <label for="username">Username</label>
+      <input type="text" id="username" required autocomplete="username">
+      <label for="password">Password</label>
+      <input type="password" id="password" required autocomplete="current-password">
+      <button type="submit">Login</button>
+      <div class="login-error" id="login-error" style="display:none;">Invalid credentials</div>
+    </form>
+  </div>
+  <script>
+    document.getElementById('login-form').onsubmit = function(e) {
+      e.preventDefault();
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if(u === 'admin' && p === 'admin') {
+        localStorage.setItem('sb_logged_in', '1');
+        window.location.href = 'site.html';
+      } else {
+        document.getElementById('login-error').style.display = '';
+      }
+    };
+    if(localStorage.getItem('sb_logged_in')==='1') window.location.href = 'site.html';
+  </script>
+</body>
+</html>

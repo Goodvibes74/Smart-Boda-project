@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Management - Smart Boda Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Smart Boda</h2>
+    <div class="nav-tabs">
+      <button class="nav-tab" onclick="location.href='site.html'">Home</button>
+      <button class="nav-tab" onclick="location.href='analytics.html'">Analytics</button>
+      <button class="nav-tab active">Management</button>
+    </div>
+  </div>
+  <div class="management-main">
+    <h1>Management</h1>
+    <div class="management-card">
+      <h2>Change Password</h2>
+      <form id="change-password-form">
+        <label for="oldpass">Old Password</label>
+        <input type="password" id="oldpass" required>
+        <label for="newpass">New Password</label>
+        <input type="password" id="newpass" required>
+        <button type="submit">Change Password</button>
+        <div class="change-msg" id="change-msg"></div>
+      </form>
+    </div>
+  </div>
+  <script>
+    if(localStorage.getItem('sb_logged_in')!=='1') window.location.href = 'login.html';
+    document.getElementById('change-password-form').onsubmit = function(e) {
+      e.preventDefault();
+      // Dummy logic
+      const oldp = document.getElementById('oldpass').value;
+      const newp = document.getElementById('newpass').value;
+      if(oldp === 'admin' && newp.length >= 4) {
+        document.getElementById('change-msg').textContent = 'Password changed (not really, this is a demo).';
+        document.getElementById('change-msg').style.color = '#43a047';
+      } else {
+        document.getElementById('change-msg').textContent = 'Incorrect old password or new password too short.';
+        document.getElementById('change-msg').style.color = '#e53935';
+      }
+    };
+  </script>
+</body>
+</html>

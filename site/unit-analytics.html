@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit Analytics - Smart Boda Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Smart Boda</h2>
+    <div class="nav-tabs">
+      <button class="nav-tab" onclick="location.href='site.html'">Home</button>
+      <button class="nav-tab" onclick="location.href='analytics.html'">Analytics</button>
+      <button class="nav-tab" onclick="location.href='management.html'">Management</button>
+    </div>
+  </div>
+  <h1 style="text-align:left;">Unit Analytics</h1>
+  <div id="analytics-panel">
+    <!-- Analytics content will be loaded here -->
+  </div>
+  <div class="dashboard-insights">
+    <div class="insight-card">
+      <div class="insight-title">Last Trip Duration</div>
+      <div class="insight-value" id="trip-duration">Loading...</div>
+      <div class="insight-desc">Estimated duration of the last trip (simulated).</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Idle Time</div>
+      <div class="insight-value" id="idle-time">Loading...</div>
+      <div class="insight-desc">Total idle time detected for this unit (simulated).</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-title">Alerts</div>
+      <div class="insight-value" id="alerts">Loading...</div>
+      <div class="insight-desc">Number of harsh events or alerts (simulated).</div>
+    </div>
+  </div>
+  <script>
+    if(localStorage.getItem('sb_logged_in')!=='1') window.location.href = 'login.html';
+    // Get unit id from query string
+    const params = new URLSearchParams(window.location.search);
+    const unitId = params.get('unit');
+    document.querySelector('h1').textContent = 'Analytics for Unit #' + unitId;
+    // Use the same ThingSpeak channel for all units
+    const CHANNEL_ID = "3001035";
+    const READ_API_KEY = "RI4Q6J38OQU6LEXA";
+    async function fetchUnitData() {
+      let data = [];
+      for (let field = 1; field <= 5; field++) {
+        const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/fields/${field}.json?api_key=${READ_API_KEY}&results=20`;
+        const res = await fetch(url);
+        const json = await res.json();
+        data.push(json.feeds.map(feed => parseFloat(feed[`field${field}`])));
+      }
+      return data;
+    }
+    async function runUnitAnalytics() {
+      const unit = await fetchUnitData();
+      let accX = unit[2], accY = unit[3], accZ = unit[4];
+      let accMag = accX.map((v,i) => {
+        const ax = accX[i]||0, ay = accY[i]||0, az = accZ[i]||0;
+        return Math.sqrt(ax*ax + ay*ay + az*az);
+      });
+      let avgAcc = accMag.reduce((a,b)=>a+b,0)/accMag.length;
+      let lat = unit[0], lng = unit[1];
+      let locs = {};
+      for(let i=0;i<lat.length;i++) {
+        const key = `${lat[i]?.toFixed(3)},${lng[i]?.toFixed(3)}`;
+        locs[key] = (locs[key]||0)+1;
+      }
+      let maxLoc = '', maxLocCount = 0;
+      for(const k in locs) if(locs[k]>maxLocCount) { maxLoc=k; maxLocCount=locs[k]; }
+      document.getElementById('analytics-panel').innerHTML = `
+        <div class="analytics-pane">
+          <div class="analytics-cards">
+            <div class="insight-card"><div class="insight-title">Avg. Acceleration</div><div class="insight-value">${avgAcc.toFixed(2)} m/s²</div><div class="insight-desc">Average acceleration magnitude for this unit.</div></div>
+            <div class="insight-card"><div class="insight-title">Hotspot</div><div class="insight-value">${maxLoc}</div><div class="insight-desc">Most common location for this unit.</div></div>
+          </div>
+          <div class="analytics-charts">
+            <h2>Acceleration Magnitude Over Time</h2>
+            <canvas id="accMagChart"></canvas>
+          </div>
+        </div>
+      `;
+      new Chart(document.getElementById('accMagChart').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: accMag.map((_,i)=>i+1),
+          datasets: [{
+            label: 'Acc. Magnitude',
+            data: accMag,
+            borderColor: '#1976d2',
+            backgroundColor: '#1976d211',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 2
+          }]
+        },
+        options: {
+          plugins: { legend: { labels: { color: '#1976d2' } } },
+          scales: { x: { ticks: { color: '#888' } }, y: { ticks: { color: '#888' } } }
+        }
+      });
+    }
+    runUnitAnalytics();
+    // Simulate extra insights
+    document.getElementById('trip-duration').textContent = '42 min';
+    document.getElementById('idle-time').textContent = '7 min';
+    document.getElementById('alerts').textContent = '2';
+  </script>
+</body>
+</html>
