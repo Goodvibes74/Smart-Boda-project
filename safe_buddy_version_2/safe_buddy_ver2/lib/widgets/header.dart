@@ -4,6 +4,8 @@ import 'package:safe_buddy_ver2/widgets/search_bar.dart' as custom; // Import yo
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
 
+  const HeaderWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,7 +14,6 @@ class HeaderWidget extends StatelessWidget {
         context,
       ).colorScheme.surface, // Dark background from theme
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Greeting text
           Padding(
@@ -27,21 +28,19 @@ class HeaderWidget extends StatelessWidget {
               ),
             ),
           ),
-          // Search bar
+          const SizedBox(width: 20.0),
           Expanded(
             child: custom.SearchBar(), // Use the custom SearchBar widget
           ),
-          // Notification icon
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white),
+            icon: const Icon(Icons.notifications, color: Colors.white),
             onPressed: () {},
           ),
-          // User profile avatar
-          CircleAvatar(
+          const SizedBox(width: 8),
+          const CircleAvatar(
             backgroundColor: Colors.white,
             child: Icon(Icons.person, color: Colors.black),
           ),
-          SizedBox(width: 16.0), // Right margin
         ],
       ),
     );
