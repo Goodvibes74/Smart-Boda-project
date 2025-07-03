@@ -3,20 +3,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'theme.dart';
+
+// Web-specific
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
-import 'package:flutter/foundation.dart'; //  Needed for kIsWeb
+// ignore: undefined_prefixed_name
+import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:google_maps/google_maps.dart' as gmaps;
 import 'web_google_map.dart';
-import 'base_layout.dart'; //  Make sure this exists
+import 'base_layout.dart';
+
+// Conditional web UI helper (aliased to avoid collision with dart:ui)
 import 'web_ui_stub.dart'
-    if (dart.library.html) 'web_ui_real.dart';
-
-
+    if (dart.library.html) 'web_ui_real.dart' as web_ui;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //  Only register platform view factory for web
+  // Register the platform view for web only
   if (kIsWeb) {
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
@@ -28,11 +34,14 @@ void main() async {
         ..style.border = 'none',
     );
   }
-// Firebase analytics instance
-FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Firebase Analytics (optional)
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   runApp(const SafeBuddyApp());
 }
@@ -47,7 +56,7 @@ class SafeBuddyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: BaseLayout(child: WebGoogleMap()), //  Renders Google Map inside your layout
+      home: BaseLayout(child: WebGoogleMap()),
       debugShowCheckedModeBanner: false,
     );
   }
