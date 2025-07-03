@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 64.0, // Standard app bar height
-      color: Theme.of(context).colorScheme.background, // Dark background from theme
+      color: Theme.of(context).colorScheme.surface, // Dark background from theme
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

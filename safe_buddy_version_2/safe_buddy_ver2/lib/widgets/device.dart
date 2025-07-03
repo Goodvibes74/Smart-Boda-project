@@ -5,7 +5,7 @@ class DeviceCard extends StatelessWidget {
   final String location;
   final String status;
 
-  DeviceCard({required this.deviceId, required this.location, required this.status});
+  const DeviceCard({super.key, required this.deviceId, required this.location, required this.status});
 
   @override
   Widget build(BuildContext context) {

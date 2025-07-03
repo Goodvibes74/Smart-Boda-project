@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CreateAccountForm extends StatefulWidget {
+  const CreateAccountForm({super.key});
+
   @override
   _CreateAccountFormState createState() => _CreateAccountFormState();
 }
