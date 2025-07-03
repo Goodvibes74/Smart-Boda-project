@@ -1,0 +1,3612 @@
+{
+    "id": "VariableCollectionId:1:13638",
+    "name": "Global Tokens",
+    "modes": {
+        "1:74": "light",
+        "1:187": "Dark"
+    },
+    "variableIds": [
+        "VariableID:1:13639",
+        "VariableID:1:13640",
+        "VariableID:1:13641",
+        "VariableID:1:13642",
+        "VariableID:1:13643",
+        "VariableID:1:13644",
+        "VariableID:1:13645",
+        "VariableID:1:13646",
+        "VariableID:1:13647",
+        "VariableID:1:13648",
+        "VariableID:1:14506",
+        "VariableID:1:14507",
+        "VariableID:1:14508",
+        "VariableID:1:14509",
+        "VariableID:1:14510",
+        "VariableID:1:14511",
+        "VariableID:1:14512",
+        "VariableID:1:14513",
+        "VariableID:1:14514",
+        "VariableID:1:14515",
+        "VariableID:1:15324",
+        "VariableID:1:15325",
+        "VariableID:1:15326",
+        "VariableID:1:15327",
+        "VariableID:1:15328",
+        "VariableID:1:15329",
+        "VariableID:1:15330",
+        "VariableID:1:15331",
+        "VariableID:1:15332",
+        "VariableID:1:15333",
+        "VariableID:1:31371",
+        "VariableID:1:31372",
+        "VariableID:1:31373",
+        "VariableID:1:31374",
+        "VariableID:1:31375",
+        "VariableID:1:31376",
+        "VariableID:1:31377",
+        "VariableID:1:31378",
+        "VariableID:1:31379",
+        "VariableID:1:31380",
+        "VariableID:1:31381",
+        "VariableID:1:31382",
+        "VariableID:1:31383",
+        "VariableID:1:31384",
+        "VariableID:1:31385",
+        "VariableID:1:31386",
+        "VariableID:1:31387",
+        "VariableID:1:31388",
+        "VariableID:1:31389",
+        "VariableID:1:31390",
+        "VariableID:1:31391",
+        "VariableID:1:31392",
+        "VariableID:1:31393",
+        "VariableID:1:31394",
+        "VariableID:1:31395",
+        "VariableID:1:31396",
+        "VariableID:1:31397",
+        "VariableID:1:31398",
+        "VariableID:1:31399",
+        "VariableID:1:31400",
+        "VariableID:1:31401",
+        "VariableID:1:31402",
+        "VariableID:1:31403",
+        "VariableID:1:31404",
+        "VariableID:1:31405",
+        "VariableID:1:31406",
+        "VariableID:1:31407",
+        "VariableID:1:31408",
+        "VariableID:1:31409",
+        "VariableID:1:31410",
+        "VariableID:1:31411",
+        "VariableID:1:31412",
+        "VariableID:1:31413",
+        "VariableID:1:31414",
+        "VariableID:1:31415",
+        "VariableID:1:31416",
+        "VariableID:1:31417",
+        "VariableID:1:31418",
+        "VariableID:1:31419",
+        "VariableID:1:31420",
+        "VariableID:1:31421",
+        "VariableID:1:31422",
+        "VariableID:1:31423",
+        "VariableID:1:31424",
+        "VariableID:1:31425",
+        "VariableID:1:31426",
+        "VariableID:1:31427",
+        "VariableID:1:31428",
+        "VariableID:1:31429",
+        "VariableID:1:31430"
+    ],
+    "variables": [
+        {
+            "id": "VariableID:1:13639",
+            "name": "Spacing/3xs",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 4,
+                "1:187": 4
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 4,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 4,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13640",
+            "name": "Spacing/2xs",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 8,
+                "1:187": 8
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 8,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 8,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13641",
+            "name": "Spacing/xs",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 16,
+                "1:187": 16
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 16,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 16,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13642",
+            "name": "Spacing/s",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 24,
+                "1:187": 24
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 24,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 24,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13643",
+            "name": "Spacing/m",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 32,
+                "1:187": 32
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 32,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 32,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13644",
+            "name": "Spacing/l",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 40,
+                "1:187": 40
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 40,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 40,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13645",
+            "name": "Spacing/xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 48,
+                "1:187": 48
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 48,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 48,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13646",
+            "name": "Spacing/2xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 64,
+                "1:187": 64
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 64,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 64,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13647",
+            "name": "Spacing/3xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 80,
+                "1:187": 80
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 80,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 80,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:13648",
+            "name": "Spacing/4xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 96,
+                "1:187": 96
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 96,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 96,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "GAP"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14506",
+            "name": "Radius/none",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 0,
+                "1:187": 0
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 0,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 0,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14507",
+            "name": "Radius/2xs",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 4,
+                "1:187": 4
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 4,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 4,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14508",
+            "name": "Radius/xs",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 8,
+                "1:187": 8
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 8,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 8,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14509",
+            "name": "Radius/s",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 12,
+                "1:187": 12
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 12,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 12,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14510",
+            "name": "Radius/m",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 16,
+                "1:187": 16
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 16,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 16,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14511",
+            "name": "Radius/l",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 20,
+                "1:187": 20
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 20,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 20,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14512",
+            "name": "Radius/xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 24,
+                "1:187": 24
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 24,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 24,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14513",
+            "name": "Radius/2xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 32,
+                "1:187": 32
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 32,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 32,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14514",
+            "name": "Radius/3xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 40,
+                "1:187": 40
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 40,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 40,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:14515",
+            "name": "Radius/full",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 999,
+                "1:187": 999
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 999,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 999,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "CORNER_RADIUS"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15324",
+            "name": "Stroke/s",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 0,
+                "1:187": 0
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 0,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 0,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15325",
+            "name": "Stroke/m",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 1,
+                "1:187": 1
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 1,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 1,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15326",
+            "name": "Stroke/l",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 2,
+                "1:187": 2
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 2,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 2,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15327",
+            "name": "Stroke/xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 3,
+                "1:187": 3
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 3,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 3,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15328",
+            "name": "Stroke/2xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 4,
+                "1:187": 4
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 4,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 4,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15329",
+            "name": "Stroke/3xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 5,
+                "1:187": 5
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 5,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 5,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15330",
+            "name": "Stroke/4xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 6,
+                "1:187": 6
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 6,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 6,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15331",
+            "name": "Stroke/5xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 8,
+                "1:187": 8
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 8,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 8,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15332",
+            "name": "Stroke/6xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 10,
+                "1:187": 10
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 10,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 10,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:15333",
+            "name": "Stroke/7xl",
+            "description": "",
+            "type": "FLOAT",
+            "valuesByMode": {
+                "1:74": 12,
+                "1:187": 12
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": 12,
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": 12,
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "STROKE_FLOAT"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31371",
+            "name": "Colors/Primary/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8901960849761963,
+                    "g": 0.9490196108818054,
+                    "b": 0.9921568632125854,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.8901960849761963,
+                    "g": 0.9490196108818054,
+                    "b": 0.9921568632125854,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8901960849761963,
+                        "g": 0.9490196108818054,
+                        "b": 0.9921568632125854,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8901960849761963,
+                        "g": 0.9490196108818054,
+                        "b": 0.9921568632125854,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31372",
+            "name": "Colors/Primary/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.7333333492279053,
+                    "g": 0.8705882430076599,
+                    "b": 0.9843137264251709,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.7333333492279053,
+                    "g": 0.8705882430076599,
+                    "b": 0.9843137264251709,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.7333333492279053,
+                        "g": 0.8705882430076599,
+                        "b": 0.9843137264251709,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.7333333492279053,
+                        "g": 0.8705882430076599,
+                        "b": 0.9843137264251709,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31373",
+            "name": "Colors/Primary/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.5647059082984924,
+                    "g": 0.7921568751335144,
+                    "b": 0.9764705896377563,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.5647059082984924,
+                    "g": 0.7921568751335144,
+                    "b": 0.9764705896377563,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.5647059082984924,
+                        "g": 0.7921568751335144,
+                        "b": 0.9764705896377563,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.5647059082984924,
+                        "g": 0.7921568751335144,
+                        "b": 0.9764705896377563,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31374",
+            "name": "Colors/Primary/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.3921568691730499,
+                    "g": 0.7098039388656616,
+                    "b": 0.9647058844566345,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.3921568691730499,
+                    "g": 0.7098039388656616,
+                    "b": 0.9647058844566345,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.3921568691730499,
+                        "g": 0.7098039388656616,
+                        "b": 0.9647058844566345,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.3921568691730499,
+                        "g": 0.7098039388656616,
+                        "b": 0.9647058844566345,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31375",
+            "name": "Colors/Primary/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.25882354378700256,
+                    "g": 0.6470588445663452,
+                    "b": 0.9607843160629272,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.25882354378700256,
+                    "g": 0.6470588445663452,
+                    "b": 0.9607843160629272,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.25882354378700256,
+                        "g": 0.6470588445663452,
+                        "b": 0.9607843160629272,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.25882354378700256,
+                        "g": 0.6470588445663452,
+                        "b": 0.9607843160629272,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31376",
+            "name": "Colors/Primary/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31377",
+            "name": "Colors/Primary/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 0.10196078568696976
+                },
+                "1:187": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 0.10196078568696976
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31378",
+            "name": "Colors/Primary/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 0.501960813999176
+                },
+                "1:187": {
+                    "r": 0.11764705926179886,
+                    "g": 0.5333333611488342,
+                    "b": 0.8980392217636108,
+                    "a": 0.501960813999176
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.5333333611488342,
+                        "b": 0.8980392217636108,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31379",
+            "name": "Colors/Secondary/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.501960813999176,
+                    "g": 0.501960813999176,
+                    "b": 0.501960813999176,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.3803921639919281,
+                    "g": 0.3803921639919281,
+                    "b": 0.3803921639919281,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.501960813999176,
+                        "g": 0.501960813999176,
+                        "b": 0.501960813999176,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.3803921639919281,
+                        "g": 0.3803921639919281,
+                        "b": 0.3803921639919281,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31380",
+            "name": "Colors/Secondary/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.4000000059604645,
+                    "g": 0.4000000059604645,
+                    "b": 0.4000000059604645,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.4588235318660736,
+                    "g": 0.4588235318660736,
+                    "b": 0.4588235318660736,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.4000000059604645,
+                        "g": 0.4000000059604645,
+                        "b": 0.4000000059604645,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.4588235318660736,
+                        "g": 0.4588235318660736,
+                        "b": 0.4588235318660736,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31381",
+            "name": "Colors/Secondary/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.3019607961177826,
+                    "g": 0.3019607961177826,
+                    "b": 0.3019607961177826,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.6196078658103943,
+                    "g": 0.6196078658103943,
+                    "b": 0.6196078658103943,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.3019607961177826,
+                        "g": 0.3019607961177826,
+                        "b": 0.3019607961177826,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.6196078658103943,
+                        "g": 0.6196078658103943,
+                        "b": 0.6196078658103943,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31382",
+            "name": "Colors/Secondary/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.7411764860153198,
+                    "g": 0.7411764860153198,
+                    "b": 0.7411764860153198,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.7411764860153198,
+                        "g": 0.7411764860153198,
+                        "b": 0.7411764860153198,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31383",
+            "name": "Colors/Secondary/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.10196078568696976,
+                    "g": 0.10196078568696976,
+                    "b": 0.10196078568696976,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.8784313797950745,
+                    "g": 0.8784313797950745,
+                    "b": 0.8784313797950745,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.10196078568696976,
+                        "g": 0.10196078568696976,
+                        "b": 0.10196078568696976,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8784313797950745,
+                        "g": 0.8784313797950745,
+                        "b": 0.8784313797950745,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31384",
+            "name": "Colors/Secondary/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31385",
+            "name": "Colors/Secondary/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 0.10196078568696976
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 0.10196078568696976
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31386",
+            "name": "Colors/Secondary/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 0.501960813999176
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 0.501960813999176
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31387",
+            "name": "Colors/Accent/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8392156958580017,
+                    "g": 0.8392156958580017,
+                    "b": 0.8392156958580017,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.25882354378700256,
+                    "g": 0.25882354378700256,
+                    "b": 0.25882354378700256,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8392156958580017,
+                        "g": 0.8392156958580017,
+                        "b": 0.8392156958580017,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.25882354378700256,
+                        "g": 0.25882354378700256,
+                        "b": 0.25882354378700256,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31388",
+            "name": "Colors/Accent/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8784313797950745,
+                    "g": 0.8784313797950745,
+                    "b": 0.8784313797950745,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8784313797950745,
+                        "g": 0.8784313797950745,
+                        "b": 0.8784313797950745,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31389",
+            "name": "Colors/Accent/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.9333333373069763,
+                    "g": 0.9333333373069763,
+                    "b": 0.9333333373069763,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.1725490242242813,
+                    "g": 0.1725490242242813,
+                    "b": 0.1725490242242813,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.9333333373069763,
+                        "g": 0.9333333373069763,
+                        "b": 0.9333333373069763,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.1725490242242813,
+                        "g": 0.1725490242242813,
+                        "b": 0.1725490242242813,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31390",
+            "name": "Colors/Accent/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.9607843160629272,
+                    "g": 0.9607843160629272,
+                    "b": 0.9607843160629272,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.13725490868091583,
+                    "g": 0.13725490868091583,
+                    "b": 0.13725490868091583,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.9607843160629272,
+                        "g": 0.9607843160629272,
+                        "b": 0.9607843160629272,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.13725490868091583,
+                        "g": 0.13725490868091583,
+                        "b": 0.13725490868091583,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31391",
+            "name": "Colors/Accent/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.9803921580314636,
+                    "g": 0.9803921580314636,
+                    "b": 0.9803921580314636,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.11764705926179886,
+                    "g": 0.11764705926179886,
+                    "b": 0.11764705926179886,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.9803921580314636,
+                        "g": 0.9803921580314636,
+                        "b": 0.9803921580314636,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.11764705926179886,
+                        "g": 0.11764705926179886,
+                        "b": 0.11764705926179886,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31392",
+            "name": "Colors/Accent/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.07058823853731155,
+                    "g": 0.07058823853731155,
+                    "b": 0.07058823853731155,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.07058823853731155,
+                        "g": 0.07058823853731155,
+                        "b": 0.07058823853731155,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31393",
+            "name": "Colors/Accent/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 0.10196078568696976
+                },
+                "1:187": {
+                    "r": 0.07058823853731155,
+                    "g": 0.07058823853731155,
+                    "b": 0.07058823853731155,
+                    "a": 0.10196078568696976
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.07058823853731155,
+                        "g": 0.07058823853731155,
+                        "b": 0.07058823853731155,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31394",
+            "name": "Colors/Accent/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 0.501960813999176
+                },
+                "1:187": {
+                    "r": 0.07058823853731155,
+                    "g": 0.07058823853731155,
+                    "b": 0.07058823853731155,
+                    "a": 0.501960813999176
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.07058823853731155,
+                        "g": 0.07058823853731155,
+                        "b": 0.07058823853731155,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31395",
+            "name": "Colors/Neutral/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31396",
+            "name": "Colors/Neutral/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.9098039269447327,
+                    "g": 0.9098039269447327,
+                    "b": 0.9098039269447327,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.9098039269447327,
+                    "g": 0.9098039269447327,
+                    "b": 0.9098039269447327,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.9098039269447327,
+                        "g": 0.9098039269447327,
+                        "b": 0.9098039269447327,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.9098039269447327,
+                        "g": 0.9098039269447327,
+                        "b": 0.9098039269447327,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31397",
+            "name": "Colors/Neutral/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8235294222831726,
+                    "g": 0.8235294222831726,
+                    "b": 0.8235294222831726,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.8235294222831726,
+                    "g": 0.8235294222831726,
+                    "b": 0.8235294222831726,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8235294222831726,
+                        "g": 0.8235294222831726,
+                        "b": 0.8235294222831726,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8235294222831726,
+                        "g": 0.8235294222831726,
+                        "b": 0.8235294222831726,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31398",
+            "name": "Colors/Neutral/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.7333333492279053,
+                    "g": 0.7333333492279053,
+                    "b": 0.7333333492279053,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.7333333492279053,
+                    "g": 0.7333333492279053,
+                    "b": 0.7333333492279053,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.7333333492279053,
+                        "g": 0.7333333492279053,
+                        "b": 0.7333333492279053,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.7333333492279053,
+                        "g": 0.7333333492279053,
+                        "b": 0.7333333492279053,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31399",
+            "name": "Colors/Neutral/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.6431372761726379,
+                    "g": 0.6431372761726379,
+                    "b": 0.6431372761726379,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.6431372761726379,
+                    "g": 0.6431372761726379,
+                    "b": 0.6431372761726379,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.6431372761726379,
+                        "g": 0.6431372761726379,
+                        "b": 0.6431372761726379,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.6431372761726379,
+                        "g": 0.6431372761726379,
+                        "b": 0.6431372761726379,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31400",
+            "name": "Colors/Neutral/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.5568627715110779,
+                    "g": 0.5568627715110779,
+                    "b": 0.5568627715110779,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.5568627715110779,
+                    "g": 0.5568627715110779,
+                    "b": 0.5568627715110779,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.5568627715110779,
+                        "g": 0.5568627715110779,
+                        "b": 0.5568627715110779,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.5568627715110779,
+                        "g": 0.5568627715110779,
+                        "b": 0.5568627715110779,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31401",
+            "name": "Colors/Neutral/700",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.46666666865348816,
+                    "g": 0.46666666865348816,
+                    "b": 0.46666666865348816,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.46666666865348816,
+                    "g": 0.46666666865348816,
+                    "b": 0.46666666865348816,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.46666666865348816,
+                        "g": 0.46666666865348816,
+                        "b": 0.46666666865348816,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.46666666865348816,
+                        "g": 0.46666666865348816,
+                        "b": 0.46666666865348816,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31402",
+            "name": "Colors/Neutral/800",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.3764705955982208,
+                    "g": 0.3764705955982208,
+                    "b": 0.3764705955982208,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.3764705955982208,
+                    "g": 0.3764705955982208,
+                    "b": 0.3764705955982208,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.3764705955982208,
+                        "g": 0.3764705955982208,
+                        "b": 0.3764705955982208,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.3764705955982208,
+                        "g": 0.3764705955982208,
+                        "b": 0.3764705955982208,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31403",
+            "name": "Colors/Neutral/900",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.29019609093666077,
+                    "g": 0.29019609093666077,
+                    "b": 0.29019609093666077,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.29019609093666077,
+                    "g": 0.29019609093666077,
+                    "b": 0.29019609093666077,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.29019609093666077,
+                        "g": 0.29019609093666077,
+                        "b": 0.29019609093666077,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.29019609093666077,
+                        "g": 0.29019609093666077,
+                        "b": 0.29019609093666077,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31404",
+            "name": "Colors/Neutral/1000",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31405",
+            "name": "Colors/Neutral/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 0.10000000149011612
+                },
+                "1:187": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 0.10000000149011612
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31406",
+            "name": "Colors/Neutral/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 0.5
+                },
+                "1:187": {
+                    "r": 0.20000000298023224,
+                    "g": 0.20000000298023224,
+                    "b": 0.20000000298023224,
+                    "a": 0.5
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 0.5
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.20000000298023224,
+                        "g": 0.20000000298023224,
+                        "b": 0.20000000298023224,
+                        "a": 0.5
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31407",
+            "name": "Colors/Error/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.7686274647712708,
+                    "b": 0.7686274647712708,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.9215686321258545,
+                    "b": 0.9333333373069763,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.7686274647712708,
+                        "b": 0.7686274647712708,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.9215686321258545,
+                        "b": 0.9333333373069763,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31408",
+            "name": "Colors/Error/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.5333333611488342,
+                    "b": 0.5333333611488342,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.8039215803146362,
+                    "b": 0.8235294222831726,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.5333333611488342,
+                        "b": 0.5333333611488342,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.8039215803146362,
+                        "b": 0.8235294222831726,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31409",
+            "name": "Colors/Error/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.3019607961177826,
+                    "b": 0.3019607961177826,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.9372549057006836,
+                    "g": 0.6039215922355652,
+                    "b": 0.6039215922355652,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.3019607961177826,
+                        "b": 0.3019607961177826,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.9372549057006836,
+                        "g": 0.6039215922355652,
+                        "b": 0.6039215922355652,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31410",
+            "name": "Colors/Error/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.062745101749897,
+                    "b": 0.062745101749897,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.8980392217636108,
+                    "g": 0.45098039507865906,
+                    "b": 0.45098039507865906,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.062745101749897,
+                        "b": 0.062745101749897,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8980392217636108,
+                        "g": 0.45098039507865906,
+                        "b": 0.45098039507865906,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31411",
+            "name": "Colors/Error/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8196078538894653,
+                    "g": 0,
+                    "b": 0,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.9372549057006836,
+                    "g": 0.32549020648002625,
+                    "b": 0.3137255012989044,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8196078538894653,
+                        "g": 0,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.9372549057006836,
+                        "g": 0.32549020648002625,
+                        "b": 0.3137255012989044,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31412",
+            "name": "Colors/Error/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.5803921818733215,
+                    "g": 0,
+                    "b": 0,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.8980392217636108,
+                    "g": 0.2235294133424759,
+                    "b": 0.2078431397676468,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.5803921818733215,
+                        "g": 0,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8980392217636108,
+                        "g": 0.2235294133424759,
+                        "b": 0.2078431397676468,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31413",
+            "name": "Colors/Error/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.3019607961177826,
+                    "b": 0.3019607961177826,
+                    "a": 0.10000000149011612
+                },
+                "1:187": {
+                    "r": 0.8980392217636108,
+                    "g": 0.2235294133424759,
+                    "b": 0.2078431397676468,
+                    "a": 0.10000000149011612
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.3019607961177826,
+                        "b": 0.3019607961177826,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8980392217636108,
+                        "g": 0.2235294133424759,
+                        "b": 0.2078431397676468,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31414",
+            "name": "Colors/Error/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.3019607961177826,
+                    "b": 0.3019607961177826,
+                    "a": 0.5
+                },
+                "1:187": {
+                    "r": 0.8980392217636108,
+                    "g": 0.2235294133424759,
+                    "b": 0.2078431397676468,
+                    "a": 0.5
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.3019607961177826,
+                        "b": 0.3019607961177826,
+                        "a": 0.5
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.8980392217636108,
+                        "g": 0.2235294133424759,
+                        "b": 0.2078431397676468,
+                        "a": 0.5
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31415",
+            "name": "Colors/Warning/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.9254902005195618,
+                    "b": 0.7019608020782471,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.9254902005195618,
+                    "b": 0.7019608020782471,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.9254902005195618,
+                        "b": 0.7019608020782471,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.9254902005195618,
+                        "b": 0.7019608020782471,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31416",
+            "name": "Colors/Warning/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.8784313797950745,
+                    "b": 0.5098039507865906,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.8784313797950745,
+                    "b": 0.5098039507865906,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.8784313797950745,
+                        "b": 0.5098039507865906,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.8784313797950745,
+                        "b": 0.5098039507865906,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31417",
+            "name": "Colors/Warning/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.8352941274642944,
+                    "b": 0.30980393290519714,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.8352941274642944,
+                    "b": 0.30980393290519714,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.8352941274642944,
+                        "b": 0.30980393290519714,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.8352941274642944,
+                        "b": 0.30980393290519714,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31418",
+            "name": "Colors/Warning/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.7568627595901489,
+                    "b": 0.027450980618596077,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.7568627595901489,
+                    "b": 0.027450980618596077,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.7568627595901489,
+                        "b": 0.027450980618596077,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.7568627595901489,
+                        "b": 0.027450980618596077,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31419",
+            "name": "Colors/Warning/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.7019608020782471,
+                    "b": 0,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.7019608020782471,
+                    "b": 0,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.7019608020782471,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.7019608020782471,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31420",
+            "name": "Colors/Warning/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31421",
+            "name": "Colors/Warning/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 0.10196078568696976
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 0.10196078568696976
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 0.10196078568696976
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31422",
+            "name": "Colors/Warning/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 0.501960813999176
+                },
+                "1:187": {
+                    "r": 1,
+                    "g": 0.6274510025978088,
+                    "b": 0,
+                    "a": 0.501960813999176
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 1,
+                        "g": 0.6274510025978088,
+                        "b": 0,
+                        "a": 0.501960813999176
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31423",
+            "name": "Colors/Success/100",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.8235294222831726,
+                    "g": 0.9215686321258545,
+                    "b": 0.8274509906768799,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.9098039269447327,
+                    "g": 0.9607843160629272,
+                    "b": 0.9137254953384399,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.8235294222831726,
+                        "g": 0.9215686321258545,
+                        "b": 0.8274509906768799,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.9098039269447327,
+                        "g": 0.9607843160629272,
+                        "b": 0.9137254953384399,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31424",
+            "name": "Colors/Success/200",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.6470588445663452,
+                    "g": 0.8470588326454163,
+                    "b": 0.6549019813537598,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.7843137383460999,
+                    "g": 0.9019607901573181,
+                    "b": 0.7882353067398071,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.6470588445663452,
+                        "g": 0.8470588326454163,
+                        "b": 0.6549019813537598,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.7843137383460999,
+                        "g": 0.9019607901573181,
+                        "b": 0.7882353067398071,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31425",
+            "name": "Colors/Success/300",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.47058823704719543,
+                    "g": 0.7686274647712708,
+                    "b": 0.48235294222831726,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.6470588445663452,
+                    "g": 0.8392156958580017,
+                    "b": 0.6549019813537598,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.47058823704719543,
+                        "g": 0.7686274647712708,
+                        "b": 0.48235294222831726,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.6470588445663452,
+                        "g": 0.8392156958580017,
+                        "b": 0.6549019813537598,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31426",
+            "name": "Colors/Success/400",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.2980392277240753,
+                    "g": 0.686274528503418,
+                    "b": 0.3137255012989044,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.5058823823928833,
+                    "g": 0.7803921699523926,
+                    "b": 0.5176470875740051,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.2980392277240753,
+                        "g": 0.686274528503418,
+                        "b": 0.3137255012989044,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.5058823823928833,
+                        "g": 0.7803921699523926,
+                        "b": 0.5176470875740051,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31427",
+            "name": "Colors/Success/500",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.23137255012989044,
+                    "g": 0.5333333611488342,
+                    "b": 0.24313725531101227,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.4000000059604645,
+                    "g": 0.7333333492279053,
+                    "b": 0.4156862795352936,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.23137255012989044,
+                        "g": 0.5333333611488342,
+                        "b": 0.24313725531101227,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.4000000059604645,
+                        "g": 0.7333333492279053,
+                        "b": 0.4156862795352936,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31428",
+            "name": "Colors/Success/600",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.16470588743686676,
+                    "g": 0.3764705955982208,
+                    "b": 0.1725490242242813,
+                    "a": 1
+                },
+                "1:187": {
+                    "r": 0.26274511218070984,
+                    "g": 0.6274510025978088,
+                    "b": 0.27843138575553894,
+                    "a": 1
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.16470588743686676,
+                        "g": 0.3764705955982208,
+                        "b": 0.1725490242242813,
+                        "a": 1
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.26274511218070984,
+                        "g": 0.6274510025978088,
+                        "b": 0.27843138575553894,
+                        "a": 1
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31429",
+            "name": "Colors/Success/Alpha/10",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.2980392277240753,
+                    "g": 0.686274528503418,
+                    "b": 0.3137255012989044,
+                    "a": 0.10000000149011612
+                },
+                "1:187": {
+                    "r": 0.26274511218070984,
+                    "g": 0.6274510025978088,
+                    "b": 0.27843138575553894,
+                    "a": 0.10000000149011612
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.2980392277240753,
+                        "g": 0.686274528503418,
+                        "b": 0.3137255012989044,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.26274511218070984,
+                        "g": 0.6274510025978088,
+                        "b": 0.27843138575553894,
+                        "a": 0.10000000149011612
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        },
+        {
+            "id": "VariableID:1:31430",
+            "name": "Colors/Success/Alpha/50",
+            "description": "",
+            "type": "COLOR",
+            "valuesByMode": {
+                "1:74": {
+                    "r": 0.2980392277240753,
+                    "g": 0.686274528503418,
+                    "b": 0.3137255012989044,
+                    "a": 0.5
+                },
+                "1:187": {
+                    "r": 0.26274511218070984,
+                    "g": 0.6274510025978088,
+                    "b": 0.27843138575553894,
+                    "a": 0.5
+                }
+            },
+            "resolvedValuesByMode": {
+                "1:74": {
+                    "resolvedValue": {
+                        "r": 0.2980392277240753,
+                        "g": 0.686274528503418,
+                        "b": 0.3137255012989044,
+                        "a": 0.5
+                    },
+                    "alias": null
+                },
+                "1:187": {
+                    "resolvedValue": {
+                        "r": 0.26274511218070984,
+                        "g": 0.6274510025978088,
+                        "b": 0.27843138575553894,
+                        "a": 0.5
+                    },
+                    "alias": null
+                }
+            },
+            "scopes": [
+                "ALL_FILLS",
+                "STROKE_COLOR"
+            ],
+            "hiddenFromPublishing": false,
+            "codeSyntax": {}
+        }
+    ]
+}
