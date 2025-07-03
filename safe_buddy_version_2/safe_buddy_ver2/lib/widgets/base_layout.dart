@@ -13,10 +13,15 @@ class BaseLayout extends StatelessWidget {
       body: Row(
         children: [
           HoverSidebar(), // The hover-expandable sidebar
-          Expanded(
-            child: HeaderWidget(),
-          // The header widget
-          ), // The main content area
+          Column(
+            children: [
+              HeaderWidget(), // The header widget
+              Expanded(
+                child:
+                    child, // The main content area, now correctly placed below the header
+              ),
+            ],
+          ),
         ],
       ),
     );

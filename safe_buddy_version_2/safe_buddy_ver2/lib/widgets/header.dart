@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safe_buddy_ver2/widgets/search_bar.dart' as custom; // Import your SearchBar widget
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
@@ -7,7 +8,9 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 64.0, // Standard app bar height
-      color: Theme.of(context).colorScheme.surface, // Dark background from theme
+      color: Theme.of(
+        context,
+      ).colorScheme.surface, // Dark background from theme
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -17,27 +20,16 @@ class HeaderWidget extends StatelessWidget {
             child: Text(
               'Hi, User',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.primary, // Blue color from theme
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary, // Blue color from theme
                 fontSize: 18.0,
               ),
             ),
           ),
           // Search bar
           Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Hinted search text',
-                hintStyle: TextStyle(color: Colors.white70),
-                prefixIcon: Icon(Icons.search, color: Colors.white),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[800], // Dark fill for search bar
-              ),
-              style: TextStyle(color: Colors.white),
-            ),
+            child: custom.SearchBar(), // Use the custom SearchBar widget
           ),
           // Notification icon
           IconButton(

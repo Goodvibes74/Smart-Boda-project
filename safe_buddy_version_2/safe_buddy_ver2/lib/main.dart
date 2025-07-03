@@ -9,9 +9,7 @@ FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const SafeBuddyApp());
 }
 
@@ -25,7 +23,7 @@ class SafeBuddyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: BaseLayout(child: Container()),
+      home: const BaseLayout(child: SizedBox()), // Use BaseLayout as the home
       debugShowCheckedModeBanner: false,
     );
   }
