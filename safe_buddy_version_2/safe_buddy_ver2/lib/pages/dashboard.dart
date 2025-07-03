@@ -19,17 +19,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        HoverSidebar(),
-        Expanded(
-          child: Center(
-            child: Text(
-              'Dashboard Content Here',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ),
-      ],
+      
     );
   }
 }

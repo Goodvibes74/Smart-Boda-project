@@ -14,11 +14,10 @@ class _BaseLayoutState extends State<BaseLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-  const Center(child: Text('Home Page', style: TextStyle(color: Colors.white))),      // 👈 new Home page
-  const Center(child: Text('Devices Page', style: TextStyle(color: Colors.white))),
-  const Center(child: Text('Settings Page', style: TextStyle(color: Colors.white))),
-];
-
+    const Center(child: Text('Home Page', style: TextStyle(color: Colors.white))),
+    const Center(child: Text('Devices Page', style: TextStyle(color: Colors.white))),
+    const Center(child: Text('Settings Page', style: TextStyle(color: Colors.white))),
+  ];
 
   void _onSidebarItemTapped(int index) {
     setState(() => _selectedIndex = index);

@@ -3,8 +3,7 @@ import 'package:safe_buddy_ver2/widgets/search_bar.dart' as custom; // Import yo
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
-
-  const HeaderWidget({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
