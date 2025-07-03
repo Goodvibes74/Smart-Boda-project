@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'header.dart';
 import 'sidebar.dart';
+import 'dashboard.dart'; // Import your actual page
+import 'device_management.dart'; // Import your actual page
+import 'settings.dart'; // Import your actual page
 
 class BaseLayout extends StatefulWidget {
   final Widget child;
@@ -14,15 +17,9 @@ class _BaseLayoutState extends State<BaseLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(
-      child: Text('Home Page', style: TextStyle(color: Colors.white)),
-    ),
-    const Center(
-      child: Text('Devices Page', style: TextStyle(color: Colors.white)),
-    ),
-    const Center(
-      child: Text('Settings Page', style: TextStyle(color: Colors.white)),
-    ),
+    DashboardPage(), // Updated to use the actual dashboard page
+    DeviceManagerPage(), // Updated to use the actual device manager page
+    SettingsPage(), // Updated to use the actual settings page
   ];
 
   void _onSidebarItemTapped(int index) {
