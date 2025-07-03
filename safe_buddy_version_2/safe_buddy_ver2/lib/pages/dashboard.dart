@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safe_buddy_ver2/widgets/sidebar.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
