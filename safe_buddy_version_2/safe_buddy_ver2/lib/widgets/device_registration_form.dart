@@ -1,20 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DeviceRegistrationForm extends StatefulWidget {
   const DeviceRegistrationForm({super.key});
 
   @override
-  _DeviceRegistrationFormState createState() => _DeviceRegistrationFormState();
+  DeviceRegistrationFormState createState() => DeviceRegistrationFormState();
 }
 
-class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
+class DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  String _deviceId = '';
-  String _username = '';
-  String _deviceType = '';
-  String _ipAddress = '';
-  String _location = '';
-  String _description = '';
+  final _deviceIdController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _deviceTypeController = TextEditingController();
+  final _ipAddressController = TextEditingController();
+  final _locationController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _deviceIdController.dispose();
+    _usernameController.dispose();
+    _deviceTypeController.dispose();
+    _ipAddressController.dispose();
+    _locationController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _registerDevice() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      try {
+        // Check if user is authenticated
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          setState(() {
+            _errorMessage = 'Please log in to register a device';
+            _isLoading = false;
+          });
+          return;
+        }
+
+        // Register device in Firestore
+        await FirebaseFirestore.instance.collection('devices').add({
+          'deviceId': _deviceIdController.text.trim(),
+          'username': _usernameController.text.trim(),
+          'deviceType': _deviceTypeController.text.trim(),
+          'ipAddress': _ipAddressController.text.trim(),
+          'location': _locationController.text.trim(),
+          'description': _descriptionController.text.trim(),
+          'userId': user.uid,
+          'createdAt': Timestamp.now(),
+        });
+
+        // Navigate back or to success screen
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      } on FirebaseException catch (e) {
+        setState(() {
+          _errorMessage = _getErrorMessage(e.code);
+        });
+      } catch (e) {
+        setState(() {
+          _errorMessage = 'An unexpected error occurred. Please try again.';
+        });
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
+  }
+
+  String _getErrorMessage(String code) {
+    switch (code) {
+      case 'permission-denied':
+        return 'You do not have permission to register devices.';
+      case 'unavailable':
+        return 'Firestore is currently unavailable. Please try again later.';
+      default:
+        return 'Device registration failed. Please try again.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +101,8 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
       child: Column(
         children: [
           TextFormField(
-            decoration: InputDecoration(
+            controller: _deviceIdController,
+            decoration: const InputDecoration(
               labelText: 'Device ID',
               border: OutlineInputBorder(),
             ),
@@ -33,13 +112,11 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
               }
               return null;
             },
-            onSaved: (value) {
-              _deviceId = value!;
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            controller: _usernameController,
+            decoration: const InputDecoration(
               labelText: 'Username',
               border: OutlineInputBorder(),
             ),
@@ -47,15 +124,16 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
               if (value == null || value.isEmpty) {
                 return 'Please enter a username';
               }
+              if (value.length < 3) {
+                return 'Username must be at least 3 characters';
+              }
               return null;
             },
-            onSaved: (value) {
-              _username = value!;
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            controller: _deviceTypeController,
+            decoration: const InputDecoration(
               labelText: 'Device Type',
               border: OutlineInputBorder(),
             ),
@@ -65,29 +143,29 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
               }
               return null;
             },
-            onSaved: (value) {
-              _deviceType = value!;
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            controller: _ipAddressController,
+            decoration: const InputDecoration(
               labelText: 'IP Address',
               border: OutlineInputBorder(),
             ),
+            keyboardType: TextInputType.number,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter an IP address';
               }
+              if (!RegExp(r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$').hasMatch(value)) {
+                return 'Please enter a valid IP address';
+              }
               return null;
             },
-            onSaved: (value) {
-              _ipAddress = value!;
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            controller: _locationController,
+            decoration: const InputDecoration(
               labelText: 'Location',
               border: OutlineInputBorder(),
             ),
@@ -97,39 +175,45 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
               }
               return null;
             },
-            onSaved: (value) {
-              _location = value!;
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            controller: _descriptionController,
+            decoration: const InputDecoration(
               labelText: 'Description',
               border: OutlineInputBorder(),
             ),
-            onSaved: (value) {
-              _description = value ?? '';
-            },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                _errorMessage!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Add device registration logic here
-                  }
-                },
-                child: Text('Activate device registration'),
+                onPressed: _isLoading ? null : _registerDevice,
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Activate device registration'),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               TextButton(
-                onPressed: () {
-                  // Add cancel logic here
-                },
-                child: Text('Cancel'),
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        Navigator.pop(context);
+                      },
+                child: const Text('Cancel'),
               ),
             ],
           ),
