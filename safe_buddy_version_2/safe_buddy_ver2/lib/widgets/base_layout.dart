@@ -14,9 +14,15 @@ class _BaseLayoutState extends State<BaseLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Home Page', style: TextStyle(color: Colors.white))),
-    const Center(child: Text('Devices Page', style: TextStyle(color: Colors.white))),
-    const Center(child: Text('Settings Page', style: TextStyle(color: Colors.white))),
+    const Center(
+      child: Text('Home Page', style: TextStyle(color: Colors.white)),
+    ),
+    const Center(
+      child: Text('Devices Page', style: TextStyle(color: Colors.white)),
+    ),
+    const Center(
+      child: Text('Settings Page', style: TextStyle(color: Colors.white)),
+    ),
   ];
 
   void _onSidebarItemTapped(int index) {
@@ -25,11 +31,16 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme; // Use theme color scheme
+
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E2C),
+      backgroundColor: colorScheme.surface, // Use themed background
       body: Row(
         children: [
-          HoverSidebar(onItemSelected: _onSidebarItemTapped, selectedIndex: _selectedIndex),
+          HoverSidebar(
+            onItemSelected: _onSidebarItemTapped,
+            selectedIndex: _selectedIndex,
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

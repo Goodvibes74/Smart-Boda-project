@@ -100,16 +100,20 @@ class AdminLoginFormState extends State<AdminLoginForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Email',
               border: OutlineInputBorder(),
+              fillColor: Theme.of(context).colorScheme.surface,
+              filled: true,
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return 'Please enter a valid email';
               }
               return null;
@@ -140,6 +144,10 @@ class AdminLoginFormState extends State<AdminLoginForm> {
               ),
             ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
             onPressed: _isLoading ? null : _signIn,
             child: _isLoading
                 ? const SizedBox(

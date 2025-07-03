@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class CreateAccountForm extends StatefulWidget {
   const CreateAccountForm({super.key});
 
@@ -37,11 +36,13 @@ class CreateAccountFormState extends State<CreateAccountForm> {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
 
-        await userCredential.user?.updateDisplayName(_usernameController.text.trim());
+        await userCredential.user?.updateDisplayName(
+          _usernameController.text.trim(),
+        );
 
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/home');
@@ -104,16 +105,20 @@ class CreateAccountFormState extends State<CreateAccountForm> {
           const SizedBox(height: 16),
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Email',
               border: OutlineInputBorder(),
+              fillColor: Theme.of(context).colorScheme.surface,
+              filled: true,
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter an email';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              ).hasMatch(value)) {
                 return 'Please enter a valid email';
               }
               return null;
@@ -165,6 +170,10 @@ class CreateAccountFormState extends State<CreateAccountForm> {
               ),
             ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            ),
             onPressed: _isLoading ? null : _createAccount,
             child: _isLoading
                 ? const SizedBox(

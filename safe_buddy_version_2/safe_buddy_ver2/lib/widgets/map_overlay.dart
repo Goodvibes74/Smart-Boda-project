@@ -25,15 +25,30 @@ class MapOverlay extends StatelessWidget {
           left: 16,
           child: Container(
             padding: EdgeInsets.all(16),
-            color: Colors.black.withAlpha((0.7 * 255).toInt()),
-            // .withOpacity is deprecated; use .withAlpha for 70% opacity (0.7 * 255 = 178)
+            color: Theme.of(
+              context,
+            ).colorScheme.surface.withAlpha((0.7 * 255).toInt()),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Battery: 80%', style: TextStyle(color: Colors.white)),
-                Text('Signal: Strong', style: TextStyle(color: Colors.white)),
+                Text(
+                  'Battery: 80%',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  'Signal: Strong',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
                 SizedBox(height: 8),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
                   onPressed: () {},
                   child: Text('Navigate to Device'),
                 ),
