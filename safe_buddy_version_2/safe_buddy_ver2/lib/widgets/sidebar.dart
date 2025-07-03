@@ -17,71 +17,108 @@ class _HoverSidebarState extends State<HoverSidebar> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         width: _isHovered ? 250 : 60,
-        color: Theme.of(context).colorScheme.surface, // Use theme color
+        color: Theme.of(context).colorScheme.surface,
         child: _isHovered
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  SvgPicture.asset(
-                    'assets/Logo.svg', // Corrected path
-                    height: 50,
-                    width: 50,
-                    placeholderBuilder: (context) => Container(
-                      height: 50,
-                      width: 50,
-                      color: Colors.grey,
-                    ), // Fallback for loading
-                  ),
-                  Text('Safe Buddy', style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white)),
-                  Text('Your safety is our priority', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70)),
-                  SizedBox(height: 20),
-                  ListTile(
-                    leading: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Icon(Icons.home, color: Colors.white),
-                    ),
-                    title: Text('Home', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Icon(Icons.devices, color: Colors.white),
-                    ),
-                    title: Text('Devices', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Icon(Icons.settings, color: Colors.white),
-                    ),
-                    title: Text('Settings', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white)),
-                    onTap: () {},
-                  ),
-                  Spacer(),
-                  CircleAvatar(backgroundColor: Colors.white, child: Icon(Icons.person)),
-                ],
-              )
-            : Center(
-                child: SvgPicture.asset(
-                  'assets/Logo.svg', // Consistent SVG usage
-                  height: 40,
-                  width: 40,
-                  placeholderBuilder: (context) => Container(
-                    height: 40,
-                    width: 40,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
+            ? _buildExpandedSidebar(context)
+            : _buildCollapsedSidebar(),
       ),
     );
+  }
+
+  Widget _buildLogo({double height = 50, double width = 50}) {
+    return SvgPicture.asset(
+      'assets/svg/Logo.svg',
+      height: height,
+      width: width,
+      semanticsLabel: 'Safe Buddy Logo',
+      placeholderBuilder: (context) => SizedBox(
+        height: height,
+        width: width,
+        child: const DecoratedBox(
+          decoration: BoxDecoration(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSidebarItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Tooltip(
+        message: label,
+        child: Icon(icon, color: Colors.white, size: 24),
+      ),
+      title: Text(
+        label,
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: Colors.white),
+      ),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildExpandedSidebar(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 20),
+        _buildLogo(),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+          child: Text(
+            'Safe Buddy',
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(color: Colors.white),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, bottom: 12.0),
+          child: Text(
+            'Your safety is our priority',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.white70),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              _buildSidebarItem(icon: Icons.home, label: 'Home', onTap: () {}),
+              _buildSidebarItem(
+                icon: Icons.devices,
+                label: 'Devices',
+                onTap: () {},
+              ),
+              _buildSidebarItem(
+                icon: Icons.settings,
+                label: 'Settings',
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: CircleAvatar(
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.person,
+              color: Theme.of(context).colorScheme.surface,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCollapsedSidebar() {
+    return Center(child: _buildLogo(height: 40, width: 40));
   }
 }

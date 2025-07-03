@@ -10,14 +10,13 @@ class BaseLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(64.0),
-        child: HeaderWidget(),
-      ),
       body: Row(
         children: [
           HoverSidebar(), // The hover-expandable sidebar
-          Expanded(child: child), // The main content area
+          Expanded(
+            child: HeaderWidget(),
+          // The header widget
+          ), // The main content area
         ],
       ),
     );
