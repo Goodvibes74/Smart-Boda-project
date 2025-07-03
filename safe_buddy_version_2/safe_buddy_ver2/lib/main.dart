@@ -8,8 +8,10 @@ import 'package:flutter/foundation.dart'; //  Needed for kIsWeb
 import 'package:google_maps/google_maps.dart' as gmaps;
 import 'web_google_map.dart';
 import 'base_layout.dart'; //  Make sure this exists
+import 'dart:ui' as ui;
 import 'web_ui_stub.dart'
     if (dart.library.html) 'web_ui_real.dart';
+
 
 
 
