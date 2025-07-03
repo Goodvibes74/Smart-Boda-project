@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AdminLoginForm extends StatefulWidget {
+  const AdminLoginForm({super.key});
+
   @override
   _AdminLoginFormState createState() => _AdminLoginFormState();
 }

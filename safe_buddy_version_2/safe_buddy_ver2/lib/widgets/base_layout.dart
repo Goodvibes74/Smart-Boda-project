@@ -1,22 +1,51 @@
 import 'package:flutter/material.dart';
-import 'header.dart'; // Import the HeaderWidget
-import 'sidebar.dart'; // Import the HoverSidebar
+import 'header.dart';
+import 'sidebar.dart';
 
-class BaseLayout extends StatelessWidget {
+class BaseLayout extends StatefulWidget {
   final Widget child;
-
   const BaseLayout({super.key, required this.child});
+
+  @override
+  State<BaseLayout> createState() => _BaseLayoutState();
+}
+
+class _BaseLayoutState extends State<BaseLayout> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+  const Center(child: Text('Home Page', style: TextStyle(color: Colors.white))),      // 👈 new Home page
+  const Center(child: Text('Devices Page', style: TextStyle(color: Colors.white))),
+  const Center(child: Text('Settings Page', style: TextStyle(color: Colors.white))),
+];
+
+
+  void _onSidebarItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF1E1E2C),
       body: Row(
         children: [
-          HoverSidebar(), // The hover-expandable sidebar
+          HoverSidebar(onItemSelected: _onSidebarItemTapped, selectedIndex: _selectedIndex),
           Expanded(
-            child: HeaderWidget(),
-          // The header widget
-          ), // The main content area
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const HeaderWidget(),
+                const Divider(height: 0),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: _pages[_selectedIndex],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

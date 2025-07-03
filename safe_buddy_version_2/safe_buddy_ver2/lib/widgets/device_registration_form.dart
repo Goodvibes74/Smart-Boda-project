@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DeviceRegistrationForm extends StatefulWidget {
+  const DeviceRegistrationForm({super.key});
+
   @override
   _DeviceRegistrationFormState createState() => _DeviceRegistrationFormState();
 }

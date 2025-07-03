@@ -1,53 +1,54 @@
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 64.0, // Standard app bar height
-      color: Theme.of(context).colorScheme.background, // Dark background from theme
+      height: 64.0,
+      color: const Color(0xFF1E1E2C),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Greeting text
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Hi, User',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary, // Blue color from theme
-                fontSize: 18.0,
-              ),
+          Text(
+            'Hi, ',
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
+          ),
+          Text(
+            'User',
+            style: TextStyle(
+              color: Colors.blueAccent.shade200,
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
             ),
           ),
-          // Search bar
+          const SizedBox(width: 20.0),
           Expanded(
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Hinted search text',
-                hintStyle: TextStyle(color: Colors.white70),
-                prefixIcon: Icon(Icons.search, color: Colors.white),
+                hintStyle: const TextStyle(color: Colors.white70),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.grey[800], // Dark fill for search bar
+                fillColor: const Color(0xFF2D2D40),
               ),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
-          // Notification icon
           IconButton(
-            icon: Icon(Icons.notifications, color: Colors.white),
+            icon: const Icon(Icons.notifications, color: Colors.white),
             onPressed: () {},
           ),
-          // User profile avatar
-          CircleAvatar(
+          const SizedBox(width: 8),
+          const CircleAvatar(
             backgroundColor: Colors.white,
             child: Icon(Icons.person, color: Colors.black),
           ),
-          SizedBox(width: 16.0), // Right margin
         ],
       ),
     );

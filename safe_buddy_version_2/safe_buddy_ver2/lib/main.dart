@@ -25,7 +25,7 @@ class SafeBuddyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: BaseLayout(child: Container()),
+      home: BaseLayout(child: HomePage()),
       debugShowCheckedModeBanner: false,
     );
   }
