@@ -51,7 +51,8 @@ final ColorScheme lightColorScheme = const ColorScheme(
   onTertiary: neutral900,
   tertiaryContainer: Color(0xFFB2DFDB),
   onTertiaryContainer: neutral1000,
-  background: background_bright, // Use your main background color here
+  background: background_bright, 
+  onBackground: neutral1000
 );
 
 final ColorScheme darkColorScheme = const ColorScheme(
@@ -83,7 +84,8 @@ final ColorScheme darkColorScheme = const ColorScheme(
   onTertiary: neutral1000,
   tertiaryContainer: Color(0xFF004D40),
   onTertiaryContainer: neutral100,
-  background: background_dark, // Use your main background color here
+  background: background_dark,
+  onBackground: neutral100
 );
 
 // ========================

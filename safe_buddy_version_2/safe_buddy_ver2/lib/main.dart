@@ -4,6 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'firebase_options.dart';
 import 'theme.dart';
 import 'widgets/base_layout.dart';
+import 'widgets/pages/auth_page.dart';
+import 'widgets/pages/initial.dart'; // Add this import
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -22,17 +24,19 @@ class SafeBuddyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Safe Buddy',
-      theme: lightTheme,           
-      darkTheme: darkTheme,        
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      home: const BaseLayout(
-        //mainlyout widget that contains the main structure of the app
-        //it contains the header, body and side menu
-        child: SizedBox(),
-      ),
+      initialRoute: '/initial', // Changed to start with InitialPage
+      routes: {
+        '/initial': (context) => const InitialPage(), // Added initial route
+        '/auth': (context) => const AuthPage(),
+        '/admin_dashboard': (context) => const BaseLayout(child: SizedBox()),
+        '/home': (context) => const BaseLayout(child: SizedBox()),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
