@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/device_data.dart';
-import '../pages/device_detail_page.dart'; // Full screen page
+import '../models/device_data.dart'; // Contains DeviceData class and mock()
+import '../pages/device_details_page.dart'; // Full-page view
 
 class DeviceCard extends StatelessWidget {
   final String deviceId;
@@ -26,9 +26,9 @@ class DeviceCard extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (_) => DeviceDetailPage(
                     deviceId: deviceId,
-                    data: DeviceData.mock(), // Replace with live data later
                     location: location,
                     status: status,
+                    data: DeviceData.mock(), // Replace with live data later
                   ),
                 ),
               );

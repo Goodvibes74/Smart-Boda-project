@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/device.dart';
+import '../widgets/device_card.dart';
 import '../widgets/device_registration_form.dart';
 
 class DeviceManagerPage extends StatelessWidget {
@@ -8,8 +8,9 @@ class DeviceManagerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Device Manager')),
+      appBar: AppBar(title: const Text('Device Manager')),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
@@ -24,35 +25,42 @@ class DeviceManagerPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            // Device cards row
-            Row(
-              children: [
-                DeviceCard(
-                  deviceId: 'BD12345',
-                  location: 'Nairobi, Kenya',
-                  status: 'Online',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD67890',
-                  location: 'Mombasa, Kenya',
-                  status: 'Offline',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD11223',
-                  location: 'Kisumu, Kenya',
-                  status: 'Online',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD44556',
-                  location: 'Nakuru, Kenya',
-                  status: 'Online',
-                ),
-              ],
+
+            /// ✅ Responsive scrollable row of device cards
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: const [
+                  DeviceCard(
+                    deviceId: 'SafeBoda #001',
+                    location: 'Kampala, Uganda',
+                    status: 'Online',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD67890',
+                    location: 'Mombasa, Kenya',
+                    status: 'Offline',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD11223',
+                    location: 'Kisumu, Kenya',
+                    status: 'Online',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD44556',
+                    location: 'Nakuru, Kenya',
+                    status: 'Online',
+                  ),
+                ],
+              ),
             ),
+
             const SizedBox(height: 24),
+
+            /// Button row
             Row(
               children: [
                 ElevatedButton(
@@ -61,7 +69,7 @@ class DeviceManagerPage extends StatelessWidget {
                       context: context,
                       builder: (_) => AlertDialog(
                         title: const Text('Register New Device'),
-                        content: DeviceRegistrationForm(),
+                        content: const DeviceRegistrationForm(),
                       ),
                     );
                   },
@@ -73,7 +81,9 @@ class DeviceManagerPage extends StatelessWidget {
                     backgroundColor: colorScheme.onSurface.withOpacity(0.2),
                     foregroundColor: colorScheme.onSurface,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // Handle turn-off logic here
+                  },
                   child: const Text('Turn Off All'),
                 ),
               ],
