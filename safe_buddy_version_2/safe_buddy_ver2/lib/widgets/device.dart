@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../models/device_data.dart';
-import '../pages/device_detail_page.dart'; // Full screen page
 
 class DeviceCard extends StatelessWidget {
   final String deviceId;
   final String location;
   final String status;
+  final VoidCallback? onTap;
 
   const DeviceCard({
     super.key,
     required this.deviceId,
     required this.location,
     required this.status,
+    this.onTap,
   });
 
   @override
@@ -19,26 +19,11 @@ class DeviceCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return InkWell(
-      onTap: status == 'Online'
-          ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => DeviceDetailPage(
-                    deviceId: deviceId,
-                    data: DeviceData.mock(), // Replace with live data later
-                    location: location,
-                    status: status,
-                  ),
-                ),
-              );
-            }
-          : null,
+      onTap: status == 'Online' ? onTap : null,
       child: Card(
         color: colorScheme.surface,
-        elevation: 3,
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -47,32 +32,21 @@ class DeviceCard extends StatelessWidget {
                 style: TextStyle(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 4),
               Text(
                 location,
-                style: TextStyle(
-                  color: colorScheme.onSurface.withOpacity(0.7),
-                ),
+                style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
               ),
-              const SizedBox(height: 8),
               Row(
                 children: [
                   Icon(
-                    Icons.circle,
-                    size: 14,
+                    status == 'Online' ? Icons.circle : Icons.circle_outlined,
                     color: status == 'Online' ? Colors.green : colorScheme.error,
+                    size: 16,
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    status,
-                    style: TextStyle(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  const SizedBox(width: 4),
+                  Text(status, style: TextStyle(color: colorScheme.onSurface)),
                 ],
               ),
             ],

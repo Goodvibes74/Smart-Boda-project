@@ -9,7 +9,8 @@ class DeviceDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildChart('Accelerometer', data.accelX, data.accelY, data.accelZ),
         _buildChart('Gyroscope', data.gyroX, data.gyroY, data.gyroZ),
@@ -70,61 +71,73 @@ class DeviceDataView extends StatelessWidget {
     double latest = battery.isNotEmpty ? battery.last : 0.0;
     Color barColor = latest < 20 ? Colors.red : latest < 50 ? Colors.orange : Colors.green;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Battery Status', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: latest / 100,
-          color: barColor,
-          backgroundColor: Colors.grey.shade300,
-          minHeight: 14,
-        ),
-        const SizedBox(height: 6),
-        Text('${latest.toStringAsFixed(1)}% remaining'),
-        const SizedBox(height: 24),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Battery Status', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          LinearProgressIndicator(
+            value: latest / 100,
+            color: barColor,
+            backgroundColor: Colors.grey.shade300,
+            minHeight: 14,
+          ),
+          const SizedBox(height: 6),
+          Text('${latest.toStringAsFixed(1)}% remaining'),
+        ],
+      ),
     );
   }
 
   Widget _buildSpeed(List<double> speeds) {
     final double latest = speeds.isNotEmpty ? speeds.last : 0.0;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Speed', style: TextStyle(fontWeight: FontWeight.bold)),
-        Text('Current speed: ${latest.toStringAsFixed(1)} km/h'),
-        const SizedBox(height: 24),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Speed', style: TextStyle(fontWeight: FontWeight.bold)),
+          Text('Current speed: ${latest.toStringAsFixed(1)} km/h'),
+        ],
+      ),
     );
   }
 
   Widget _buildImpact(List<bool> impacts) {
     final bool recentImpact = impacts.contains(true);
-    return Row(
-      children: [
-        Icon(
-          recentImpact ? Icons.warning : Icons.check_circle,
-          color: recentImpact ? Colors.red : Colors.green,
-        ),
-        const SizedBox(width: 8),
-        Text(recentImpact ? 'Impact Detected!' : 'No Impact'),
-        const SizedBox(height: 24),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          Icon(
+            recentImpact ? Icons.warning : Icons.check_circle,
+            color: recentImpact ? Colors.red : Colors.green,
+          ),
+          const SizedBox(width: 8),
+          Text(recentImpact ? 'Impact Detected!' : 'No Impact'),
+        ],
+      ),
     );
   }
 
   Widget _buildMap(double lat, double lon) {
-    return Container(
-      height: 220,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        color: Colors.black12,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Text('Map: ($lat, $lon)', style: const TextStyle(color: Colors.black87)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Container(
+        height: 220,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          color: Colors.black12,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            'Map: ($lat, $lon)',
+            style: const TextStyle(color: Colors.black87),
+          ),
+        ),
       ),
     );
   }

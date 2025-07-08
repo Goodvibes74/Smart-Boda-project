@@ -4,7 +4,8 @@ class DeviceData {
   final List<double> battery;
   final List<double> speed;
   final List<bool> impactDetected;
-  final double latitude, longitude;
+  final double latitude;
+  final double longitude;
 
   DeviceData({
     required this.accelX,
@@ -22,15 +23,15 @@ class DeviceData {
 
   factory DeviceData.mock() {
     return DeviceData(
-      accelX: List.generate(10, (i) => (5 * i).toDouble()),
-      accelY: List.generate(10, (i) => (3 * i).toDouble()),
-      accelZ: List.generate(10, (i) => (2 * i).toDouble()),
-      gyroX: List.generate(10, (i) => (1.5 * i).toDouble()),
-      gyroY: List.generate(10, (i) => (2.5 * i).toDouble()),
-      gyroZ: List.generate(10, (i) => (3.5 * i).toDouble()),
-      battery: List.generate(10, (i) => 100 - (i * 3)),
-      speed: List.generate(10, (i) => 10 + i * 2),
-      impactDetected: List.generate(10, (i) => i == 7),
+      accelX: List.generate(20, (i) => (i * 0.5) % 10),
+      accelY: List.generate(20, (i) => (i * 0.4) % 10),
+      accelZ: List.generate(20, (i) => (i * 0.3) % 10),
+      gyroX: List.generate(20, (i) => (i * 0.2) % 5),
+      gyroY: List.generate(20, (i) => (i * 0.1) % 5),
+      gyroZ: List.generate(20, (i) => (i * 0.3) % 5),
+      battery: List.generate(10, (i) => 70 - i * 2),
+      speed: List.generate(10, (i) => 30 + i.toDouble()),
+      impactDetected: List.generate(10, (i) => i == 5),
       latitude: 0.3476,
       longitude: 32.5825,
     );
