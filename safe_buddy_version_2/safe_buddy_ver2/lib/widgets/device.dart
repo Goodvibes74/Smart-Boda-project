@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class DeviceCard extends StatelessWidget {
@@ -14,34 +16,47 @@ class DeviceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+
     return Card(
-      color: colorScheme.surface,
+      color: cs.surface,
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               deviceId,
-              style: TextStyle(
-                color: colorScheme.primary,
+              style: text.titleMedium?.copyWith(
+                color: cs.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 4),
             Text(
               location,
-              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+              style: text.bodyLarge?.copyWith(
+                color: cs.onSurface.withOpacity(0.7),
+              ),
             ),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Icon(
                   status == 'Online' ? Icons.circle : Icons.circle_outlined,
-                  color: status == 'Online' ? Colors.green : colorScheme.error,
+                  color: status == 'Online'
+                      ? cs.tertiary
+                      : cs.error,
                   size: 16,
                 ),
-                SizedBox(width: 4),
-                Text(status, style: TextStyle(color: colorScheme.onSurface)),
+                const SizedBox(width: 4),
+                Text(
+                  status,
+                  style: text.bodyLarge?.copyWith(
+                    color: cs.onSurface,
+                  ),
+                ),
               ],
             ),
           ],

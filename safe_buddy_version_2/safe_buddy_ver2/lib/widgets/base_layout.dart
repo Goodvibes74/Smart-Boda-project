@@ -1,9 +1,12 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
+import 'package:safe_buddy_ver2/theme.dart';
 import 'header.dart';
 import 'sidebar.dart';
-import 'dashboard.dart'; // Import your actual page
-import 'device_management.dart'; // Import your actual page
-import 'settings.dart'; // Import your actual page
+import 'dashboard.dart';
+import 'device_management.dart';
+import 'settings.dart';
 
 class BaseLayout extends StatefulWidget {
   final Widget child;
@@ -17,9 +20,9 @@ class _BaseLayoutState extends State<BaseLayout> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    DashboardPage(), // Updated to use the actual dashboard page
-    DeviceManagerPage(), // Updated to use the actual device manager page
-    SettingsPage(), // Updated to use the actual settings page
+    const DashboardPage(),
+    const DeviceManagerPage(),
+    const SettingsPage(),
   ];
 
   void _onSidebarItemTapped(int index) {
@@ -28,10 +31,12 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme; // Use theme color scheme
+    final cs = Theme.of(context).colorScheme;
+    final custom = Theme.of(context).extension<CustomTheme>()!;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface, // Use themed background
+      // Use the theme's scaffoldBackgroundColor
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Row(
         children: [
           HoverSidebar(
@@ -43,7 +48,8 @@ class _BaseLayoutState extends State<BaseLayout> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const HeaderWidget(),
-                const Divider(height: 0),
+                // Divider takes its color from the theme
+                Divider(color: cs.outlineVariant, thickness: 1, height: 0),
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),

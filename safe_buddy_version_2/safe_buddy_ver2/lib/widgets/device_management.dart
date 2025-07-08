@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../widgets/device.dart';
 import '../widgets/device_registration_form.dart';
@@ -7,51 +9,57 @@ class DeviceManagerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Device Manager')),
+      appBar: AppBar(
+        title: Text('Device Manager', style: text.titleLarge),
+        backgroundColor: Theme.of(context).colorScheme.background, // updated
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Device Status',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
-              ),
+              style: text.titleLarge?.copyWith(color: cs.onSurface),
             ),
             const SizedBox(height: 24),
+
             // Device cards row
-            Row(
-              children: [
-                DeviceCard(
-                  deviceId: 'BD12345',
-                  location: 'Nairobi, Kenya',
-                  status: 'Online',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD67890',
-                  location: 'Mombasa, Kenya',
-                  status: 'Offline',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD11223',
-                  location: 'Kisumu, Kenya',
-                  status: 'Online',
-                ),
-                const SizedBox(width: 16),
-                DeviceCard(
-                  deviceId: 'BD44556',
-                  location: 'Nakuru, Kenya',
-                  status: 'Online',
-                ),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: const [
+                  DeviceCard(
+                    deviceId: 'BD12345',
+                    location: 'Nairobi, Kenya',
+                    status: 'Online',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD67890',
+                    location: 'Mombasa, Kenya',
+                    status: 'Offline',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD11223',
+                    location: 'Kisumu, Kenya',
+                    status: 'Online',
+                  ),
+                  SizedBox(width: 16),
+                  DeviceCard(
+                    deviceId: 'BD44556',
+                    location: 'Nakuru, Kenya',
+                    status: 'Online',
+                  ),
+                ],
+              ),
             ),
+
             const SizedBox(height: 24),
             Row(
               children: [
@@ -60,21 +68,28 @@ class DeviceManagerPage extends StatelessWidget {
                     showDialog(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: const Text('Register New Device'),
-                        content: DeviceRegistrationForm(),
+                        title: Text(
+                          'Register New Device',
+                          style: text.titleMedium,
+                        ),
+                        content: const DeviceRegistrationForm(),
+                        backgroundColor: cs.surface,
+                        titleTextStyle: text.titleMedium?.copyWith(
+                          color: cs.primary,
+                        ),
                       ),
                     );
                   },
-                  child: const Text('Register New Device'),
+                  child: Text('Register New Device', style: text.bodyLarge),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.onSurface.withOpacity(0.2),
-                    foregroundColor: colorScheme.onSurface,
+                    backgroundColor: cs.onSurface.withOpacity(0.2),
+                    foregroundColor: cs.onSurface,
                   ),
                   onPressed: () {},
-                  child: const Text('Turn Off All'),
+                  child: Text('Turn Off All', style: text.bodyLarge),
                 ),
               ],
             ),

@@ -1,43 +1,37 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
-import 'package:safe_buddy_ver2/widgets/search_bar.dart'
-    as custom; // Import your SearchBar widget
+import 'package:safe_buddy_ver2/theme.dart';
+import 'package:safe_buddy_ver2/widgets/search_bar.dart' as custom_search_bar;
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cs   = Theme.of(context).colorScheme;
+    final text = Theme.of(context).textTheme;
+
     return Container(
-      height: 64.0, // Standard app bar height
-      color: Theme.of(context).colorScheme.surface, // background
+      height: 64,
+      color: cs.surface,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          // Greeting text
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              'Hi, User',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary, // greeting text
-                fontSize: 18.0,
-              ),
-            ),
+          Text(
+            'Hi, User',
+            style: text.titleMedium?.copyWith(color: cs.primary),
           ),
-          const SizedBox(width: 20.0),
-          Expanded(
-            child: custom.SearchBar(), // Use the custom SearchBar widget
-          ),
+          const SizedBox(width: 20),
+          const Expanded(child: custom_search_bar.SearchBar()),
           IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
+            icon: Icon(Icons.notifications, color: cs.onSurface),
             onPressed: () {},
           ),
           const SizedBox(width: 8),
-          const CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(Icons.person, color: Colors.black),
+          CircleAvatar(
+            backgroundColor: cs.primaryContainer,
+            child: Icon(Icons.person, color: cs.onPrimaryContainer),
           ),
         ],
       ),
