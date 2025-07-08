@@ -22,15 +22,15 @@ class SafeBuddyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Safe Buddy',
-      theme: lightTheme,           // Your Poppins + Material3 light theme
-      darkTheme: darkTheme,        // Your Poppins + Material3 dark theme
-      themeMode: ThemeMode.system, // Follows OS setting
+      theme: lightTheme,           
+      darkTheme: darkTheme,        
+      themeMode: ThemeMode.system,
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
       home: const BaseLayout(
-        // Since BaseLayout manages its own child pages,
-        // you can pass an empty placeholder here.
+        //mainlyout widget that contains the main structure of the app
+        //it contains the header, body and side menu
         child: SizedBox(),
       ),
       debugShowCheckedModeBanner: false,

@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import '../widgets/device.dart';
-import '../widgets/device_registration_form.dart';
+import '../device.dart';
+import '../device_registration_form.dart';
 
 class DeviceManagerPage extends StatelessWidget {
   const DeviceManagerPage({Key? key}) : super(key: key);
@@ -22,18 +22,18 @@ class DeviceManagerPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: cs.background,
-      appBar: AppBar(
-        title: Text('Device Manager', style: text.titleLarge),
-        backgroundColor: cs.background,
-        elevation: 0,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Device Status', style: text.headlineSmall),
-            const SizedBox(height: 16),
+          children: [ 
+            // Page Title
+            Text(
+              'Device Manager',
+              style: text.titleLarge?.copyWith(color: cs.onSurface, fontSize: 32),
+            ),
+
+            const SizedBox(height: 24),
 
             // Responsive grid/wrap
             Expanded(

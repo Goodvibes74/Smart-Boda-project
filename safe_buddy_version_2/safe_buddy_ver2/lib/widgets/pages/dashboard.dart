@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use, unused_local_variable
 
 import 'package:flutter/material.dart';
-import '../widgets/alert_card.dart';
-import '../widgets/map_overlay.dart';
+import '../alert_card.dart';
+import '../map_overlay.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});

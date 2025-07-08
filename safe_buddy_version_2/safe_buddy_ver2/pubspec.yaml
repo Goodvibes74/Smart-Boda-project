@@ -38,6 +38,7 @@ dependencies:
   google_maps_flutter: ^2.9.0  # For Google Maps integration
   geolocator: ^9.0.2  # For location services
   flutter_svg: ^2.2.0  # For SVG image support
+  
 
   
 

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:safe_buddy_ver2/theme.dart';
 import 'header.dart';
 import 'sidebar.dart';
-import 'dashboard.dart';
-import 'device_management.dart';
-import 'settings.dart';
+import 'pages/dashboard.dart';
+import 'pages/device_management.dart';
+import 'pages/settings.dart';
 
 class BaseLayout extends StatefulWidget {
   final Widget child;
@@ -48,8 +48,6 @@ class _BaseLayoutState extends State<BaseLayout> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const HeaderWidget(),
-                // Divider takes its color from the theme
-                Divider(color: cs.outlineVariant, thickness: 1, height: 0),
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),

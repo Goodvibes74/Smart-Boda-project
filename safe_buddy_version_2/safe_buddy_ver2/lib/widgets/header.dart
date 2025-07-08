@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, deprecated_member_use
 
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:safe_buddy_ver2/widgets/search_bar.dart';
@@ -43,6 +43,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
     final textTheme  = theme.textTheme;
 
     return Material(
+      color: cs.background,
       child: SafeArea(
         bottom: false,
         child: Container(
