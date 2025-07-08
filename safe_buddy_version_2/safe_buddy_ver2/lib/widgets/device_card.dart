@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/device_data.dart'; // Contains DeviceData class and mock()
-import '../pages/device_details_page.dart'; // Full-page view
+import '../pages/device_detail_page.dart'; // Full-page view
 
 class DeviceCard extends StatelessWidget {
   final String deviceId;
