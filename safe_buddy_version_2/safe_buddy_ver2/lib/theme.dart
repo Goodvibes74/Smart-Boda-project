@@ -16,7 +16,7 @@ const Color neutral900 = Color(0xFF4A4A4A);
 const Color neutral1000 = Color(0xFF333333);
 const Color success = Color(0xFF4CAF50);
 const Color warning = Color.fromARGB(255, 255, 140, 0);
-const Color background_bright = Color.fromARGB(0, 255, 246, 237);
+const Color background_bright = Color(0xFFFAFAFA);
 const Color background_dark = Color(0xFF1A1A1A);
 
 // =============================

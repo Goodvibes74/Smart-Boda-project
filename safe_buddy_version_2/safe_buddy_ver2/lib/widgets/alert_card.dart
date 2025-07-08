@@ -7,56 +7,73 @@ class AlertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = Theme.of(context).colorScheme;
     return Card(
-      color: colorScheme.surface,
+      color: cs.surface,
       child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        padding: const EdgeInsets.all(16),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // if narrow, use Wrap for buttons; else Row
+            final isNarrow = constraints.maxWidth < 300;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.warning, color: colorScheme.error),
-                SizedBox(width: 8),
+                Row(
+                  children: [
+                    Icon(Icons.warning, color: cs.error),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Severity: High',
+                      style: TextStyle(color: cs.error),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 Text(
-                  'Severity: High',
-                  style: TextStyle(color: colorScheme.error),
+                  'Device No: 000920',
+                  style: TextStyle(color: cs.onSurface.withOpacity(0.7)),
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  '2024-09-11 14:00',
+                  style: TextStyle(color: cs.onSurface.withOpacity(0.7)),
+                ),
+                const SizedBox(height: 16),
+                isNarrow
+                    ? Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        alignment: WrapAlignment.end,
+                        children: _buildButtons(cs),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: _buildButtons(cs),
+                      ),
               ],
-            ),
-            Text(
-              'Device No: 000920',
-              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-            ),
-            Text(
-              '2024-09-11 14:00',
-              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.error,
-                    foregroundColor: colorScheme.onError,
-                  ),
-                  child: Text('Locate'),
-                ),
-                SizedBox(width: 8),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: colorScheme.onSurface),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
+
+  List<Widget> _buildButtons(ColorScheme cs) => [
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: cs.error,
+            foregroundColor: cs.onError,
+          ),
+          child: const Text('Locate'),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: cs.onSurface),
+          ),
+        ),
+      ];
 }
