@@ -1,12 +1,12 @@
-// ignore_for_file: deprecated_member_use, unused_local_variable, unused_import
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:safe_buddy_ver2/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+  const AuthPage({Key? key}) : super(key: key);
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -15,109 +15,97 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   bool _isLogin = true;
 
-  void _toggleForm() {
-    setState(() {
-      _isLogin = !_isLogin;
-    });
-  }
+  void _toggleForm() => setState(() => _isLogin = !_isLogin);
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
+    final maxCardWidth = 400.0;
 
     return Scaffold(
       backgroundColor: cs.background,
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          margin: const EdgeInsets.symmetric(horizontal: 20.0),
-          decoration: BoxDecoration(
-            color: cs.surface,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/icon.svg',
-                  height: 100,
-                  color: cs.primary,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Safe Buddy',
-                  style: text.titleLarge?.copyWith(
-                    color: cs.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Your safety is our priority',
-                  style: text.bodyLarge?.copyWith(
-                    color: cs.onSurface.withOpacity(0.6),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  _isLogin ? 'Admin Login' : 'Create Account',
-                  style: text.titleMedium?.copyWith(
-                    color: cs.primary,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                _isLogin ? const LoginForm() : const SignUpForm(),
-                const SizedBox(height: 20),
-                _isLogin
-                    ? TextButton(
-                        onPressed: () => _resetPassword(context),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxCardWidth),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/icon.svg',
+                      height: 100,
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Safe Buddy',
+                      style: text.headlineMedium?.copyWith(
+                        color: cs.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _isLogin ? 'Admin Login' : 'Create Account',
+                      style: text.titleMedium?.copyWith(
+                        decoration: TextDecoration.underline,
+                        color: cs.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Show LoginForm or SignUpForm
+                    _isLogin ? const LoginForm() : const SignUpForm(),
+
+                    const SizedBox(height: 16),
+                    if (_isLogin)
+                      TextButton(
+                        onPressed: () {
+                          // TODO: implement reset password
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Reset link sent')),
+                          );
+                        },
                         child: Text(
                           'Forgot PIN?',
-                          style: text.bodyLarge?.copyWith(
-                            color: cs.onSurface.withOpacity(0.6),
+                          style: text.bodyMedium?.copyWith(
+                            color: cs.primary,
                           ),
                         ),
-                      )
-                    : const SizedBox.shrink(),
-                TextButton(
-                  onPressed: _toggleForm,
-                  child: Text(
-                    _isLogin
-                        ? 'Don’t have an account?'
-                        : 'Already have an account? Login',
-                    style: text.bodyLarge?.copyWith(
-                      color: cs.onSurface.withOpacity(0.6),
+                      ),
+
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: _toggleForm,
+                      child: Text(
+                        _isLogin
+                            ? 'Don’t have an account? Sign up'
+                            : 'Already have an account? Log in',
+                        style: text.bodyMedium?.copyWith(
+                          color: cs.primary.withOpacity(0.8),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
-  Future<void> _resetPassword(BuildContext context) async {
-    // Integrate your existing _resetPassword logic here
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset email sent.')),
-    );
-  }
 }
 
+
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -125,108 +113,119 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
+  final _userCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
+  bool _loading = false;
+  String? _error;
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
+    _userCtrl.dispose();
+    _passCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _error = null;
     });
 
+    String email;
+    final input = _userCtrl.text.trim();
+
     try {
-      // Replace with your existing sign-in logic
+      if (input.contains('@')) {
+        email = input;
+      } else {
+        final snap = await FirebaseFirestore.instance
+            .collection('users')
+            .where('username', isEqualTo: input)
+            .limit(1)
+            .get();
+
+        if (snap.docs.isEmpty) {
+          setState(() => _error = 'Username not found.');
+          return;
+        }
+        email = snap.docs.first['email'];
+      }
+
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _usernameController.text.trim(), // Adjust based on your auth method
-        password: _passwordController.text.trim(),
+        email: email,
+        password: _passCtrl.text.trim(),
       );
+
       if (mounted) Navigator.pushReplacementNamed(context, '/admin_dashboard');
     } on FirebaseAuthException catch (e) {
-      setState(() => _errorMessage = _getErrorMessage(e.code));
+      setState(() => _error = _mapAuthError(e.code));
     } catch (_) {
-      setState(() => _errorMessage = 'An unexpected error occurred.');
+      setState(() => _error = 'Unexpected error.');
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
 
-  String _getErrorMessage(String code) {
+  String _mapAuthError(String code) {
     switch (code) {
       case 'user-not-found':
-        return 'No user found with this username.';
+        return 'No user found.';
       case 'wrong-password':
-        return 'Incorrect PIN/Password.';
+        return 'Incorrect password.';
       default:
-        return 'Authentication failed.';
+        return 'Auth failed.';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final text = Theme.of(context).textTheme;
+    final txt = Theme.of(context).textTheme;
 
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
-            controller: _usernameController,
+            controller: _userCtrl,
             decoration: InputDecoration(
-              labelText: 'Username',
-              hintText: 'Enter your username',
-              border: OutlineInputBorder(),
+              labelText: 'Username or Email',
+              border: const OutlineInputBorder(),
               filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
+              fillColor: cs.surfaceVariant,
             ),
-            validator: (v) => (v == null || v.isEmpty) ? 'Enter username' : null,
+            validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              labelText: 'PIN/Password',
-              hintText: 'Enter your PIN/Password',
-              border: OutlineInputBorder(),
-              filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
-            ),
+            controller: _passCtrl,
             obscureText: true,
-            validator: (v) => (v == null || v.isEmpty) ? 'Enter PIN/Password' : null,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              border: const OutlineInputBorder(),
+              filled: true,
+              fillColor: cs.surfaceVariant,
+            ),
+            validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
           ),
-          const SizedBox(height: 16),
-          if (_errorMessage != null)
-            Text(
-              _errorMessage!,
-              style: text.bodyLarge?.copyWith(color: cs.error),
-              textAlign: TextAlign.center,
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(_error!, style: txt.bodySmall?.copyWith(color: cs.error)),
+          ],
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _loading ? null : _signIn,
+              child: _loading
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : const Text('Login'),
             ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: cs.primary,
-              foregroundColor: cs.onPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: _isLoading ? null : _signIn,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  )
-                : Text('Login', style: text.bodyLarge),
           ),
         ],
       ),
@@ -234,8 +233,9 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
+
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key});
+  const SignUpForm({Key? key}) : super(key: key);
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
@@ -243,139 +243,150 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
+  final _userCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
+  final _confirmCtrl = TextEditingController();
+  bool _loading = false;
+  String? _error;
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _userCtrl.dispose();
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
+    _confirmCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _createAccount() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _error = null;
     });
 
     try {
-      // Replace with your existing sign-up logic
+      // check username uniqueness
+      final snap = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: _userCtrl.text.trim())
+          .limit(1)
+          .get();
+      if (snap.docs.isNotEmpty) {
+        setState(() => _error = 'Username taken.');
+        return;
+      }
+
       final creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: _emailCtrl.text.trim(),
+        password: _passCtrl.text.trim(),
       );
-      await creds.user?.updateDisplayName(_usernameController.text.trim());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(creds.user!.uid)
+          .set({
+        'username': _userCtrl.text.trim(),
+        'email': _emailCtrl.text.trim(),
+      });
+
       if (mounted) Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
-      setState(() => _errorMessage = _getErrorMessage(e.code));
+      setState(() => _error = _mapError(e.code));
     } catch (_) {
-      setState(() => _errorMessage = 'An unexpected error occurred.');
+      setState(() => _error = 'Unexpected error.');
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
 
-  String _getErrorMessage(String code) {
+  String _mapError(String code) {
     switch (code) {
       case 'email-already-in-use':
         return 'Email already registered.';
       case 'weak-password':
-        return 'Password must be at least 6 characters.';
+        return 'Password too weak.';
       default:
-        return 'Account creation failed.';
+        return 'Signup failed.';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final text = Theme.of(context).textTheme;
+    final txt = Theme.of(context).textTheme;
 
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
-            controller: _usernameController,
+            controller: _userCtrl,
             decoration: InputDecoration(
               labelText: 'Username',
-              hintText: 'Enter your username',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
+              fillColor: cs.surfaceVariant,
             ),
-            validator: (v) => (v == null || v.isEmpty) ? 'Enter username' : null,
+            validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _emailController,
+            controller: _emailCtrl,
+            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelText: 'Email',
-              hintText: 'Enter your email',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
+              fillColor: cs.surfaceVariant,
             ),
-            keyboardType: TextInputType.emailAddress,
-            validator: (v) => (v == null || v.isEmpty) ? 'Enter email' : null,
+            validator: (v) {
+              if (v == null || v.isEmpty) return 'Required';
+              final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+              return emailRegex.hasMatch(v) ? null : 'Invalid email';
+            },
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _passwordController,
+            controller: _passCtrl,
+            obscureText: true,
             decoration: InputDecoration(
               labelText: 'Password',
-              hintText: 'Enter your password',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
+              fillColor: cs.surfaceVariant,
             ),
-            obscureText: true,
-            validator: (v) => (v == null || v.isEmpty) ? 'Enter password' : null,
+            validator: (v) => (v == null || v.length < 6) ? 'Min 6 chars' : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _confirmPasswordController,
+            controller: _confirmCtrl,
+            obscureText: true,
             decoration: InputDecoration(
               labelText: 'Confirm Password',
-              hintText: 'Confirm your password',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               filled: true,
-              fillColor: cs.onSurface.withOpacity(0.1),
+              fillColor: cs.surfaceVariant,
             ),
-            obscureText: true,
-            validator: (v) => (v != _passwordController.text) ? 'Passwords must match' : null,
+            validator: (v) => v != _passCtrl.text ? 'Doesn’t match' : null,
           ),
-          const SizedBox(height: 16),
-          if (_errorMessage != null)
-            Text(
-              _errorMessage!,
-              style: text.bodyLarge?.copyWith(color: cs.error),
-              textAlign: TextAlign.center,
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(_error!, style: txt.bodySmall?.copyWith(color: cs.error)),
+          ],
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _loading ? null : _createAccount,
+              child: _loading
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    )
+                  : const Text('Create Account'),
             ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: cs.primary,
-              foregroundColor: cs.onPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: _isLoading ? null : _createAccount,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                  )
-                : Text('Create Account', style: text.bodyLarge),
           ),
         ],
       ),

@@ -21,8 +21,8 @@ class HoverSidebar extends StatefulWidget {
 class _HoverSidebarState extends State<HoverSidebar> {
   bool _isHovered = false;
 
-  static const _collapsedWidth = 60.0;
-  static const _expandedWidth = 250.0;
+  static const _collapsedWidth = 60.0; // Slimmer collapsed width
+  static const _expandedWidth = 200.0; // Adjusted expanded width
   static const _animationDuration = Duration(milliseconds: 200);
   static const _animationCurve = Curves.easeInOut;
 
@@ -42,7 +42,7 @@ class _HoverSidebarState extends State<HoverSidebar> {
         duration: _animationDuration,
         curve: _animationCurve,
         width: isExpanded ? _expandedWidth : _collapsedWidth,
-        color: cs.surface,
+        color: cs.surface, // Dark background from theme
         child: AnimatedSwitcher(
           duration: _animationDuration,
           switchInCurve: _animationCurve,
@@ -75,7 +75,6 @@ class _SidebarContent extends StatelessWidget {
   final ValueChanged<int> onItemSelected;
   final bool expanded;
 
-  /// Collapsed constructor
   const _SidebarContent.collapsed({
     Key? key,
     required this.cs,
@@ -85,7 +84,6 @@ class _SidebarContent extends StatelessWidget {
   })  : expanded = false,
         super(key: key);
 
-  /// Expanded constructor
   const _SidebarContent.expanded({
     Key? key,
     required this.cs,
@@ -96,7 +94,7 @@ class _SidebarContent extends StatelessWidget {
         super(key: key);
 
   Widget _logo(double size) => SvgPicture.asset(
-        'assets/svg/icon.svg',
+        'assets/svg/icon.svg', 
         width: size,
         height: size,
         semanticsLabel: 'SafeBuddy logo',
@@ -109,38 +107,41 @@ class _SidebarContent extends StatelessWidget {
 
   Widget _iconButton(IconData icon, int index, {String? tooltip}) {
     final isSelected = selectedIndex == index;
-    final iconColor = isSelected ? cs.primary : cs.onSurface;
-    final btn = IconButton(
-      icon: Icon(icon, size: 26),
-      color: iconColor,
-      onPressed: () => onItemSelected(index),
-    );
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: tooltip != null ? Tooltip(message: tooltip, child: btn) : btn,
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0), // Uniform spacing
+      child: Tooltip(
+        message: tooltip,
+        child: IconButton(
+          icon: Icon(icon, size: 24, color: isSelected ? cs.primary : cs.onSurface),
+          onPressed: () => onItemSelected(index),
+          style: IconButton.styleFrom(
+            backgroundColor: isSelected ? cs.primary.withOpacity(0.1) : Colors.transparent,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _listItem(IconData icon, String label, int index) {
     final isSelected = selectedIndex == index;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       decoration: BoxDecoration(
-        color: isSelected
-            ? cs.secondary.withOpacity(0.2)
-            : Colors.transparent,
+        color: isSelected ? cs.primary.withOpacity(0.1) : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        leading: Icon(icon, color: cs.onSurface),
+        leading: Icon(icon, color: isSelected ? cs.primary : cs.onSurface),
         title: Text(
           label,
           style: TextStyle(
-            fontWeight:
-                isSelected ? FontWeight.bold : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? cs.primary : cs.onSurface,
           ),
         ),
         onTap: () => onItemSelected(index),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
       ),
     );
   }
@@ -149,22 +150,27 @@ class _SidebarContent extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!expanded) {
       return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 20),
-          _logo(40),
-          const SizedBox(height: 24),
-          _iconButton(Icons.home, 0, tooltip: 'Home'),
-          _iconButton(Icons.devices, 1, tooltip: 'Devices'),
-          _iconButton(Icons.settings, 2, tooltip: 'Settings'),
-          const Spacer(),
+          Column(
+            children: [
+              const SizedBox(height: 16),
+              Center(child: _logo(40)),
+              const SizedBox(height: 24),
+              _iconButton(Icons.home, 0, tooltip: 'Home'),
+              _iconButton(Icons.devices, 1, tooltip: 'Devices'),
+              _iconButton(Icons.settings, 2, tooltip: 'Settings'),
+            ],
+          ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Text(
-              '© Group 7 @ MAKCOTIS 2025',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+              '© Group 7 @ MAKCOTIS 2025',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSurface.withOpacity(0.6),
+                    fontSize: 10,
+                  ),
             ),
           ),
         ],
@@ -174,28 +180,25 @@ class _SidebarContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
-        Center(child: _logo(50)),
+        const SizedBox(height: 16),
+        Center(child: _logo(40)),
         const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+        Center(
           child: Text(
-            'Safe Buddy',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge,
+            'Safe Buddy',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: cs.onSurface),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 16),
+        const SizedBox(height: 4),
+        Center(
           child: Text(
             'Your safety is our priority',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall
-                ?.copyWith(color: cs.onSurface.withOpacity(0.7)),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: cs.onSurface.withOpacity(0.7),
+                ),
           ),
         ),
+        const SizedBox(height: 16),
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -207,13 +210,14 @@ class _SidebarContent extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
-            '© Group 7 @ MAKCOTIS 2025',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+            '© Group 7 @ MAKCOTIS 2025',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: cs.onSurface.withOpacity(0.6),
+                  fontSize: 10,
+                ),
           ),
         ),
       ],

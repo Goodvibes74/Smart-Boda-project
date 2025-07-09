@@ -37,7 +37,8 @@ class _InitialPageState extends State<InitialPage> {
           children: [
             SvgPicture.asset(
               'assets/svg/icon.svg',
-              height: 150, 
+              height: 150,
+              width: 366,
             ),
             const SizedBox(height: 20),
             Text(
