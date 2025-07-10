@@ -71,7 +71,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
                   if (value == 'logout') {
                     Navigator.pushReplacementNamed(context, '/initial');
                   }
-                  // TODO: Handle 'profile' selection if needed
+                  //  TODO: Handle 'profile' selection if needed
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem<String>(
