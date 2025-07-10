@@ -8,29 +8,21 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   /// Displayed greeting name
   final String userName;
 
+  /// URL of the user's profile picture
+  final String? profilePictureUrl;
+
   /// Called when the search text changes
   final ValueChanged<String>? onSearchChanged;
 
   /// Called when search is submitted
   final ValueChanged<String>? onSearchSubmitted;
 
-  /// Called when the notification icon is tapped
-  final VoidCallback? onNotificationTap;
-
-  /// Badge count for notifications
-  final int notificationCount;
-
-  /// Called when the avatar is tapped
-  final VoidCallback? onAvatarTap;
-
   const HeaderWidget({
     Key? key,
     this.userName = 'User',
+    this.profilePictureUrl,
     this.onSearchChanged,
     this.onSearchSubmitted,
-    this.onNotificationTap,
-    this.notificationCount = 0,
-    this.onAvatarTap,
   }) : super(key: key);
 
   @override
@@ -38,9 +30,9 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme      = Theme.of(context);
-    final cs         = theme.colorScheme;
-    final textTheme  = theme.textTheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final textTheme = theme.textTheme;
 
     return Material(
       color: cs.background,
@@ -54,8 +46,10 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
               // Greeting
               Text(
                 'Hi, $userName',
-                style: textTheme.titleMedium
-                    ?.copyWith(color: cs.primary, fontWeight: FontWeight.w600),
+                style: textTheme.titleMedium?.copyWith(
+                  color: cs.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
 
               const SizedBox(width: 20),
@@ -71,53 +65,56 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
 
               const SizedBox(width: 16),
 
-              // Notifications with badge
-              Tooltip(
-                message: 'Notifications',
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.notifications, color: cs.onSurface),
-                      onPressed: onNotificationTap,
-                    ),
-                    if (notificationCount > 0)
-                      Positioned(
-                        right: 6,
-                        top: 6,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: cs.error,
-                            shape: BoxShape.circle,
-                          ),
-                          constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
-                          child: Center(
-                            child: Text(
-                              notificationCount > 99 ? '99+' : '$notificationCount',
-                              style: textTheme.labelSmall?.copyWith(
-                                color: cs.onError,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+              // Avatar with PopupMenuButton
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    Navigator.pushReplacementNamed(context, '/initial');
+                  }
+                  // TODO: Handle 'profile' selection if needed
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem<String>(
+                    value: 'profile',
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: profilePictureUrl != null
+                              ? NetworkImage(profilePictureUrl!)
+                              : null,
+                          radius: 20,
+                          child: profilePictureUrl == null
+                              ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                              : null,
                         ),
-                      ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              // Avatar
-              GestureDetector(
-                onTap: onAvatarTap,
+                        const SizedBox(width: 10),
+                        Text('Profile', style: textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem<String>(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, color: cs.error),
+                        const SizedBox(width: 10),
+                        Text('Logout', style: textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
                 child: Semantics(
                   label: 'User profile',
                   button: true,
                   child: CircleAvatar(
-                    backgroundColor: cs.primaryContainer,
-                    child: Icon(Icons.person, color: cs.onPrimaryContainer),
+                    backgroundImage: profilePictureUrl != null
+                        ? NetworkImage(profilePictureUrl!)
+                        : null,
+                    radius: 20,
+                    child: profilePictureUrl == null
+                        ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                        : null,
                   ),
                 ),
               ),

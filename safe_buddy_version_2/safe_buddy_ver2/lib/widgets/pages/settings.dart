@@ -1,7 +1,6 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/material.dart';
-import 'package:safe_buddy_ver2/theme.dart';
+import 'package:safe_buddy_ver2/widgets/change_password_form.dart';
+import 'package:safe_buddy_ver2/widgets/profile_picture_uploader.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -96,24 +95,13 @@ class SettingsPage extends StatelessWidget {
                     'Manage your account settings',
                     style: text.bodyLarge?.copyWith(color: cs.onSurface),
                   ),
-                  const SizedBox(height: 12),
-                  OutlinedButton(
-                    onPressed: () {
-                      /* TODO: change password */
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: cs.primary),
-                      foregroundColor: cs.onSurface,
-                    ),
-                    child: Text('Change Password', style: text.bodyLarge),
-                  ),
                 ],
               ),
             ),
           ),
           const SizedBox(height: 16),
 
-          // Notifications
+          // Change Password
           Card(
             color: cs.surface,
             child: Padding(
@@ -122,46 +110,37 @@ class SettingsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Notifications',
+                    'Change Password',
                     style: text.titleMedium?.copyWith(
                       color: cs.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
+                  const ChangePasswordForm(),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Change Profile Picture
+          Card(
+            color: cs.surface,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    'Configure your notification preferences.',
-                    style: text.bodyLarge?.copyWith(color: cs.onSurface),
+                    'Change Profile Picture',
+                    style: text.titleMedium?.copyWith(
+                      color: cs.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Email Alerts',
-                        style: text.bodyLarge?.copyWith(color: cs.onSurface),
-                      ),
-                      Switch(
-                        value: true,
-                        onChanged: (_) {},
-                        activeColor: cs.primary,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'SMS Alerts',
-                        style: text.bodyLarge?.copyWith(color: cs.onSurface),
-                      ),
-                      Switch(
-                        value: false,
-                        onChanged: (_) {},
-                        activeColor: cs.error,
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 8),
+                  const ProfilePictureUploader(),
                 ],
               ),
             ),

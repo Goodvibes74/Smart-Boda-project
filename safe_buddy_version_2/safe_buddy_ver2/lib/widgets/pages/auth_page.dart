@@ -218,11 +218,15 @@ class _LoginFormState extends State<LoginForm> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _loading ? null : _signIn,
+              style: ElevatedButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
               child: _loading
-                  ? const SizedBox(
-                      height: 18,
+                  ? SizedBox(
+                      height: 20,
                       width: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     )
                   : const Text('Login'),
             ),
@@ -379,10 +383,11 @@ class _SignUpFormState extends State<SignUpForm> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _loading ? null : _createAccount,
+              style: ElevatedButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
               child: _loading
                   ? const SizedBox(
-                      height: 18,
-                      width: 18,
+                      height: 20,
+                      width: 20,
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
                   : const Text('Create Account'),

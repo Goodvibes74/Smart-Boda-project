@@ -39,7 +39,8 @@ dependencies:
   geolocator: ^9.0.2  # For location services
   flutter_svg: ^2.2.0  # For SVG image support
   google_sign_in: ^6.2.1 
-  
+  image_picker: ^0.8.7+3  # For picking images from the gallery or camera
+  firebase_storage_web: ^3.10.15 # For web support of Firebase Storage
 
   
 
