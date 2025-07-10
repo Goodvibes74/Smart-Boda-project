@@ -108,14 +108,15 @@ class SettingsPage extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                        builder: (BuildContext context) {
+                      builder: (BuildContext context) {
                         return AlertDialog(
                             content: SizedBox(
-                              width: 300, // Adjust the width as needed
-                              child: ChangePasswordForm(), // Your ChangePasswordForm widget
+                              width: 400,
+                              height: 350,
+                              child: ChangePasswordForm(), // ChangePasswordForm widget
                             ),
                           );
-                        },
+                      },
                   );
                 },
                 style: TextButton.styleFrom(foregroundColor: cs.primary),
