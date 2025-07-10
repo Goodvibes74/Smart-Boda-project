@@ -157,7 +157,7 @@ class _SidebarContent extends StatelessWidget {
               const SizedBox(height: 16),
               Center(child: _logo(40)),
               const SizedBox(height: 24),
-              _iconButton(Icons.home, 0, tooltip: 'Home'),
+              _iconButton(Icons.dashboard, 0, tooltip: 'Home'),
               _iconButton(Icons.devices, 1, tooltip: 'Devices'),
               _iconButton(Icons.settings, 2, tooltip: 'Settings'),
             ],
@@ -203,7 +203,7 @@ class _SidebarContent extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              _listItem(Icons.home, 'Home', 0),
+              _listItem(Icons.dashboard, 'Home', 0),
               _listItem(Icons.devices, 'Devices', 1),
               _listItem(Icons.settings, 'Settings', 2),
             ],
