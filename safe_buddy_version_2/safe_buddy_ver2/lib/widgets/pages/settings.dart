@@ -111,8 +111,8 @@ class SettingsPage extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlertDialog(
                             content: SizedBox(
-                              width: 400,
-                              height: 350,
+                              width: 350,
+                              height: 400,
                               child: ChangePasswordForm(), // ChangePasswordForm widget
                             ),
                           );
