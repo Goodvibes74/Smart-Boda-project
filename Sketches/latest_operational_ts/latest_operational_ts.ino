@@ -12,10 +12,12 @@ void uploadToThingSpeak(float lat, float lon, float ax, float ay, float az, floa
 String getISOTime();  // helper for timestamp string
 /* ------------------------------------------ */
 
+// --- FSR ----------------------------------------------------
+#define FSR_PIN 33
+
 // --- SIM800L -------------------------------------------------
 #define SIM_RX_PIN 16
 #define SIM_TX_PIN 17
-#define FSR_PIN 33
 SoftwareSerial sim800l(SIM_RX_PIN, SIM_TX_PIN);
 
 // --- NEO‑6M --------------------------------------------------
@@ -41,19 +43,6 @@ void setup() {
 
   Serial.println(F("Init MPU‑6050…"));
   Wire.begin(21, 22);  // Explicitly set I2C pins if not already
-  Serial.println("Scanning I2C devices...");
-  byte count = 0;
-  for (byte address = 1; address < 127; ++address) {
-    Wire.beginTransmission(address);
-    if (Wire.endTransmission() == 0) {
-      Serial.print("MPU-6050 found at 0x");
-      Serial.println(address, HEX);
-      count++;
-    }
-  }
-  if (count == 0) {
-    Serial.println("No I2C devices found.");
-  }
 
   while (!mpu.begin()) {
     Serial.println(F("MPU6050 not found. Retrying..."));
