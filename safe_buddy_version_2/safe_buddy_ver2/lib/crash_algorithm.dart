@@ -161,10 +161,5 @@ String getCrashDirection(Map<dynamic, dynamic> values) {
 }
 
 void main() async {
-  var data = await getData();
-  if (data.isNotEmpty) {
-    print("Sample entry: ${data.entries.first}");
-  }
-  var crashes = getCrashes(data);
-  print("Crashes: $crashes");
+
 }
