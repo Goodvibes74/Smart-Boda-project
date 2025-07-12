@@ -50,7 +50,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   firebase_analytics: ^11.5.1
   firebase_database: ^11.3.8
-
+  fl_chart: ^1.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -78,6 +79,8 @@ flutter:
       - assets/svg/
       - assets/images/
       - assets/fonts/
+      - analysis_output.json
+      - raw_output.json
   # An asset is a file that is bundled and deployed with your application,
   # and is accessible at runtime. For Flutter, an asset can be an image,
 
