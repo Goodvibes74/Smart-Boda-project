@@ -42,6 +42,7 @@ dependencies:
   image_picker: ^0.8.7+3  # For picking images from the gallery or camera
   firebase_storage_web: ^3.10.15 # For web support of Firebase Storage
   url_launcher: ^6.3.0
+  image_cropper: ^5.0.0
 
   
 

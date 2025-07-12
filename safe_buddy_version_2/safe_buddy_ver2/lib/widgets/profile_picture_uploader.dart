@@ -1,16 +1,17 @@
-// ignore_for_file: unused_local_variable, deprecated_member_use
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePictureUploader extends StatefulWidget {
   const ProfilePictureUploader({super.key});
 
   @override
-  State<ProfilePictureUploader> createState() => _ProfilePictureUploaderState();
+  State<ProfilePictureUploader> createState() =>
+      _ProfilePictureUploaderState();
 }
 
 class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
@@ -21,51 +22,92 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
   @override
   void initState() {
     super.initState();
+
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && user.photoURL != null) {
-      setState(() => _photoUrl = user.photoURL);
+      _photoUrl = user.photoURL;
     }
+
+    // 🔄 Listen to auth profile changes
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if (mounted && user?.photoURL != null) {
+        setState(() {
+          _photoUrl = user!.photoURL;
+        });
+      }
+    });
   }
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final file = File(pickedFile.path);
-      // Check file size (e.g., max 5MB)
-      final fileSize = await file.length();
-      if (fileSize > 5 * 1024 * 1024) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image size exceeds 5MB limit')),
-        );
-        return;
-      }
-      setState(() => _image = file);
+    if (pickedFile == null) return;
+
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: pickedFile.path,
+      aspectRatioPresets: [CropAspectRatioPreset.square],
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          toolbarColor: Theme.of(context).colorScheme.primary,
+          toolbarWidgetColor: Colors.white,
+          hideBottomControls: true,
+        ),
+        IOSUiSettings(title: 'Crop Image'),
+      ],
+    );
+
+    if (croppedFile == null) return;
+
+    final file = File(croppedFile.path);
+    final fileSize = await file.length();
+
+    if (fileSize > 5 * 1024 * 1024) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Image size exceeds 5MB limit')),
+      );
+      return;
     }
+
+    setState(() => _image = file);
   }
 
   Future<void> _uploadImage() async {
     if (_image == null) return;
     setState(() => _isUploading = true);
+
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('profile_pictures/${user.uid}.jpg');
-        await storageRef.putFile(_image!);
-        final downloadUrl = await storageRef.getDownloadURL();
-        await user.updatePhotoURL(downloadUrl);
-        setState(() => _photoUrl = downloadUrl);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile picture updated')),
-        );
-        setState(() => _image = null); // Clear selected image
-      } else {
+      if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No user signed in')),
         );
+        return;
       }
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_pictures/${user.uid}.jpg');
+      await storageRef.putFile(_image!);
+      final downloadUrl = await storageRef.getDownloadURL();
+
+      // Update Firebase Auth photo
+      await user.updatePhotoURL(downloadUrl);
+
+      // Update Firestore user document
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({'photoURL': downloadUrl}, SetOptions(merge: true));
+
+      setState(() {
+        _photoUrl = downloadUrl;
+        _image = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile picture updated')),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
@@ -110,16 +152,21 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                             height: imageSize,
                             width: imageSize,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => CircleAvatar(
+                            errorBuilder: (context, error, stackTrace) =>
+                                CircleAvatar(
                               radius: imageSize / 2,
                               backgroundColor: cs.primaryContainer,
-                              child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+                              child: Icon(Icons.person,
+                                  color: cs.onPrimaryContainer,
+                                  size: imageSize / 2),
                             ),
                           )
                         : CircleAvatar(
                             radius: imageSize / 2,
                             backgroundColor: cs.primaryContainer,
-                            child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+                            child: Icon(Icons.person,
+                                color: cs.onPrimaryContainer,
+                                size: imageSize / 2),
                           ),
               ),
             ),
@@ -132,8 +179,10 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: cs.primary,
                     foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                   ),
                   child: const Text('Select Image'),
                 ),
@@ -144,14 +193,17 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: cs.primary,
                       foregroundColor: cs.onPrimary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     child: _isUploading
                         ? SizedBox(
                             height: 16,
                             width: 16,
-                            child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                                color: cs.onPrimary, strokeWidth: 2),
                           )
                         : const Text('Upload Image'),
                   ),
