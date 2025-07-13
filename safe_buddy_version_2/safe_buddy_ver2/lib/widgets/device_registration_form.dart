@@ -11,27 +11,18 @@ class DeviceRegistrationForm extends StatefulWidget {
 
 class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  final _deviceNameCtrl = TextEditingController();
-  final _deviceIdCtrl   = TextEditingController();
-  final _typeCtrl       = TextEditingController();
-  final _locationCtrl   = TextEditingController();
-  final _ipCtrl         = TextEditingController();
-  final _descCtrl       = TextEditingController();
-  bool _activate = false;
-  bool _loading  = false;
+  String? _deviceId;
+  String? _simNumber;
+  bool _loading = false;
+
+  // Add controllers for the text fields
+  final TextEditingController _deviceIdCtrl = TextEditingController();
+  final TextEditingController _simNumberCtrl = TextEditingController();
 
   @override
   void dispose() {
-    for (final c in [
-      _deviceNameCtrl,
-      _deviceIdCtrl,
-      _typeCtrl,
-      _locationCtrl,
-      _ipCtrl,
-      _descCtrl
-    ]) {
-      c.dispose();
-    }
+    _deviceIdCtrl.dispose();
+    _simNumberCtrl.dispose();
     super.dispose();
   }
 
@@ -65,83 +56,22 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // row 1: name & id
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _deviceNameCtrl,
-                      decoration: _decorate('Device Name'),
-                      validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _deviceIdCtrl,
-                      decoration: _decorate('Device ID'),
-                      validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // row 2: type full width
               TextFormField(
-                controller: _typeCtrl,
-                decoration: _decorate('Device Type'),
+                controller: _deviceIdCtrl,
+                decoration: _decorate('Device ID'),
                 validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
+                onSaved: (v) => _deviceId = v,
               ),
-
-              const SizedBox(height: 12),
-
-              // row 3: location & IP
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _locationCtrl,
-                      decoration: _decorate('Location (e.g. Kampala, Uganda)'),
-                      validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _ipCtrl,
-                      decoration: _decorate('IP Address (Optional)'),
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // row 4: description
-              TextFormField(
-                controller: _descCtrl,
-                decoration: _decorate('Description (Optional)'),
-                maxLines: 3,
-              ),
-
-              const SizedBox(height: 12),
-
-              // activate checkbox
-              CheckboxListTile(
-                value: _activate,
-                onChanged: (v) => setState(() => _activate = v ?? false),
-                title: const Text('Activate device upon registration'),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-              ),
-
               const SizedBox(height: 16),
-
-              // buttons
+              TextFormField(
+                controller: _simNumberCtrl,
+                decoration: _decorate('SIM Card Number'),
+                validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
+                onSaved: (v) => _simNumber = v,
+              ),
+              const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -157,7 +87,7 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
                             height: 16, width: 16,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Add Device'),
+                        : const Text('Register'),
                   ),
                 ],
               ),

@@ -134,9 +134,9 @@ String getSeverity(Map<dynamic, dynamic> values) {
   double az = values['az'] ?? 0.0;
 
   double magnitude = math.sqrt(ax * ax + ay * ay + az * az);
-  if (magnitude < 2.0) return "Minor";
-  if (magnitude < 4.0) return "Moderate";
-  if (magnitude < 6.0) return "Severe";
+  if (magnitude < 2.0) return "Low";
+  if (magnitude < 4.0) return "Medium";
+  if (magnitude < 6.0) return "High";
   return "Critical";
 }
 
