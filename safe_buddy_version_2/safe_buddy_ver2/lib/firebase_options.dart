@@ -60,6 +60,9 @@ class DefaultFirebaseOptions {
     authDomain: 'safe-buddy-141a4.firebaseapp.com',
     storageBucket: 'safe-buddy-141a4.firebasestorage.app',
     measurementId: 'G-Z4HSGPCEQZ',
-  );
 
+
+    databaseURL: 'https://safe-buddy-141a4-default-rtdb.firebaseio.com/',
+
+  );
 }

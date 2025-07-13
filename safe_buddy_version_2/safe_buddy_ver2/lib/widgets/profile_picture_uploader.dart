@@ -1,124 +1,118 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb, Uint8List;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class ProfilePictureUploader extends StatefulWidget {
   const ProfilePictureUploader({super.key});
 
   @override
-  State<ProfilePictureUploader> createState() =>
-      _ProfilePictureUploaderState();
+  State<ProfilePictureUploader> createState() => _ProfilePictureUploaderState();
 }
 
 class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
-  File? _image;
+  XFile? _image;
+  Uint8List? _webImageData;
   bool _isUploading = false;
   String? _photoUrl;
 
   @override
   void initState() {
     super.initState();
-
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && user.photoURL != null) {
-      _photoUrl = user.photoURL;
+      setState(() => _photoUrl = user.photoURL);
     }
-
-    // 🔄 Listen to auth profile changes
-    FirebaseAuth.instance.userChanges().listen((user) {
-      if (mounted && user?.photoURL != null) {
-        setState(() {
-          _photoUrl = user!.photoURL;
-        });
-      }
-    });
   }
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile == null) return;
-
-    final croppedFile = await ImageCropper().cropImage(
-      sourcePath: pickedFile.path,
-      aspectRatioPresets: [CropAspectRatioPreset.square],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: Theme.of(context).colorScheme.primary,
-          toolbarWidgetColor: Colors.white,
-          hideBottomControls: true,
-        ),
-        IOSUiSettings(title: 'Crop Image'),
-      ],
-    );
-
-    if (croppedFile == null) return;
-
-    final file = File(croppedFile.path);
-    final fileSize = await file.length();
-
-    if (fileSize > 5 * 1024 * 1024) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image size exceeds 5MB limit')),
-      );
-      return;
+    if (pickedFile != null) {
+      if (kIsWeb) {
+        final data = await pickedFile.readAsBytes();
+        if (data.length > 5 * 1024 * 1024) {
+          _showSnackbar('Image size exceeds 5MB limit');
+          return;
+        }
+        setState(() {
+          _image = pickedFile;
+          _webImageData = data;
+        });
+      } else {
+        final file = File(pickedFile.path);
+        final fileSize = await file.length();
+        if (fileSize > 5 * 1024 * 1024) {
+          _showSnackbar('Image size exceeds 5MB limit');
+          return;
+        }
+        setState(() {
+          _image = pickedFile;
+        });
+      }
     }
-
-    setState(() => _image = file);
   }
 
   Future<void> _uploadImage() async {
     if (_image == null) return;
-    setState(() => _isUploading = true);
 
+    setState(() => _isUploading = true);
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No user signed in')),
-        );
+        _showSnackbar('No user signed in');
         return;
       }
 
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_pictures/${user.uid}.jpg');
-      await storageRef.putFile(_image!);
-      final downloadUrl = await storageRef.getDownloadURL();
+      final storageRef =
+          FirebaseStorage.instance.ref().child('profile_pictures/${user.uid}.jpg');
 
-      // Update Firebase Auth photo
+      if (kIsWeb) {
+        if (_webImageData != null) {
+          await storageRef.putData(_webImageData!);
+        } else {
+          _showSnackbar('No image data found');
+          return;
+        }
+      } else {
+        final file = File(_image!.path);
+        await storageRef.putFile(file);
+      }
+
+      final downloadUrl = await storageRef.getDownloadURL();
       await user.updatePhotoURL(downloadUrl);
 
-      // Update Firestore user document
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({'photoURL': downloadUrl}, SetOptions(merge: true));
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
 
       setState(() {
         _photoUrl = downloadUrl;
         _image = null;
+        _webImageData = null;
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile picture updated')),
-      );
+      _showSnackbar('Profile picture updated');
+    } on FirebaseException catch (e) {
+      _showSnackbar('Upload failed: ${e.message}');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      _showSnackbar('Unexpected error: $e');
     } finally {
       setState(() => _isUploading = false);
     }
   }
 
   void _clearImage() {
-    setState(() => _image = null);
+    setState(() {
+      _image = null;
+      _webImageData = null;
+    });
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
@@ -130,6 +124,43 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
       builder: (context, constraints) {
         final imageSize = constraints.maxWidth < 400 ? 80.0 : 100.0;
 
+        Widget imageWidget;
+        if (_image != null) {
+          if (kIsWeb && _webImageData != null) {
+            imageWidget = Image.memory(
+              _webImageData!,
+              height: imageSize,
+              width: imageSize,
+              fit: BoxFit.cover,
+            );
+          } else {
+            imageWidget = Image.file(
+              File(_image!.path),
+              height: imageSize,
+              width: imageSize,
+              fit: BoxFit.cover,
+            );
+          }
+        } else if (_photoUrl != null) {
+          imageWidget = Image.network(
+            _photoUrl!,
+            height: imageSize,
+            width: imageSize,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => CircleAvatar(
+              radius: imageSize / 2,
+              backgroundColor: cs.primaryContainer,
+              child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+            ),
+          );
+        } else {
+          imageWidget = CircleAvatar(
+            radius: imageSize / 2,
+            backgroundColor: cs.primaryContainer,
+            child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+          );
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -138,37 +169,7 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                 shape: BoxShape.circle,
                 border: Border.all(color: cs.primary.withOpacity(0.3)),
               ),
-              child: ClipOval(
-                child: _image != null
-                    ? Image.file(
-                        _image!,
-                        height: imageSize,
-                        width: imageSize,
-                        fit: BoxFit.cover,
-                      )
-                    : _photoUrl != null
-                        ? Image.network(
-                            _photoUrl!,
-                            height: imageSize,
-                            width: imageSize,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                CircleAvatar(
-                              radius: imageSize / 2,
-                              backgroundColor: cs.primaryContainer,
-                              child: Icon(Icons.person,
-                                  color: cs.onPrimaryContainer,
-                                  size: imageSize / 2),
-                            ),
-                          )
-                        : CircleAvatar(
-                            radius: imageSize / 2,
-                            backgroundColor: cs.primaryContainer,
-                            child: Icon(Icons.person,
-                                color: cs.onPrimaryContainer,
-                                size: imageSize / 2),
-                          ),
-              ),
+              child: ClipOval(child: imageWidget),
             ),
             const SizedBox(height: 12),
             Row(
@@ -179,10 +180,8 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: cs.primary,
                     foregroundColor: cs.onPrimary,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   ),
                   child: const Text('Select Image'),
                 ),
@@ -193,17 +192,17 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: cs.primary,
                       foregroundColor: cs.onPrimary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     ),
                     child: _isUploading
                         ? SizedBox(
                             height: 16,
                             width: 16,
                             child: CircularProgressIndicator(
-                                color: cs.onPrimary, strokeWidth: 2),
+                              color: cs.onPrimary,
+                              strokeWidth: 2,
+                            ),
                           )
                         : const Text('Upload Image'),
                   ),
