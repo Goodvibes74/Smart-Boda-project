@@ -2,7 +2,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+
+// Notifier for map pings
+class MapPingNotifier extends InheritedWidget {
+  final void Function(double lat, double lon, Color color) pingMap;
+  const MapPingNotifier({
+    required this.pingMap,
+    required super.child,
+    super.key,
+  });
+
+  static MapPingNotifier? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<MapPingNotifier>();
+
+  @override
+  bool updateShouldNotify(MapPingNotifier oldWidget) => false;
+}
 
 class MapOverlay extends StatefulWidget {
   const MapOverlay({super.key});
@@ -15,6 +33,8 @@ class _MapOverlayState extends State<MapOverlay> {
   late GoogleMapController _mapController;
   final Set<Marker> _markers = {};
   final Set<Circle> _circles = {};
+  final StreamController<_PingData> _pingController =
+      StreamController<_PingData>.broadcast();
 
   @override
   void initState() {
@@ -48,7 +68,9 @@ class _MapOverlayState extends State<MapOverlay> {
                 title: 'Device $deviceId',
                 snippet: 'Severity: $severity',
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(_getMarkerHue(severity)),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                _getMarkerHue(severity),
+              ),
             ),
           );
 
@@ -104,20 +126,43 @@ class _MapOverlayState extends State<MapOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: GoogleMap(
-          initialCameraPosition: const CameraPosition(
-            target: LatLng(0.3363, 32.5714), // Kampala center
-            zoom: 13,
+    return MapPingNotifier(
+      pingMap: (lat, lon, color) {
+        _pingController.add(_PingData(lat, lon, color));
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(0.3363, 32.5714), // Kampala center
+                  zoom: 13,
+                ),
+                onMapCreated: (controller) {
+                  _mapController = controller;
+                  _pingController.stream.listen((ping) async {
+                    await _mapController.animateCamera(
+                      CameraUpdate.newLatLng(LatLng(ping.lat, ping.lon)),
+                    );
+                    // Optionally, add a temporary marker or effect
+                  });
+                },
+                markers: _markers,
+                circles: _circles,
+              ),
+              // Optionally, add a visual ping effect overlay here
+            ],
           ),
-          onMapCreated: (controller) {
-            _mapController = controller;
-          },
-          markers: _markers,
-          circles: _circles,
         ),
       ),
     );
   }
+}
+
+class _PingData {
+  final double lat;
+  final double lon;
+  final Color color;
+  _PingData(this.lat, this.lon, this.color);
 }
