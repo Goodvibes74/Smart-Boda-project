@@ -1,3 +1,4 @@
+
 // thing_speak_analyzer.dart
 //
 // Usage:
@@ -29,45 +30,32 @@ Future<void> main() async {
     resultsLimit,
   );
 
-  // Determine the script's directory
-  final scriptDir = File(Platform.script.toFilePath()).parent;
-
-  // Construct the path to the assets directory
-  final assetsDir = Directory(
-    '${scriptDir.path}${Platform.pathSeparator}assets',
-  );
-
-  // Check if the assets directory exists, and create it if not
-  if (!await assetsDir.exists()) {
-    await assetsDir.create(recursive: true); // `recursive: true` ensures all parent directories are created
-    print('Created assets directory: ${assetsDir.path}');
-  }
-
   // ---------- RAW JSON ----------
   final rawJson = jsonEncode({'rawData': feeds});
   // Write raw JSON to file
+  final scriptDir = File(Platform.script.toFilePath()).parent;
   final rawJsonFile = File(
-    '${assetsDir.path}${Platform.pathSeparator}raw_output.json', // Use assetsDir.path here
+    '${scriptDir.path}${Platform.pathSeparator}raw_output.json',
   );
   await rawJsonFile.writeAsString(rawJson);
-  print('Raw JSON written to: ${rawJsonFile.path}'); // Removed leading backslash, it's not needed and can look odd
+  print('Raw JSON written to: \\${rawJsonFile.path}');
 
   // ---------- ANALYSIS ----------
   final analysisJson = jsonEncode(_analyze(feeds));
   // Write analysis JSON to file
   final analysisJsonFile = File(
-    '${assetsDir.path}${Platform.pathSeparator}analysis_output.json', // Use assetsDir.path here
+    '${scriptDir.path}${Platform.pathSeparator}analysis_output.json',
   );
   await analysisJsonFile.writeAsString(analysisJson);
-  print('Analysis JSON written to: ${analysisJsonFile.path}'); // Removed leading backslash
+  print('Analysis JSON written to: \\${analysisJsonFile.path}');
 }
 
 /* ────────────────────────────────────────────────────────────── */
-/* STEP 2: pull feeds                                          */
+/*  STEP 2: pull feeds                                           */
 Future<List<Map<String, dynamic>>> _fetchFeeds(
-    int channelId,
-    String apiKey,
-    int results,
+  int channelId,
+  String apiKey,
+  int results,
 ) async {
   final uri = Uri.parse(
     'https://api.thingspeak.com/channels/$channelId/feeds.json'
@@ -84,10 +72,9 @@ Future<List<Map<String, dynamic>>> _fetchFeeds(
 }
 
 /* ────────────────────────────────────────────────────────────── */
-/* STEP 3: crunch numbers                                      */
+/*  STEP 3: crunch numbers                                       */
 Map<String, dynamic> _analyze(List<Map<String, dynamic>> feeds) {
   if (feeds.isEmpty) {
-    print('⚠️ Warning: Feed data is empty. Nothing to analyze.');
     return {'analysis': 'No data'};
   }
 
@@ -100,11 +87,11 @@ Map<String, dynamic> _analyze(List<Map<String, dynamic>> feeds) {
 
   for (final f in feeds) {
     // Parse numbers; skip entries with missing data
-    final double? lat = _toDouble(f['latitude']);
-    final double? lon = _toDouble(f['longitude']);
-    final double? ax = _toDouble(f['acc_x']);
-    final double? ay = _toDouble(f['acc_y']);
-    final double? az = _toDouble(f['acc_z']);
+    final double? lat = _toDouble(f['field1']);
+    final double? lon = _toDouble(f['field2']);
+    final double? ax = _toDouble(f['field3']);
+    final double? ay = _toDouble(f['field4']);
+    final double? az = _toDouble(f['field5']);
     final String ts = f['created_at'] as String;
 
     if ([lat, lon, ax, ay, az].contains(null)) continue;
@@ -136,16 +123,14 @@ Map<String, dynamic> _analyze(List<Map<String, dynamic>> feeds) {
   }
 
   // summary averages
-  double safeDivide(double sum, int count) => count == 0 ? 0.0 : sum / count;
-
   final summary = {
     'totalPoints': count,
-    'avgLat': safeDivide(sumLat, count),
-    'avgLon': safeDivide(sumLon, count),
-    'avgAccX': safeDivide(sumAx, count),
-    'avgAccY': safeDivide(sumAy, count),
-    'avgAccZ': safeDivide(sumAz, count),
-    'avgAccMagnitude': safeDivide(sumMag, count),
+    'avgLat': sumLat / count,
+    'avgLon': sumLon / count,
+    'avgAccX': sumAx / count,
+    'avgAccY': sumAy / count,
+    'avgAccZ': sumAz / count,
+    'avgAccMagnitude': sumMag / count,
     'suspectedCrashes': crashes.length,
   };
 
@@ -162,8 +147,6 @@ double _magnitude(double x, double y, double z) =>
     (x * x + y * y + z * z).sqrt();
 
 /* Dart has no .sqrt() on double literals before 2.19; add one */
-
-
 extension on double {
   double sqrt() => math.sqrt(this);
 }
