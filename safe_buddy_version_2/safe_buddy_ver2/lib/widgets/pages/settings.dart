@@ -206,7 +206,7 @@ class SettingsPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Developed by Group 7 @ MAKCOTIS',
+                'Developed by Group 7 @ MAKCOCIS',
                 style: text.bodyLarge?.copyWith(color: cs.onSurface),
               ),
               const SizedBox(height: 8),
