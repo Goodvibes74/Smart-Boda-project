@@ -33,13 +33,13 @@ dependencies:
   firebase_core: ^3.14.0  # Initialize Firebase
   firebase_auth: ^5.6.0  # For authentication (if needed)
   cloud_firestore: ^5.6.9  # For Firestore database (if needed)
-  firebase_storage: 12.4.8  # For Firebase Storage (if needed)
+  firebase_storage: ^12.4.9  # For Firebase Storage (if needed)
   provider: ^6.1.5  # State management
   google_maps_flutter: ^2.9.0  # For Google Maps integration
-  geolocator: ^9.0.2  # For location services
+  geolocator: ^14.0.2  # For location services
   flutter_svg: ^2.2.0  # For SVG image support
-  google_sign_in: ^6.2.1 
-  image_picker: ^0.8.7+3  # For picking images from the gallery or camera
+  google_sign_in: ^7.1.1 
+  image_picker: ^1.1.2  # For picking images from the gallery or camera
   firebase_storage_web: ^3.10.15 # For web support of Firebase Storage
   url_launcher: ^6.3.0
 
@@ -61,7 +61,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
