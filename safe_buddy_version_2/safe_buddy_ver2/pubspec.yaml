@@ -40,6 +40,9 @@ dependencies:
   flutter_svg: ^2.2.0  # For SVG image support
   google_sign_in: ^6.2.1 
   image_picker: ^0.8.7+3  # For picking images from the gallery or camera
+  file_picker: ^5.5.0 # Better for desktop than image_picker
+  cached_network_image: ^3.3.0 # For caching network images
+  path_provider: ^2.1.1  
   firebase_storage_web: ^3.10.15 # For web support of Firebase Storage
   url_launcher: ^6.3.0
 
