@@ -165,7 +165,7 @@ class _SidebarContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
-              '© Group 7 @ MAKCOTIS 2025',
+              '© Group 7 @ MAKCOCIS 2025',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: cs.onSurface.withOpacity(0.6),
@@ -212,7 +212,7 @@ class _SidebarContent extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            '© Group 7 @ MAKCOTIS 2025',
+            '© Group 7 @ MAKCOCIS 2025',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: cs.onSurface.withOpacity(0.6),
