@@ -5,15 +5,11 @@ import 'package:safe_buddy_ver2/widgets/search_bar.dart';
 import 'package:safe_buddy_ver2/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
-  /// Called when the search text changes
   final ValueChanged<String>? onSearchChanged;
-
-  /// Called when search is submitted
   final ValueChanged<String>? onSearchSubmitted;
-
-  /// Called when the avatar is tapped
   final VoidCallback? onAvatarTap;
 
   const HeaderWidget({
@@ -26,19 +22,20 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(64);
 
-  // Fetch username from Firestore
   Future<String> _getUsername() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return 'User'; // Fallback if no user is logged in
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return 'User';
+      
       final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get();
+          
       return doc.exists ? (doc.data()?['username'] ?? 'User') : 'User';
     } catch (e) {
-      print('Error fetching username: $e'); // Log error for debugging
-      return 'User'; // Fallback on error
+      debugPrint('Error fetching username: $e');
+      return 'User';
     }
   }
 
@@ -47,7 +44,6 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final textTheme = theme.textTheme;
-    final user = FirebaseAuth.instance.currentUser;
 
     return Material(
       color: cs.background,
@@ -58,18 +54,37 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              // Greeting with dynamic username
+              // Username with loading state
               FutureBuilder<String>(
                 future: _getUsername(),
                 builder: (context, snapshot) {
-                  final username = snapshot.connectionState == ConnectionState.waiting
-                      ? 'Loading...'
-                      : (snapshot.data ?? 'User');
-                  return Text(
-                    'Hi, $username',
-                    style: textTheme.titleMedium?.copyWith(
-                      color: cs.primary,
-                      fontWeight: FontWeight.w600,
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      width: 120,
+                      child: LinearProgressIndicator(
+                        color: cs.primary,
+                        minHeight: 2,
+                        backgroundColor: cs.primaryContainer,
+                      ),
+                    );
+                  }
+                  
+                  final error = snapshot.error;
+                  if (error != null) {
+                    debugPrint('Username error: $error');
+                  }
+                  
+                  final username = error != null ? 'User' : (snapshot.data ?? 'User');
+                  
+                  return Tooltip(
+                    message: error != null ? 'Error loading name' : 'Hello $username',
+                    child: Text(
+                      'Hi, $username',
+                      style: textTheme.titleMedium?.copyWith(
+                        color: error != null ? cs.error : cs.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   );
                 },
@@ -77,7 +92,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
 
               const SizedBox(width: 20),
 
-              // Search
+              // Search bar
               Expanded(
                 child: SearchBar(
                   onChanged: onSearchChanged,
@@ -88,62 +103,116 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
 
               const SizedBox(width: 16),
 
-              // Avatar with Popup Menu
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacementNamed(context, '/initial');
-                  } else if (value == 'profile') {
-                    // Optionally handle profile navigation
-                    if (onAvatarTap != null) onAvatarTap!();
+              // Profile avatar with auth state listener
+              StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  final user = snapshot.data;
+                  final error = snapshot.error;
+                  
+                  if (error != null) {
+                    debugPrint('Auth state error: $error');
                   }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'profile',
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: user?.photoURL != null
-                              ? NetworkImage(user!.photoURL!)
-                              : null,
-                          backgroundColor: cs.primaryContainer,
-                          child: user?.photoURL == null
-                              ? Icon(Icons.person, color: cs.onPrimaryContainer)
-                              : null,
-                          radius: 20,
+
+                  return PopupMenuButton<String>(
+                    onSelected: (value) async {
+                      if (value == 'logout') {
+                        try {
+                          await FirebaseAuth.instance.signOut();
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(context, '/initial');
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Logout failed: ${e.toString()}'),
+                                backgroundColor: cs.error,
+                              ),
+                            );
+                          }
+                        }
+                      } else if (value == 'profile') {
+                        onAvatarTap?.call();
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'profile',
+                        child: Row(
+                          children: [
+                            _buildProfileAvatar(user, cs, 20, error != null),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Profile',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: error != null ? cs.error : null,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Text('Profile', style: textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem<String>(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout, color: cs.error),
-                        const SizedBox(width: 10),
-                        Text('Logout', style: textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                ],
-                icon: CircleAvatar(
-                  backgroundImage: user?.photoURL != null
-                      ? NetworkImage(user!.photoURL!)
-                      : null,
-                  backgroundColor: cs.primaryContainer,
-                  child: user?.photoURL == null
-                      ? Icon(Icons.person, color: cs.onPrimaryContainer)
-                      : null,
-                  radius: 20,
-                ),
+                      ),
+                      const PopupMenuDivider(),
+                      const PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout),
+                            SizedBox(width: 10),
+                            Text('Logout'),
+                          ],
+                        ),
+                      ),
+                    ],
+                    icon: _buildProfileAvatar(user, cs, 20, error != null),
+                  );
+                },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileAvatar(User? user, ColorScheme cs, double radius, bool hasError) {
+    if (hasError) {
+      return CircleAvatar(
+        radius: radius,
+        backgroundColor: cs.errorContainer,
+        child: Icon(
+          Icons.error_outline,
+          color: cs.onErrorContainer,
+          size: radius,
+        ),
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: user?.photoURL ?? '',
+      imageBuilder: (context, imageProvider) => CircleAvatar(
+        radius: radius,
+        backgroundImage: imageProvider,
+      ),
+      placeholder: (context, url) => CircleAvatar(
+        radius: radius,
+        backgroundColor: cs.primaryContainer,
+        child: SizedBox(
+          width: radius,
+          height: radius,
+          child: CircularProgressIndicator(
+            color: cs.onPrimaryContainer,
+            strokeWidth: 2,
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => CircleAvatar(
+        radius: radius,
+        backgroundColor: cs.primaryContainer,
+        child: Icon(
+          Icons.person,
+          color: cs.onPrimaryContainer,
+          size: radius,
         ),
       ),
     );
