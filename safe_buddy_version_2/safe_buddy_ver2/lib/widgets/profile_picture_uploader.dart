@@ -1,5 +1,4 @@
-// ignore_for_file: unused_local_variable, deprecated_member_use
-
+import 'package:flutter/foundation.dart' show kIsWeb, Uint8List;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,7 +13,8 @@ class ProfilePictureUploader extends StatefulWidget {
 }
 
 class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
-  File? _image;
+  XFile? _image;
+  Uint8List? _webImageData;
   bool _isUploading = false;
   String? _photoUrl;
 
@@ -31,52 +31,88 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      final file = File(pickedFile.path);
-      // Check file size (e.g., max 5MB)
-      final fileSize = await file.length();
-      if (fileSize > 5 * 1024 * 1024) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image size exceeds 5MB limit')),
-        );
-        return;
+      if (kIsWeb) {
+        final data = await pickedFile.readAsBytes();
+        if (data.length > 5 * 1024 * 1024) {
+          _showSnackbar('Image size exceeds 5MB limit');
+          return;
+        }
+        setState(() {
+          _image = pickedFile;
+          _webImageData = data;
+        });
+      } else {
+        final file = File(pickedFile.path);
+        final fileSize = await file.length();
+        if (fileSize > 5 * 1024 * 1024) {
+          _showSnackbar('Image size exceeds 5MB limit');
+          return;
+        }
+        setState(() {
+          _image = pickedFile;
+        });
       }
-      setState(() => _image = file);
     }
   }
 
   Future<void> _uploadImage() async {
     if (_image == null) return;
+
     setState(() => _isUploading = true);
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('profile_pictures/${user.uid}.jpg');
-        await storageRef.putFile(_image!);
-        final downloadUrl = await storageRef.getDownloadURL();
-        await user.updatePhotoURL(downloadUrl);
-        setState(() => _photoUrl = downloadUrl);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile picture updated')),
-        );
-        setState(() => _image = null); // Clear selected image
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No user signed in')),
-        );
+      if (user == null) {
+        _showSnackbar('No user signed in');
+        return;
       }
+
+      final storageRef =
+          FirebaseStorage.instance.ref().child('profile_pictures/${user.uid}.jpg');
+
+      if (kIsWeb) {
+        if (_webImageData != null) {
+          await storageRef.putData(_webImageData!);
+        } else {
+          _showSnackbar('No image data found');
+          return;
+        }
+      } else {
+        final file = File(_image!.path);
+        await storageRef.putFile(file);
+      }
+
+      final downloadUrl = await storageRef.getDownloadURL();
+      await user.updatePhotoURL(downloadUrl);
+
+      await user.reload();
+      final refreshedUser = FirebaseAuth.instance.currentUser;
+
+      setState(() {
+        _photoUrl = downloadUrl;
+        _image = null;
+        _webImageData = null;
+      });
+      _showSnackbar('Profile picture updated');
+    } on FirebaseException catch (e) {
+      _showSnackbar('Upload failed: ${e.message}');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      _showSnackbar('Unexpected error: $e');
     } finally {
       setState(() => _isUploading = false);
     }
   }
 
   void _clearImage() {
-    setState(() => _image = null);
+    setState(() {
+      _image = null;
+      _webImageData = null;
+    });
+  }
+
+  void _showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
@@ -88,6 +124,43 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
       builder: (context, constraints) {
         final imageSize = constraints.maxWidth < 400 ? 80.0 : 100.0;
 
+        Widget imageWidget;
+        if (_image != null) {
+          if (kIsWeb && _webImageData != null) {
+            imageWidget = Image.memory(
+              _webImageData!,
+              height: imageSize,
+              width: imageSize,
+              fit: BoxFit.cover,
+            );
+          } else {
+            imageWidget = Image.file(
+              File(_image!.path),
+              height: imageSize,
+              width: imageSize,
+              fit: BoxFit.cover,
+            );
+          }
+        } else if (_photoUrl != null) {
+          imageWidget = Image.network(
+            _photoUrl!,
+            height: imageSize,
+            width: imageSize,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => CircleAvatar(
+              radius: imageSize / 2,
+              backgroundColor: cs.primaryContainer,
+              child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+            ),
+          );
+        } else {
+          imageWidget = CircleAvatar(
+            radius: imageSize / 2,
+            backgroundColor: cs.primaryContainer,
+            child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
+          );
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -96,32 +169,7 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                 shape: BoxShape.circle,
                 border: Border.all(color: cs.primary.withOpacity(0.3)),
               ),
-              child: ClipOval(
-                child: _image != null
-                    ? Image.file(
-                        _image!,
-                        height: imageSize,
-                        width: imageSize,
-                        fit: BoxFit.cover,
-                      )
-                    : _photoUrl != null
-                        ? Image.network(
-                            _photoUrl!,
-                            height: imageSize,
-                            width: imageSize,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => CircleAvatar(
-                              radius: imageSize / 2,
-                              backgroundColor: cs.primaryContainer,
-                              child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
-                            ),
-                          )
-                        : CircleAvatar(
-                            radius: imageSize / 2,
-                            backgroundColor: cs.primaryContainer,
-                            child: Icon(Icons.person, color: cs.onPrimaryContainer, size: imageSize / 2),
-                          ),
-              ),
+              child: ClipOval(child: imageWidget),
             ),
             const SizedBox(height: 12),
             Row(
@@ -151,7 +199,10 @@ class _ProfilePictureUploaderState extends State<ProfilePictureUploader> {
                         ? SizedBox(
                             height: 16,
                             width: 16,
-                            child: CircularProgressIndicator(color: cs.onPrimary, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: cs.onPrimary,
+                              strokeWidth: 2,
+                            ),
                           )
                         : const Text('Upload Image'),
                   ),
