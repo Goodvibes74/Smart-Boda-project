@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:safe_buddy_ver2/widgets/avatar_uploader.dart';
 import '../../providers/theme_provider.dart';
 import '../change_password_form.dart';
-import '../profile_picture_uploader.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -18,6 +18,8 @@ class SettingsPage extends StatelessWidget {
       width: width,
       child: Card(
         color: cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -38,34 +40,38 @@ class SettingsPage extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      Provider.of<ThemeProvider>(
-                        context,
-                        listen: false,
-                      ).setThemeMode(ThemeMode.light);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: cs.primary),
-                      foregroundColor: cs.onSurface,
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => context
+                          .read<ThemeProvider>()
+                          .setThemeMode(ThemeMode.light),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: cs.primary),
+                        foregroundColor: cs.onSurface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      icon: Icon(Icons.light_mode, color: cs.primary),
+                      label: Text('Light', style: text.bodyLarge),
                     ),
-                    icon: Icon(Icons.light_mode, color: cs.primary),
-                    label: Text('Light', style: text.bodyLarge),
                   ),
                   const SizedBox(width: 12),
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      Provider.of<ThemeProvider>(
-                        context,
-                        listen: false,
-                      ).setThemeMode(ThemeMode.dark);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: cs.primary),
-                      foregroundColor: cs.onSurface,
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => context
+                          .read<ThemeProvider>()
+                          .setThemeMode(ThemeMode.dark),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: cs.primary),
+                        foregroundColor: cs.onSurface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      icon: Icon(Icons.dark_mode, color: cs.primary),
+                      label: Text('Dark', style: text.bodyLarge),
                     ),
-                    icon: Icon(Icons.dark_mode, color: cs.primary),
-                    label: Text('Dark', style: text.bodyLarge),
                   ),
                 ],
               ),
@@ -86,6 +92,8 @@ class SettingsPage extends StatelessWidget {
       width: width,
       child: Card(
         color: cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -104,40 +112,32 @@ class SettingsPage extends StatelessWidget {
                 style: text.bodyLarge?.copyWith(color: cs.onSurface),
               ),
               const SizedBox(height: 12),
-              TextButton(
+              TextButton.icon(
                 onPressed: () {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
                     builder: (_) => Center(
-                      child: SizedBox(
-                        width: 400, // Fixed width for web
-                        child: ChangePasswordForm(),
-                      ),
+                      child: SizedBox(width: 400, child: ChangePasswordForm()),
                     ),
                   );
                 },
-                child: Row(
-                  children: [
-                    Icon(Icons.edit, color: cs.primary),
-                    const SizedBox(width: 8),
-                    Text('Change Password & Username', style: text.bodyLarge),
-                  ],
+                icon: Icon(Icons.edit, color: cs.primary),
+                label: Text(
+                  'Change Password & Username',
+                  style: text.bodyLarge,
                 ),
               ),
               const SizedBox(height: 12),
-              TextButton(
+              TextButton.icon(
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.pushReplacementNamed(context, '/auth');
                 },
-                style: TextButton.styleFrom(foregroundColor: cs.primary),
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, color: cs.primary),
-                    const SizedBox(width: 8),
-                    Text('Log Out', style: text.bodyLarge),
-                  ],
+                icon: Icon(Icons.logout, color: cs.error),
+                label: Text(
+                  'Log Out',
+                  style: text.bodyLarge?.copyWith(color: cs.error),
                 ),
               ),
             ],
@@ -156,6 +156,8 @@ class SettingsPage extends StatelessWidget {
       width: width,
       child: Card(
         color: cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -169,7 +171,12 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const ProfilePictureUploader(),
+              Center(
+                child: AvatarUploader(
+                  radius: 60,
+                  allowUpload: true, // Explicitly set to true for clarity
+                ),
+              ),
             ],
           ),
         ),
@@ -182,6 +189,8 @@ class SettingsPage extends StatelessWidget {
       width: width,
       child: Card(
         color: cs.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -196,15 +205,14 @@ class SettingsPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Application Version: 1.0.0',
+                'Version 1.0.0',
                 style: text.bodyLarge?.copyWith(color: cs.onSurface),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 'Developed by Group 7 @ MAKCOCIS',
                 style: text.bodyLarge?.copyWith(color: cs.onSurface),
               ),
-              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -233,47 +241,46 @@ class SettingsPage extends StatelessWidget {
                 style: text.titleLarge?.copyWith(
                   color: cs.onSurface,
                   fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 24),
-              if (isWide)
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      // Wrap with Expanded
-                      child: Column(
-                        children: [
-                          _buildThemeCard(cs, text, cardWidth, context),
-                          const SizedBox(height: 16),
-                          _buildAccountCard(cs, text, cardWidth, context),
-                        ],
-                      ),
+              isWide
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _buildThemeCard(cs, text, cardWidth, context),
+                              const SizedBox(height: 16),
+                              _buildAccountCard(cs, text, cardWidth, context),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              _buildProfilePictureCard(cs, text, cardWidth),
+                              const SizedBox(height: 16),
+                              _buildAboutCard(cs, text, cardWidth),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        _buildThemeCard(cs, text, cardWidth, context),
+                        const SizedBox(height: 16),
+                        _buildAccountCard(cs, text, cardWidth, context),
+                        const SizedBox(height: 16),
+                        _buildProfilePictureCard(cs, text, cardWidth),
+                        const SizedBox(height: 16),
+                        _buildAboutCard(cs, text, cardWidth),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          _buildProfilePictureCard(cs, text, cardWidth),
-                          const SizedBox(height: 16),
-                          _buildAboutCard(cs, text, cardWidth),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              else
-                Column(
-                  children: [
-                    _buildThemeCard(cs, text, cardWidth, context),
-                    const SizedBox(height: 16),
-                    _buildAccountCard(cs, text, cardWidth, context),
-                    const SizedBox(height: 16),
-                    _buildProfilePictureCard(cs, text, cardWidth),
-                    const SizedBox(height: 16),
-                    _buildAboutCard(cs, text, cardWidth),
-                  ],
-                ),
             ],
           ),
         );
