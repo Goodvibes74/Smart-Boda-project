@@ -7,13 +7,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
-  /// Called when the search text changes
+  /// A custom header widget that displays a greeting message, a search bar,
+  /// and an avatar icon.
+  /// It includes functionality for user profile access and logout.
   final ValueChanged<String>? onSearchChanged;
-
-  /// Called when search is submitted
+  /// Callback when the search input changes.
+  /// This can be used to filter a list or perform a search.
   final ValueChanged<String>? onSearchSubmitted;
-
-  /// Called when the avatar is tapped
+  /// Callback when the avatar icon is tapped.
+  /// This can be used to navigate to the user's profile or settings.
   final VoidCallback? onAvatarTap;
 
   const HeaderWidget({
@@ -26,126 +28,102 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(64);
 
-  // Fetch username from Firestore
-  Future<String> _getUsername() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return 'User'; // Fallback if no user is logged in
-    try {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      return doc.exists ? (doc.data()?['username'] ?? 'User') : 'User';
-    } catch (e) {
-      print('Error fetching username: $e'); // Log error for debugging
-      return 'User'; // Fallback on error
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    final textTheme = theme.textTheme;
     final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const SizedBox.shrink();
 
-    return Material(
-      color: cs.background,
-      child: SafeArea(
-        bottom: false,
-        child: Container(
-          height: preferredSize.height,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              // Greeting with dynamic username
-              FutureBuilder<String>(
-                future: _getUsername(),
-                builder: (context, snapshot) {
-                  final username = snapshot.connectionState == ConnectionState.waiting
-                      ? 'Loading...'
-                      : (snapshot.data ?? 'User');
-                  return Text(
+    final docStream = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .snapshots();
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: docStream,
+      builder: (context, snapshot) {
+        // Loading or error fallback
+        final data = snapshot.hasData && snapshot.data!.exists
+            ? (snapshot.data!.data() as Map<String, dynamic>)
+            : <String, dynamic>{ 'username': 'User', 'photoURL': null };
+
+        final username = data['username'] as String? ?? 'User';
+        final photoUrl = data['photoURL'] as String?;
+        final cs = Theme.of(context).colorScheme;
+        final text = Theme.of(context).textTheme;
+
+        return Material(
+          color: cs.background,
+          child: SafeArea(
+            bottom: false,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: preferredSize.height,
+              child: Row(
+                children: [
+                  Text(
                     'Hi, $username',
-                    style: textTheme.titleMedium?.copyWith(
+                    style: text.titleMedium?.copyWith(
                       color: cs.primary,
                       fontWeight: FontWeight.w600,
                     ),
-                  );
-                },
-              ),
-
-              const SizedBox(width: 20),
-
-              // Search
-              Expanded(
-                child: SearchBar(
-                  onChanged: onSearchChanged,
-                  onSubmitted: onSearchSubmitted,
-                  hintText: 'Search…',
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              // Avatar with Popup Menu
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacementNamed(context, '/initial');
-                  } else if (value == 'profile') {
-                    // Optionally handle profile navigation
-                    if (onAvatarTap != null) onAvatarTap!();
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'profile',
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: user?.photoURL != null
-                              ? NetworkImage(user!.photoURL!)
-                              : null,
-                          backgroundColor: cs.primaryContainer,
-                          child: user?.photoURL == null
-                              ? Icon(Icons.person, color: cs.onPrimaryContainer)
-                              : null,
-                          radius: 20,
-                        ),
-                        const SizedBox(width: 10),
-                        Text('Profile', style: textTheme.bodyMedium),
-                      ],
-                    ),
                   ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem<String>(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout, color: cs.error),
-                        const SizedBox(width: 10),
-                        Text('Logout', style: textTheme.bodyMedium),
-                      ],
+                  const Spacer(),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'logout') {
+                        FirebaseAuth.instance.signOut();
+                        Navigator.pushReplacementNamed(context, '/initial');
+                      } else if (value == 'profile') {
+                        if (onAvatarTap != null) onAvatarTap!();
+                      }
+                    },
+                    icon: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: cs.primaryContainer,
+                      backgroundImage:
+                          photoUrl != null ? NetworkImage(photoUrl) : null,
+                      child: photoUrl == null
+                          ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                          : null,
                     ),
+                    itemBuilder: (_) => [
+                      PopupMenuItem<String>(
+                        value: 'profile',
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: cs.primaryContainer,
+                              backgroundImage:
+                                  photoUrl != null ? NetworkImage(photoUrl) : null,
+                              child: photoUrl == null
+                                  ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                                  : null,
+                            ),
+                            const SizedBox(width: 10),
+                            Text('Profile', style: text.bodyMedium),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuDivider(),
+                      PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Row(
+                          children: [
+                            Icon(Icons.logout, color: cs.error),
+                            const SizedBox(width: 10),
+                            Text('Logout', style: text.bodyMedium),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-                icon: CircleAvatar(
-                  backgroundImage: user?.photoURL != null
-                      ? NetworkImage(user!.photoURL!)
-                      : null,
-                  backgroundColor: cs.primaryContainer,
-                  child: user?.photoURL == null
-                      ? Icon(Icons.person, color: cs.onPrimaryContainer)
-                      : null,
-                  radius: 20,
-                ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

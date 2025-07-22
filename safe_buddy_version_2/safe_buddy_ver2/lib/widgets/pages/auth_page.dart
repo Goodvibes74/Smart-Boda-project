@@ -64,23 +64,7 @@ class _AuthPageState extends State<AuthPage> {
                     _isLogin ? const LoginForm() : const SignUpForm(),
 
                     const SizedBox(height: 16),
-                    if (_isLogin)
-                      TextButton(
-                        onPressed: () {
-                          // TODO: implement reset password
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Reset link sent')),
-                          );
-                        },
-                        child: Text(
-                          'Forgot PIN?',
-                          style: text.bodyMedium?.copyWith(
-                            color: cs.primary,
-                          ),
-                        ),
-                      ),
-
-                    const SizedBox(height: 8),
+                    if (_isLogin)                 
                     TextButton(
                       onPressed: _toggleForm,
                       child: Text(
@@ -102,7 +86,6 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 }
-
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -236,7 +219,6 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
-
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);

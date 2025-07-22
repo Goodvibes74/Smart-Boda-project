@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChangePasswordForm extends StatefulWidget {
   const ChangePasswordForm({super.key});
@@ -19,49 +20,63 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   bool _isLoading = false;
 
   Future<void> _updateProfile() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      try {
-        final user = FirebaseAuth.instance.currentUser;
-        if (user != null) {
-          final credential = EmailAuthProvider.credential(
-            email: user.email!,
-            password: _currentPasswordController.text,
-          );
-          await user.reauthenticateWithCredential(credential);
+    if (!_formKey.currentState!.validate()) return;
 
-          // Update password if provided
-          if (_newPasswordController.text.isNotEmpty) {
-            await user.updatePassword(_newPasswordController.text);
-          }
+    setState(() => _isLoading = true);
+    try {
+      final auth = FirebaseAuth.instance;
+      final user = auth.currentUser;
+      if (user == null) throw FirebaseAuthException(code: 'no-user');
 
-          // Update username if provided
-          if (_usernameController.text.isNotEmpty) {
-            await user.updateDisplayName(_usernameController.text);
-          }
+      // 1. Reauthenticate
+      final cred = EmailAuthProvider.credential(
+        email: user.email!,
+        password: _currentPasswordController.text,
+      );
+      await user.reauthenticateWithCredential(cred);
 
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Profile updated successfully')),
-            );
-            Navigator.of(context).pop();
-          }
-        } else {
-          if (mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text('No user signed in')));
-          }
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
-        }
-      } finally {
-        setState(() => _isLoading = false);
+      // 2. Update password in Auth
+      final newPwd = _newPasswordController.text.trim();
+      if (newPwd.isNotEmpty) {
+        await user.updatePassword(newPwd);
       }
+
+      // 3. Update Auth displayName _and_ Firestore username
+      final newUsername = _usernameController.text.trim();
+      if (newUsername.isNotEmpty) {
+        // a) Update the Auth profile (so user.displayName is correct)
+        await user.updateDisplayName(newUsername);
+
+        // b) ALSO update the Firestore document
+        final uid = user.uid;
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .update({'username': newUsername});
+      }
+
+      // 4. Success UI
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+        Navigator.of(context).pop();
+      }
+    } on FirebaseAuthException catch (e) {
+      var msg = 'Error: ${e.code}';
+      if (e.code == 'wrong-password') {
+        msg = 'Current password is incorrect. Please try again.';
+      }
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context
+          ).showSnackBar(SnackBar(content: Text('Unexpected error: $e')));
+      }
+    } finally {
+      setState(() => _isLoading = false);
+      
     }
   }
 
