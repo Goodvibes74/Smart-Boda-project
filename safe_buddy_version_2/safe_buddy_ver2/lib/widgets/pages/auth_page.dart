@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+// Main AuthPage widget
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
 
@@ -59,12 +60,8 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-
-                    // Show LoginForm or SignUpForm
                     _isLogin ? const LoginForm() : const SignUpForm(),
-
                     const SizedBox(height: 16),
-                    if (_isLogin)                 
                     TextButton(
                       onPressed: _toggleForm,
                       child: Text(
@@ -87,6 +84,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 }
 
+// LoginForm widget
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
@@ -96,27 +94,36 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
+  final _usernameOrEmailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _loading = false;
   String? _error;
+  bool _obscurePassword = true;
+  final _usernameFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _usernameFocus.requestFocus();
+    });
+  }
 
   @override
   void dispose() {
-    _userCtrl.dispose();
-    _passCtrl.dispose();
+    _usernameOrEmailController.dispose();
+    _passwordController.dispose();
+    _usernameFocus.dispose();
     super.dispose();
   }
 
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+    setState(() => _loading = true);
+    await Future.delayed(const Duration(milliseconds: 200));
 
     String email;
-    final input = _userCtrl.text.trim();
+    final input = _usernameOrEmailController.text.trim();
 
     try {
       if (input.contains('@')) {
@@ -127,7 +134,6 @@ class _LoginFormState extends State<LoginForm> {
             .where('username', isEqualTo: input)
             .limit(1)
             .get();
-
         if (snap.docs.isEmpty) {
           setState(() => _error = 'Username not found.');
           return;
@@ -137,10 +143,16 @@ class _LoginFormState extends State<LoginForm> {
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
-        password: _passCtrl.text.trim(),
+        password: _passwordController.text.trim(),
       );
 
-      if (mounted) Navigator.pushReplacementNamed(context, '/admin_dashboard');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Welcome back!')),
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        Navigator.pushReplacementNamed(context, '/admin_dashboard');
+      }
     } on FirebaseAuthException catch (e) {
       setState(() => _error = _mapAuthError(e.code));
     } catch (_) {
@@ -171,7 +183,8 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         children: [
           TextFormField(
-            controller: _userCtrl,
+            controller: _usernameOrEmailController,
+            focusNode: _usernameFocus,
             decoration: InputDecoration(
               labelText: 'Username or Email',
               border: const OutlineInputBorder(),
@@ -179,18 +192,25 @@ class _LoginFormState extends State<LoginForm> {
               fillColor: cs.surfaceVariant,
             ),
             validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+            onChanged: (v) => setState(() => _error = null),
+            // semanticsLabel: 'Username or Email',
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _passCtrl,
-            obscureText: true,
+            controller: _passwordController,
+            obscureText: _obscurePassword,
             decoration: InputDecoration(
               labelText: 'Password',
               border: const OutlineInputBorder(),
               filled: true,
               fillColor: cs.surfaceVariant,
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              ),
             ),
             validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+            onChanged: (v) => setState(() => _error = null),
           ),
           if (_error != null) ...[
             const SizedBox(height: 12),
@@ -201,14 +221,17 @@ class _LoginFormState extends State<LoginForm> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _loading ? null : _signIn,
-              style: ElevatedButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: cs.primary,
+                foregroundColor: cs.onPrimary,
+              ),
               child: _loading
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 20,
-                      width: 18,
+                      width: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Colors.white,
                       ),
                     )
                   : const Text('Login'),
@@ -220,6 +243,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
+// SignUpForm widget
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
 
@@ -229,34 +253,43 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userCtrl = TextEditingController();
-  final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
-  final _confirmCtrl = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _loading = false;
   String? _error;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  final _usernameFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _usernameFocus.requestFocus();
+    });
+  }
 
   @override
   void dispose() {
-    _userCtrl.dispose();
-    _emailCtrl.dispose();
-    _passCtrl.dispose();
-    _confirmCtrl.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernameFocus.dispose();
     super.dispose();
   }
 
   Future<void> _createAccount() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+    setState(() => _loading = true);
+    await Future.delayed(const Duration(milliseconds: 200));
 
     try {
-      // check username uniqueness
       final snap = await FirebaseFirestore.instance
           .collection('users')
-          .where('username', isEqualTo: _userCtrl.text.trim())
+          .where('username', isEqualTo: _usernameController.text.trim())
           .limit(1)
           .get();
       if (snap.docs.isNotEmpty) {
@@ -265,18 +298,28 @@ class _SignUpFormState extends State<SignUpForm> {
       }
 
       final creds = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailCtrl.text.trim(),
-        password: _passCtrl.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(creds.user!.uid)
           .set({
-        'username': _userCtrl.text.trim(),
-        'email': _emailCtrl.text.trim(),
+        'username': _usernameController.text.trim(),
+        'email': _emailController.text.trim(),
+      }).catchError((e) {
+        setState(() => _error = 'Failed to save user data.');
+        throw e;
       });
 
-      if (mounted) Navigator.pushReplacementNamed(context, '/home');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account created! Welcome!')),
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     } on FirebaseAuthException catch (e) {
       setState(() => _error = _mapError(e.code));
     } catch (_) {
@@ -307,7 +350,8 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           TextFormField(
-            controller: _userCtrl,
+            controller: _usernameController,
+            focusNode: _usernameFocus,
             decoration: InputDecoration(
               labelText: 'Username',
               border: const OutlineInputBorder(),
@@ -315,10 +359,11 @@ class _SignUpFormState extends State<SignUpForm> {
               fillColor: cs.surfaceVariant,
             ),
             validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+            onChanged: (v) => setState(() => _error = null),
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _emailCtrl,
+            controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelText: 'Email',
@@ -331,30 +376,41 @@ class _SignUpFormState extends State<SignUpForm> {
               final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
               return emailRegex.hasMatch(v) ? null : 'Invalid email';
             },
+            onChanged: (v) => setState(() => _error = null),
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _passCtrl,
-            obscureText: true,
+            controller: _passwordController,
+            obscureText: _obscurePassword,
             decoration: InputDecoration(
               labelText: 'Password',
               border: const OutlineInputBorder(),
               filled: true,
               fillColor: cs.surfaceVariant,
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              ),
             ),
             validator: (v) => (v == null || v.length < 6) ? 'Min 6 chars' : null,
+            onChanged: (v) => setState(() => _error = null),
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _confirmCtrl,
-            obscureText: true,
+            controller: _confirmPasswordController,
+            obscureText: _obscureConfirmPassword,
             decoration: InputDecoration(
               labelText: 'Confirm Password',
               border: const OutlineInputBorder(),
               filled: true,
               fillColor: cs.surfaceVariant,
+              suffixIcon: IconButton(
+                icon: Icon(_obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+              ),
             ),
-            validator: (v) => v != _passCtrl.text ? 'Doesn’t match' : null,
+            validator: (v) => v != _passwordController.text ? 'Doesn’t match' : null,
+            onChanged: (v) => setState(() => _error = null),
           ),
           if (_error != null) ...[
             const SizedBox(height: 12),
@@ -365,12 +421,18 @@ class _SignUpFormState extends State<SignUpForm> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _loading ? null : _createAccount,
-              style: ElevatedButton.styleFrom(backgroundColor: cs.primary, foregroundColor: cs.onPrimary),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: cs.primary,
+                foregroundColor: cs.onPrimary,
+              ),
               child: _loading
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
                   : const Text('Create Account'),
             ),
