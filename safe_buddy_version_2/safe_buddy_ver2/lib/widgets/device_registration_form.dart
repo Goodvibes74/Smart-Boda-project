@@ -1,6 +1,6 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class DeviceRegistrationForm extends StatefulWidget {
   const DeviceRegistrationForm({Key? key}) : super(key: key);
@@ -11,11 +11,11 @@ class DeviceRegistrationForm extends StatefulWidget {
 
 class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  String? _deviceId;
+
   String? _simNumber;
   bool _loading = false;
 
-  // Add controllers for the text fields
+  //Controllers for the text fields
   final TextEditingController _deviceIdCtrl = TextEditingController();
   final TextEditingController _simNumberCtrl = TextEditingController();
 
@@ -28,10 +28,45 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+
+    // Save form data
+    _formKey.currentState!.save();
     setState(() => _loading = true);
-    // TODO: your registration logic
-    await Future.delayed(const Duration(seconds: 1));
-    if (mounted) Navigator.of(context).pop();
+
+    try {
+      const String firebaseApiKey = 'AIzaSyAkY6qkVOfuXhns81HwTICd41ts-LnBQ0Q'; 
+      const String simNumber = '0766192699'; 
+      final String url =
+          'https://safe-buddy-141a4-default-rtdb.firebaseio.com/accident_detector/$simNumber.json?auth=$firebaseApiKey';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+        }),
+      );
+
+      if (!mounted) return;
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Device registered successfully')),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to register device: ${response.statusCode}')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _loading = false);
+      }
+    }
   }
 
   InputDecoration _decorate(String hint) => InputDecoration(
@@ -47,9 +82,6 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
 
   @override
   Widget build(BuildContext context) {
-    final cs   = Theme.of(context).colorScheme;
-    final text = Theme.of(context).textTheme;
-
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
@@ -58,17 +90,17 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(
-                controller: _deviceIdCtrl,
-                decoration: _decorate('Device ID'),
-                validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
-                onSaved: (v) => _deviceId = v,
-              ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _simNumberCtrl,
                 decoration: _decorate('SIM Card Number'),
-                validator: (v) => (v?.isEmpty ?? true) ? 'Required' : null,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Required';
+                  if (!RegExp(r'^\d{10,15}$').hasMatch(v)) {
+                    return 'Enter a valid SIM number (10-15 digits)';
+                  }
+                  return null;
+                },
                 onSaved: (v) => _simNumber = v,
               ),
               const SizedBox(height: 24),
@@ -84,7 +116,8 @@ class _DeviceRegistrationFormState extends State<DeviceRegistrationForm> {
                     onPressed: _loading ? null : _submit,
                     child: _loading
                         ? const SizedBox(
-                            height: 16, width: 16,
+                            height: 16,
+                            width: 16,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Text('Register'),
