@@ -14,7 +14,6 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  List<Map<String, dynamic>> _lastCrashList = [];
   
   void _exportCrashes(
     BuildContext context,
@@ -117,7 +116,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           },
         )
         .toList();
-    _lastCrashList = List<Map<String, dynamic>>.from(crashList);
 
     // Crash type counts
     final typeCounts = <String, int>{};

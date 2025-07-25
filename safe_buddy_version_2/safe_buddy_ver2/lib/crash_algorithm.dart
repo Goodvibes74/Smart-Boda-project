@@ -1,97 +1,62 @@
-import 'dart:core';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-// Firebase configuration constants (mirroring ESP32 sketch)
-const String FIREBASE_HOST = "safe-buddy-141a4-default-rtdb.firebaseio.com";
-const String FIREBASE_AUTH = "AIzaSyAkY6qkVOfuXhns81HwTICd41ts-LnBQ0Q";
-const String FIREBASE_CRASH_PATH = "/crashData.json?auth="; // Path for crash data upload
+// The URL for your Firebase Realtime Database. The .json suffix is required for the REST API.
+const String firebaseURL = 'https://safe-buddy-141a4-default-rtdb.firebaseio.com/0766192699.json';
 
-/// Fetches crash data from Firebase Realtime Database.
-/// Returns a map where keys are Firebase push IDs and values are maps of crash data.
-Future<Map<String, Map<String, dynamic>?>> getData() async {
-  Map<String, Map<String, dynamic>?> parsedData = {};
+/// Fetches the raw data from the Firebase URL.
+///
+/// This function makes an HTTP GET request and returns the decoded JSON data as a Map.
+Future<Map<String, dynamic>> getData() async {
+  final uri = Uri.parse(firebaseURL);
+  final response = await http.get(uri);
 
-  try {
-    final uri = Uri.parse(
-      'https://$FIREBASE_HOST$FIREBASE_CRASH_PATH$FIREBASE_AUTH',
-    );
-
-    final resp = await http.get(uri);
-    
-    if (resp.statusCode == 200) {
-      final decoded = jsonDecode(resp.body);
-      if (decoded is Map<String, dynamic>) {
-        // Firebase Realtime DB returns a map of unique IDs to data objects
-        decoded.forEach((key, value) {
-          if (value is Map<String, dynamic>) {
-            parsedData[key] = value;
-          }
-        });
-      } else if (decoded == null) {
-        print("Firebase returned null, no data available yet.");
-      } else {
-        print("Unexpected Firebase response format: ${decoded.runtimeType}");
-      }
-    } else {
-      print("Failed to fetch data from Firebase. Status code: ${resp.statusCode}");
-      print("Response body: ${resp.body}");
+  if (response.statusCode == 200) {
+    // If the server returns a 200 OK response, parse the JSON.
+    // Firebase returns the string "null" for an empty database, so we handle that case.
+    print('Firebase response: ${response.body}');
+    if (response.body == 'null') {
+      return {};
     }
-
-    print("Parsed ${parsedData.length} entries from Firebase.");
-    return parsedData;
-  } catch (e) {
-    print('Error fetching or decoding Firebase data: $e');
-    return {};
+    return json.decode(response.body) as Map<String, dynamic>;
+  } else {
+    // If the server did not return a 200 OK response, throw an exception.
+    // This will be caught by the FutureBuilder in dashboard.dart.
+    throw Exception('Failed to load crash data');
   }
 }
 
-/// Retrieves the severity string directly from the fetched Firebase data.
-/// Assumes the severity is already calculated and present in the data.
-String getSeverity(Map<dynamic, dynamic> values) {
-  return values['severity']?.toString() ?? "Unknown";
-}
+/// Processes the raw, nested data from Firebase and formats it for the UI.
+///
+/// The raw data is structured by SIM number, then by timestamp. This function
+/// flattens that structure into a single map where each key is a timestamp.
+/// The value is a list of crash details in the order expected by `dashboard.dart`.
+Map<String, List<dynamic>> getAllFormattedData(Map<dynamic, dynamic> rawData) {
+  final Map<String, List<dynamic>> formattedCrashes = {};
 
-/// Retrieves the speed (in km/h) directly from the fetched Firebase data.
-/// Assumes the speed is already calculated and present in the data.
-int getSpeed(Map<dynamic, dynamic> values) {
-  // Firebase uploads speed_kmph as a double, convert to int for frontend consistency
-  return (values['speed_kmph'] as num?)?.round() ?? 0;
-}
+  // Iterate over each SIM number entry in the raw data.
+  rawData.forEach((simNumber, crashesForSim) {
+    final crashesMap = crashesForSim as Map<String, dynamic>;
 
-/// Retrieves the crash type string directly from the fetched Firebase data.
-/// Assumes the crash type is already determined and present in the data.
-String getCrashDirection(Map<dynamic, dynamic> values) {
-  return values['crash_type']?.toString() ?? "Unknown";
-}
+    // Iterate over each crash event (keyed by timestamp) for the current SIM.
+    crashesMap.forEach((timestamp, details) {
+      final crashDetails = details as Map<String, dynamic>;
 
-/// Processes all fetched Firebase crash data into a formatted structure
-/// that includes latitude, longitude, severity, speed, and crash type.
-/// It directly uses the values uploaded by the ESP32 sketch.
-Map<String, List<dynamic>> getAllFormattedData(Map<dynamic, dynamic> data) {
-  Map<String, List<dynamic>> formattedData = {};
-  for (var timestampKey in data.keys) {
-    var values = data[timestampKey];
-    
-    // Extract values directly from the Firebase data
-    String simNumber = values['sim_number']?.toString() ?? "Unknown";
-    double? lat = values['latitude'] as double?;
-    double? lon = values['longitude'] as double?;
-    String severity = getSeverity(values); // Uses the value from Firebase
-    int speed = getSpeed(values);         // Uses the value from Firebase
-    String type = getCrashDirection(values); // Uses the value from Firebase
+      // Create a list with crash data in the specific order
+      // that dashboard.dart's ListView.builder expects.
+      final dataList = [
+        crashDetails['sim_number'],      // index 0
+        crashDetails['latitude'],        // index 1
+        crashDetails['longitude'],       // index 2
+        crashDetails['severity'],        // index 3
+        crashDetails['speed_kmph'],      // index 4
+        crashDetails['crash_type'],      // index 5
+      ];
+      
+      // Add the formatted list to our final map, keyed by its unique timestamp.
+      formattedCrashes[timestamp] = dataList;
+    });
+  });
 
-    if (speed < 0) speed = 0; // Ensure speed is non-negative
-
-    formattedData[timestampKey.toString()] = [
-      simNumber,
-      lat,
-      lon,
-      severity,
-      speed,
-      type,
-    ];
-  }
-  print("Processed ${formattedData.length} entries into formatted data.");
-  return formattedData;
+  return formattedCrashes;
 }
