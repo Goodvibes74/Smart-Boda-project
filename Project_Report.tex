@@ -94,6 +94,14 @@ Sensors collect data $\rightarrow$ ESP32 processes and evaluates thresholds $\ri
 \end{itemize}
 
 % [Insert screenshots and diagrams where necessary.]
+\subsubsection{Our basis for accident detection}
+Our accident detection is based upon the following sensor readings and logic:
+
+\begin{itemize}
+  \item \textbf{Impact-force Readings:}  
+  Readings above 3g (29.43 m/s\textsuperscript{2}) detected by the force sensor indicate a significant impact, likely caused by a collision rather than normal riding conditions. Such impacts include head-on collisions or collisions with stationary or moving objects.
+\end{itemize}
+
 
 \section{Limitations and Next Steps}
 
