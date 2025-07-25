@@ -100,6 +100,14 @@ Our accident detection is based upon the following sensor readings and logic:
 \begin{itemize}
   \item \textbf{Impact-force Readings:}  
   Readings above 3g (29.43 m/s\textsuperscript{2}) detected by the force sensor indicate a significant impact, likely caused by a collision rather than normal riding conditions. Such impacts include head-on collisions or collisions with stationary or moving objects.
+  \begin{itemize}
+  \item \textbf{Impact-force Readings:}  
+  Readings above 3g (29.43 m/s\textsuperscript{2}) detected by the force sensor indicate a significant impact, likely caused by a collision rather than normal riding conditions. Such impacts include head-on collisions or collisions with stationary or moving objects.
+  
+  \item \textbf{Gyroscope Readings:}  
+  A sudden sharp spike in angular velocity combined with accelerometer data suggests abnormal rotational movement typically experienced during a crash. This helps differentiate accidents from other movements.
+\end{itemize}
+
 \end{itemize}
 
 
