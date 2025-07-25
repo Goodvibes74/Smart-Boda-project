@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -26,6 +27,14 @@ void main() async {
       child: const SafeBuddyApp(),
     ),
   );
+}
+
+Future<void> signInAnonymously() async {
+  try {
+    await FirebaseAuth.instance.signInAnonymously();
+  } catch (e) {
+    print("Error signing in: $e");
+  }
 }
 
 class SafeBuddyApp extends StatelessWidget {

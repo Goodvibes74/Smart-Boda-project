@@ -147,7 +147,6 @@ class Dashboard extends StatelessWidget {
 // This function is correctly defined in crash_algorithm.dart and imported.
 // It fetches raw data and then formats it.
 Future<Map> getCrashData() async {
-  var raw = await getData(); // getData from crash_algorithm.dart
-  var crashes = getAllFormattedData(raw); // getAllFormattedData from crash_algorithm.dart
+  var crashes = await getAllFormattedData({}); // getAllFormattedData from crash_algorithm.dart
   return crashes;
 }

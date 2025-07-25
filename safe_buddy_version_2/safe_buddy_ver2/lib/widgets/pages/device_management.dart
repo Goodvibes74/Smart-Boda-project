@@ -1,9 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../device.dart';
 import '../device_registration_form.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+final databaseRef = FirebaseDatabase.instance.ref("devices");
+Stream<DatabaseEvent> stream = databaseRef.onValue;
 
 class DeviceManagerPage extends StatelessWidget {
   const DeviceManagerPage({Key? key}) : super(key: key);
@@ -12,6 +15,7 @@ class DeviceManagerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
+    DatabaseReference ref = FirebaseDatabase.instance.ref('devices');
 
     return Scaffold(
       backgroundColor: cs.background,
@@ -28,25 +32,23 @@ class DeviceManagerPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            // Firestore device fetch
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('devices')
-                  .snapshots(),
+            StreamBuilder<DatabaseEvent>(
+              stream: ref.onValue,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error loading devices'));
+                  return Center(child: Text('Error loading devices: ${snapshot.error}'));
                 }
-                final docs = snapshot.data?.docs ?? [];
-                // Filter out 'users' document if present
-                final devices = docs.where((d) => d.id != 'users').toList();
+                final data = snapshot.data?.snapshot.value as Map<dynamic, dynamic>? ?? {};
+                final devices = data.entries.map((e) => {
+                  'id': e.key,
+                }).toList();
                 final active = devices.where((d) => d['online'] == true).length;
                 final offline = devices
-                    .where((d) => d['online'] == false)
-                    .length;
+                .where((d) => d['online'] == false)
+                .length;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -66,7 +68,6 @@ class DeviceManagerPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    // Responsive grid/wrap
                     LayoutBuilder(
                       builder: (ctx, constraints) {
                         final crossAxisCount = constraints.maxWidth ~/ 220;
@@ -74,21 +75,21 @@ class DeviceManagerPage extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: devices.length,
-                          gridDelegate:
+                          gridDelegate: 
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: crossAxisCount > 1
-                                    ? crossAxisCount
-                                    : 1,
-                                childAspectRatio: 1.8,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                              ),
+                                crossAxisCount: crossAxisCount > 1 
+                                ? crossAxisCount 
+                                : 1,
+                            childAspectRatio: 1.8,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
                           itemBuilder: (_, i) {
                             final d = devices[i];
                             return DeviceCard(
-                              deviceId: d['id'] ?? d.id,
-                              location: d['loc'] ?? 'Unknown',
-                              isOnline: d['online'] ?? false,
+                              deviceId: d['id'],
+                              location: d['loc'],
+                              isOnline: d['online'],
                             );
                           },
                         );
@@ -99,7 +100,6 @@ class DeviceManagerPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            // Actions
             Row(
               children: [
                 ElevatedButton(
@@ -127,7 +127,7 @@ class DeviceManagerPage extends StatelessWidget {
                     side: BorderSide(color: cs.onSurface.withOpacity(0.3)),
                   ),
                   onPressed: () {
-                    /* Turn off all logic */
+                    // Implement turn off all logic if needed
                   },
                   child: const Text('Turn Off All'),
                 ),

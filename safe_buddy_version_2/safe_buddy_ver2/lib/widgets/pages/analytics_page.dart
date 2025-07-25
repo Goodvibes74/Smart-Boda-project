@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:safe_buddy_ver2/crash_algorithm.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
-import 'dart:convert'; // Added for jsonEncode
+import 'dart:convert';
+
+import 'dashboard.dart'; // Added for jsonEncode
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -61,7 +63,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   void initState() {
     super.initState();
-    _rawFuture = getData(); // From crash_algorithm.dart
+    _rawFuture = getCrashData(); // From crash_algorithm.dart
     _crashesFuture = _rawFuture.then((raw) => getAllFormattedData(raw)); // From crash_algorithm.dart
   }
 
