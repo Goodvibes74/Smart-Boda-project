@@ -108,6 +108,13 @@ Our accident detection is based upon the following sensor readings and logic:
   A sudden sharp spike in angular velocity combined with accelerometer data suggests abnormal rotational movement typically experienced during a crash. This helps differentiate accidents from other movements.
    \item \textbf{Accelerometer Readings:}  
   High acceleration combined with force sensor triggers and gyro spikes confirms an accident event. Isolated acceleration spikes (e.g., over bumps) without corresponding gyro data are filtered out.
+   \item \textbf{Sensor Fusion Logic:}  
+  To reduce false positives, the system considers:  
+  \begin{itemize}
+    \item \textit{Speed bumps:} Cause acceleration spikes but no significant gyro spikes or force sensor impact.  
+    \item \textit{Sharp turns:} Cause gyro spikes without large force impact or acceleration spikes indicating collisions.  
+    \item \textit{Accident detection:} Requires concurrent detection of significant impact force, abnormal angular velocity (gyro spike), and sudden acceleration changes.  
+  \end{itemize}
 \end{itemize}
 
 \end{itemize}
