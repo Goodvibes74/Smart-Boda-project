@@ -140,6 +140,6 @@ class Dashboard extends StatelessWidget {
 
 Future<Map> getCrashData() async {
   var raw = await getData();
-  var crashes = getCrashes(raw);
+  var crashes = getAllFormattedData(raw);
   return crashes;
 }

@@ -59,7 +59,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   void initState() {
     super.initState();
     _rawFuture = getData();
-    _crashesFuture = _rawFuture.then((raw) => getCrashes(raw));
+    _crashesFuture = _rawFuture.then((raw) => getAllFormattedData(raw));
   }
 
   @override
