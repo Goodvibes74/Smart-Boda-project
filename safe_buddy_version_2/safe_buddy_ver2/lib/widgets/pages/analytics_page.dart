@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:safe_buddy_ver2/crash_algorithm.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'dart:convert'; // Added for jsonEncode
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -21,8 +22,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     required bool asCsv,
   }) {
     if (asCsv) {
-      // CSV header
-      final headers = ['timestamp', 'lat', 'lon', 'severity', 'speed', 'type'];
+      // CSV header - ensure these match the keys used in the map below
+      final headers = ['timestamp', 'sim_number', 'latitude', 'longitude', 'severity', 'speed_kmph', 'crash_type'];
       final csv = StringBuffer();
       csv.writeln(headers.join(','));
       for (final row in crashList) {
@@ -30,7 +31,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       }
       _showExportDialog(context, csv.toString(), 'CSV');
     } else {
-      final jsonStr = crashList.toString();
+      // Convert the list of maps to a JSON string
+      final jsonStr = jsonEncode(crashList); // Use jsonEncode for proper JSON formatting
       _showExportDialog(context, jsonStr, 'JSON');
     }
   }
@@ -60,8 +62,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   void initState() {
     super.initState();
-    _rawFuture = getData();
-    _crashesFuture = _rawFuture.then((raw) => getAllFormattedData(raw));
+    _rawFuture = getData(); // From crash_algorithm.dart
+    _crashesFuture = _rawFuture.then((raw) => getAllFormattedData(raw)); // From crash_algorithm.dart
   }
 
   @override
@@ -81,9 +83,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading analytics'));
+            print('Error loading analytics: ${snapshot.error}'); // Added for debugging
+            return const Center(child: Text('Error loading analytics'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No crash data found'));
+            return const Center(child: Text('No crash data found'));
           }
           final crashMap = snapshot.data!;
           return _buildAnalytics(context, crashMap, cs, text);
@@ -99,15 +102,18 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     TextTheme text,
   ) {
     // Prepare data
+    // The List<dynamic> from getAllFormattedData is:
+    // [simNumber, lat, lon, severity, speed, type]
     final crashList = crashMap.entries
         .map(
           (e) => {
             'timestamp': e.key,
-            'lat': e.value[0],
-            'lon': e.value[1],
-            'severity': e.value[2],
-            'speed': e.value[3],
-            'type': e.value[4],
+            'sim_number': e.value[0], // Corrected index
+            'latitude': e.value[1],   // Corrected index
+            'longitude': e.value[2],  // Corrected index
+            'severity': e.value[3],
+            'speed_kmph': e.value[4], // Corrected key and index
+            'crash_type': e.value[5], // Corrected key and index
           },
         )
         .toList();
@@ -116,7 +122,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     // Crash type counts
     final typeCounts = <String, int>{};
     for (var crash in crashList) {
-      final type = crash['type']?.toString() ?? 'Unknown';
+      final type = crash['crash_type']?.toString() ?? 'Unknown'; // Use 'crash_type' key
       typeCounts[type] = (typeCounts[type] ?? 0) + 1;
     }
     // Accidents by hour
@@ -150,9 +156,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     // Average speed
     final speeds = crashList
         .map(
-          (c) => (c['speed'] is num)
-              ? c['speed']
-              : int.tryParse(c['speed']?.toString() ?? '0') ?? 0,
+          (c) => (c['speed_kmph'] is num) // Use 'speed_kmph' key
+              ? c['speed_kmph']
+              : int.tryParse(c['speed_kmph']?.toString() ?? '0') ?? 0,
         )
         .toList();
     final avgSpeed = speeds.isNotEmpty
@@ -160,7 +166,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         : 0;
     // Locations with highest speeds
     final topSpeedCrashes = List.of(crashList)
-      ..sort((a, b) => (b['speed'] as num).compareTo(a['speed'] as num));
+      ..sort((a, b) => (b['speed_kmph'] as num).compareTo(a['speed_kmph'] as num)); // Use 'speed_kmph' key
     final topLocations = topSpeedCrashes.take(3).toList();
 
     return SingleChildScrollView(
@@ -230,9 +236,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ...topLocations.map(
             (c) => ListTile(
               leading: Icon(Icons.location_on, color: cs.error),
-              title: Text('Lat: ${c['lat']}, Lon: ${c['lon']}'),
+              title: Text('Lat: ${c['latitude']}, Lon: ${c['longitude']}'), // Use 'latitude' and 'longitude' keys
               subtitle: Text(
-                'Speed: ${c['speed']} km/h, Severity: ${c['severity']}',
+                'Speed: ${c['speed_kmph']} km/h, Severity: ${c['severity']}', // Use 'speed_kmph' key
               ),
             ),
           ),

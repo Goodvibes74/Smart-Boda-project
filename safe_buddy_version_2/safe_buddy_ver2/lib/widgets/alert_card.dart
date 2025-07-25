@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'map_overlay.dart';
+import 'map_overlay.dart'; // Assuming map_overlay.dart defines MapPingNotifier
 
 class AlertCard extends StatelessWidget {
   final Map<String, String> crash;
@@ -12,13 +12,14 @@ class AlertCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     // Expect crash = { ...fields... }
+    // These keys now correctly match what is passed from dashboard.dart
     final severity = crash['severity'] ?? '';
-    final deviceNo = crash['device'] ?? '000920'; // fallback if not present
     final timestamp = crash['timestamp'] ?? '';
-    final speed = crash['speed'] ?? '';
-    final type = crash['type'] ?? '';
-    final lat = double.tryParse(crash['lat'] ?? '');
-    final lon = double.tryParse(crash['lon'] ?? '');
+    final speed = crash['speed_kmph'] ?? ''; // Corrected key
+    final type = crash['crash_type'] ?? ''; // Corrected key
+    final simNumber = crash['sim_number'] ?? ''; // Corrected key
+    final lat = double.tryParse(crash['latitude'] ?? ''); // Corrected key
+    final lon = double.tryParse(crash['longitude'] ?? ''); // Corrected key
 
     Color severityColor;
     switch (severity.toLowerCase()) {
@@ -79,17 +80,16 @@ class AlertCard extends StatelessWidget {
                     Icon(Icons.warning, color: severityColor),
                     const SizedBox(width: 8),
                     Text(
+                      'SIM: $simNumber', // Display SIM number
+                      style: TextStyle(color: cs.onSurface),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
                       'Severity: $severity',
                       style: TextStyle(color: severityColor),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Device No: $deviceNo',
-                  style: TextStyle(color: cs.onSurface.withOpacity(0.7)),
-                ),
-                const SizedBox(height: 4),
                 Text(
                   timestamp,
                   style: TextStyle(color: cs.onSurface.withOpacity(0.7)),

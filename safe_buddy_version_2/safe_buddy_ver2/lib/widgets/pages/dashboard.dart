@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import '../alert_card.dart';
 import '../map_overlay.dart';
-import 'package:safe_buddy_ver2/crash_algorithm.dart';
+import 'package:safe_buddy_ver2/crash_algorithm.dart'; // Ensure this import is correct
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -25,7 +25,7 @@ class Dashboard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
     // Use FutureBuilder to handle async crash data
-    final Future<Map> crashesFuture = getCrashData();
+    final Future<Map> crashesFuture = getCrashData(); // getCrashData is from crash_algorithm.dart
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -82,7 +82,7 @@ class Dashboard extends StatelessWidget {
                           ),
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text('No alerts found'));
+                        return const Center(child: Text('No alerts found'));
                       }
                       final crashMap = snapshot.data!;
                       final crashEntries = crashMap.entries.toList();
@@ -90,15 +90,21 @@ class Dashboard extends StatelessWidget {
                         itemCount: crashEntries.length,
                         itemBuilder: (context, index) {
                           final entry = crashEntries[index];
-                          // Convert to Map<String, String> for AlertCard
-                          final crashData = entry.value;
+                          // crashData is List<dynamic> from getAllFormattedData:
+                          // [simNumber, lat, lon, severity, speed, type]
+                          final List<dynamic> crashDataList = entry.value;
+
+                          // CORRECTED MAPPING:
+                          // Map the List<dynamic> to the Map<String, String> format
+                          // that AlertCard expects, using the correct keys.
                           final Map<String, String> crashStringMap = {
-                            'lat': crashData[0]?.toString() ?? '',
-                            'lon': crashData[1]?.toString() ?? '',
-                            'severity': crashData[2]?.toString() ?? '',
-                            'speed': crashData[3]?.toString() ?? '',
-                            'type': crashData[4]?.toString() ?? '',
-                            'timestamp': entry.key,
+                            'sim_number': crashDataList[0]?.toString() ?? '',
+                            'latitude': crashDataList[1]?.toString() ?? '',
+                            'longitude': crashDataList[2]?.toString() ?? '',
+                            'severity': crashDataList[3]?.toString() ?? '',
+                            'speed_kmph': crashDataList[4]?.toString() ?? '',
+                            'crash_type': crashDataList[5]?.toString() ?? '',
+                            'timestamp': entry.key, // Timestamp is the map key
                           };
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
@@ -138,8 +144,10 @@ class Dashboard extends StatelessWidget {
   }
 }
 
+// This function is correctly defined in crash_algorithm.dart and imported.
+// It fetches raw data and then formats it.
 Future<Map> getCrashData() async {
-  var raw = await getData();
-  var crashes = getAllFormattedData(raw);
+  var raw = await getData(); // getData from crash_algorithm.dart
+  var crashes = getAllFormattedData(raw); // getAllFormattedData from crash_algorithm.dart
   return crashes;
 }

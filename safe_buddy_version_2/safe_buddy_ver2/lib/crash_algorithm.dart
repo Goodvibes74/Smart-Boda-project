@@ -74,6 +74,7 @@ Map<String, List<dynamic>> getAllFormattedData(Map<dynamic, dynamic> data) {
     var values = data[timestampKey];
     
     // Extract values directly from the Firebase data
+    String simNumber = values['sim_number']?.toString() ?? "Unknown";
     double? lat = values['latitude'] as double?;
     double? lon = values['longitude'] as double?;
     String severity = getSeverity(values); // Uses the value from Firebase
@@ -83,6 +84,7 @@ Map<String, List<dynamic>> getAllFormattedData(Map<dynamic, dynamic> data) {
     if (speed < 0) speed = 0; // Ensure speed is non-negative
 
     formattedData[timestampKey.toString()] = [
+      simNumber,
       lat,
       lon,
       severity,
