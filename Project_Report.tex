@@ -106,6 +106,8 @@ Our accident detection is based upon the following sensor readings and logic:
   
   \item \textbf{Gyroscope Readings:}  
   A sudden sharp spike in angular velocity combined with accelerometer data suggests abnormal rotational movement typically experienced during a crash. This helps differentiate accidents from other movements.
+   \item \textbf{Accelerometer Readings:}  
+  High acceleration combined with force sensor triggers and gyro spikes confirms an accident event. Isolated acceleration spikes (e.g., over bumps) without corresponding gyro data are filtered out.
 \end{itemize}
 
 \end{itemize}
