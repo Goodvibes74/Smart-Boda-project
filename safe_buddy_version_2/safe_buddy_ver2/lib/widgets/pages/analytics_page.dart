@@ -1,12 +1,18 @@
+// lib/widgets/pages/analytics_page.dart
+// Removed ignore_for_file: deprecated_member_use as modern widgets will be used
+
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:safe_buddy_ver2/crash_algorithm.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // For getting current user
+import 'package:safe_buddy_ver2/crash_algorithm.dart'; // Import CrashData and CrashAlgorithmService
+import '../device.dart'; // Import Device and DeviceService (for potential future use in analytics)
 import 'package:intl/intl.dart';
 import 'dart:math';
-import 'dart:convert';
+import 'dart:convert'; // For jsonEncode
 
-import 'dashboard.dart'; // Added for jsonEncode
+import '../alert_card.dart'; // For displaying error/info messages
+import '../map_overlay.dart'; // For displaying historical crash locations on a map
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -16,24 +22,52 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  
+  final CrashAlgorithmService _crashService = CrashAlgorithmService();
+  // final DeviceService _deviceService = DeviceService(); // Uncomment if you need device data in analytics
+  User? _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = FirebaseAuth.instance.currentUser;
+    // Listen for authentication state changes
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (mounted) {
+        setState(() {
+          _currentUser = user;
+        });
+      }
+    });
+  }
+
+  /// Exports crash data as CSV or JSON.
   void _exportCrashes(
     BuildContext context,
-    List<Map<String, dynamic>> crashList, {
+    List<CrashData> crashList, { // Now takes List<CrashData>
     required bool asCsv,
   }) {
+    // Convert CrashData objects to a list of maps for export
+    final List<Map<String, dynamic>> exportableList = crashList.map((crash) {
+      return {
+        'timestamp': crash.timestamp.toIso8601String(), // ISO 8601 for consistent timestamp
+        'latitude': crash.latitude,
+        'longitude': crash.longitude,
+        'severity': crash.severity,
+        'speed_kmph': crash.speedKmph,
+        'crash_type': crash.crashType,
+      };
+    }).toList();
+
     if (asCsv) {
-      // CSV header - ensure these match the keys used in the map below
-      final headers = ['timestamp', 'sim_number', 'latitude', 'longitude', 'severity', 'speed_kmph', 'crash_type'];
+      final headers = ['timestamp', 'deviceId', 'latitude', 'longitude', 'severity', 'speed_kmph', 'crash_type'];
       final csv = StringBuffer();
       csv.writeln(headers.join(','));
-      for (final row in crashList) {
+      for (final row in exportableList) {
         csv.writeln(headers.map((h) => row[h]?.toString() ?? '').join(','));
       }
       _showExportDialog(context, csv.toString(), 'CSV');
     } else {
-      // Convert the list of maps to a JSON string
-      final jsonStr = jsonEncode(crashList); // Use jsonEncode for proper JSON formatting
+      final jsonStr = jsonEncode(exportableList);
       _showExportDialog(context, jsonStr, 'JSON');
     }
   }
@@ -44,7 +78,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       builder: (ctx) => AlertDialog(
         title: Text('Exported $type'),
         content: SizedBox(
-          width: 400,
+          width: MediaQuery.of(ctx).size.width * 0.7, // Make it responsive
+          height: MediaQuery.of(ctx).size.height * 0.6,
           child: SingleChildScrollView(child: SelectableText(data)),
         ),
         actions: [
@@ -57,20 +92,24 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     );
   }
 
-  late Future<Map> _rawFuture;
-  late Future<Map<String, List<dynamic>>> _crashesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _rawFuture = getCrashData(); // From crash_algorithm.dart
-    _crashesFuture = _rawFuture.then((raw) => getAllFormattedData(raw)); // From crash_algorithm.dart
-  }
-
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
+
+    if (_currentUser == null) {
+      return Center(
+        child: AlertCard(
+          title: 'Authentication Required',
+          message: 'Please log in to view crash analytics.',
+          type: AlertType.info,
+          onClose: () {
+            // Optionally navigate to auth page or just dismiss the message
+          },
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crash Analytics'),
@@ -78,19 +117,31 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         foregroundColor: cs.onPrimary,
       ),
       backgroundColor: cs.background,
-      body: FutureBuilder<Map<String, List<dynamic>>>(
-        future: _crashesFuture,
+      body: StreamBuilder<List<CrashData>>( // Use StreamBuilder for real-time data
+        stream: _crashService.getCrashStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            print('Error loading analytics: ${snapshot.error}'); // Added for debugging
-            return const Center(child: Text('Error loading analytics'));
+            print('Error loading analytics: ${snapshot.error}');
+            return Center(
+              child: AlertCard(
+                title: 'Error Loading Analytics',
+                message: 'Could not load crash data: ${snapshot.error}',
+                type: AlertType.error,
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No crash data found'));
+            return const Center(
+              child: AlertCard(
+                title: 'No Crash Data',
+                message: 'No crash events have been recorded yet for analytics.',
+                type: AlertType.info,
+              ),
+            );
           }
-          final crashMap = snapshot.data!;
-          return _buildAnalytics(context, crashMap, cs, text);
+          final crashList = snapshot.data!;
+          return _buildAnalytics(context, crashList, cs, text);
         },
       ),
     );
@@ -98,75 +149,48 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   Widget _buildAnalytics(
     BuildContext context,
-    Map<String, List<dynamic>> crashMap,
+    List<CrashData> crashList, // Now takes List<CrashData>
     ColorScheme cs,
     TextTheme text,
   ) {
-    // Prepare data
-    // The List<dynamic> from getAllFormattedData is:
-    // [simNumber, lat, lon, severity, speed, type]
-    final crashList = crashMap.entries
-        .map(
-          (e) => {
-            'timestamp': e.key,
-            'sim_number': e.value[0], // Corrected index
-            'latitude': e.value[1],   // Corrected index
-            'longitude': e.value[2],  // Corrected index
-            'severity': e.value[3],
-            'speed_kmph': e.value[4], // Corrected key and index
-            'crash_type': e.value[5], // Corrected key and index
-          },
-        )
-        .toList();
-
     // Crash type counts
     final typeCounts = <String, int>{};
     for (var crash in crashList) {
-      final type = crash['crash_type']?.toString() ?? 'Unknown'; // Use 'crash_type' key
+      final type = crash.crashType;
       typeCounts[type] = (typeCounts[type] ?? 0) + 1;
     }
+
     // Accidents by hour
     final hourCounts = List<int>.filled(24, 0);
     for (var crash in crashList) {
-      final dt = DateTime.tryParse(crash['timestamp'] ?? '') ?? DateTime(2000);
-      hourCounts[dt.hour]++;
+      hourCounts[crash.timestamp.hour]++;
     }
-    // Accidents by day of week
+
+    // Accidents by day of week (Monday=1, Sunday=7. Convert to 0-6 for array)
     final dayCounts = List<int>.filled(7, 0);
     for (var crash in crashList) {
-      final dt = DateTime.tryParse(crash['timestamp'] ?? '') ?? DateTime(2000);
-      dayCounts[dt.weekday % 7]++;
+      dayCounts[crash.timestamp.weekday % 7]++; // Monday is 1, Sunday is 7. %7 makes Sunday 0, Monday 1...
     }
+
     // Average interval
-    final timestamps =
-        crashList
-            .map(
-              (c) => DateTime.tryParse(c['timestamp'] ?? '') ?? DateTime(2000),
-            )
-            .toList()
-          ..sort();
+    final timestamps = crashList.map((c) => c.timestamp).toList()..sort();
     final intervals = <Duration>[];
     for (int i = 1; i < timestamps.length; i++) {
       intervals.add(timestamps[i].difference(timestamps[i - 1]));
     }
     final avgInterval = intervals.isNotEmpty
-        ? intervals.map((d) => d.inMinutes).reduce((a, b) => a + b) /
-              intervals.length
+        ? intervals.map((d) => d.inMinutes).reduce((a, b) => a + b) / intervals.length
         : 0;
+
     // Average speed
-    final speeds = crashList
-        .map(
-          (c) => (c['speed_kmph'] is num) // Use 'speed_kmph' key
-              ? c['speed_kmph']
-              : int.tryParse(c['speed_kmph']?.toString() ?? '0') ?? 0,
-        )
-        .toList();
+    final speeds = crashList.map((c) => c.speedKmph).toList();
     final avgSpeed = speeds.isNotEmpty
         ? speeds.reduce((a, b) => a + b) / speeds.length
         : 0;
+
     // Locations with highest speeds
     final topSpeedCrashes = List.of(crashList)
-      ..sort((a, b) => (b['speed_kmph'] as num).compareTo(a['speed_kmph'] as num)); // Use 'speed_kmph' key
+      ..sort((a, b) => b.speedKmph.compareTo(a.speedKmph));
     final topLocations = topSpeedCrashes.take(3).toList();
 
     return SingleChildScrollView(
@@ -179,15 +203,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               ElevatedButton.icon(
                 icon: const Icon(Icons.download),
                 label: const Text('Export as CSV'),
-                onPressed: () =>
-                    _exportCrashes(context, crashList, asCsv: true),
+                onPressed: () => _exportCrashes(context, crashList, asCsv: true),
               ),
               const SizedBox(width: 12),
               ElevatedButton.icon(
                 icon: const Icon(Icons.file_copy),
                 label: const Text('Export as JSON'),
-                onPressed: () =>
-                    _exportCrashes(context, crashList, asCsv: false),
+                onPressed: () => _exportCrashes(context, crashList, asCsv: false),
               ),
             ],
           ),
@@ -226,8 +248,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           const SizedBox(height: 8),
           _LineChart(
             dayCounts,
-            labelBuilder: (i) =>
-                DateFormat.E().format(DateTime(2020, 1, i + 1)),
+            labelBuilder: (i) => DateFormat.E().format(DateTime(2020, 1, (i + 1) % 7 == 0 ? 7 : (i + 1) % 7)), // Adjust for correct day mapping
             color: cs.secondary,
           ),
           const SizedBox(height: 32),
@@ -236,9 +257,25 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           ...topLocations.map(
             (c) => ListTile(
               leading: Icon(Icons.location_on, color: cs.error),
-              title: Text('Lat: ${c['latitude']}, Lon: ${c['longitude']}'), // Use 'latitude' and 'longitude' keys
+              title: Text('Lat: ${c.latitude.toStringAsFixed(4)}, Lon: ${c.longitude.toStringAsFixed(4)}'),
               subtitle: Text(
-                'Speed: ${c['speed_kmph']} km/h, Severity: ${c['severity']}', // Use 'speed_kmph' key
+                'Speed: ${c.speedKmph.toStringAsFixed(1)} km/h, Severity: ${c.severity}',
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+          Text(
+            'Historical Crash Locations',
+            style: text.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 400, // Fixed height for the map
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: CustomMapView(
+                crashLocations: crashList,
+                showDeviceMarkers: false, // Only show crash markers here
               ),
             ),
           ),
@@ -260,21 +297,21 @@ class _AnimatedCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TweenAnimationBuilder<int>(
-      tween: IntTween(begin: 0, end: value),
+    return TweenAnimationBuilder<double>( // Changed to double for smoother animation
+      tween: Tween<double>(begin: 0, end: value.toDouble()),
       duration: const Duration(seconds: 2),
       builder: (context, val, child) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '$val',
+            '${val.round()}', // Round to integer for display
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          Text(label, style: TextStyle(fontSize: 16)),
+          Text(label, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );
@@ -289,29 +326,39 @@ class _BarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxVal = data.values.isNotEmpty ? data.values.reduce(max) : 1;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: data.entries.map((e) {
-        final barHeight = (e.value / maxVal) * 60;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(width: 24, height: barHeight, color: cs.primary),
-              const SizedBox(height: 4),
-              Text(e.key, style: TextStyle(fontSize: 12)),
-              Text(
-                '${e.value}',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: cs.onSurface.withOpacity(0.7),
+    return SingleChildScrollView( // Added SingleChildScrollView for horizontal scrolling on narrow screens
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: data.entries.map((e) {
+          final barHeight = (e.value / maxVal) * 60;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  width: 24,
+                  height: barHeight,
+                  decoration: BoxDecoration(
+                    color: cs.primary,
+                    borderRadius: BorderRadius.circular(4), // Rounded corners for bars
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
+                const SizedBox(height: 4),
+                Text(e.key, style: const TextStyle(fontSize: 12)),
+                Text(
+                  '${e.value}',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: cs.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
@@ -330,14 +377,17 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final maxVal = data.isNotEmpty ? data.reduce(max) : 1;
     return SizedBox(
-      height: 80,
+      height: 100, // Increased height for better visibility
       child: CustomPaint(
         painter: _LineChartPainter(data, color, maxVal),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            data.length,
-            (i) => Text(labelBuilder(i), style: const TextStyle(fontSize: 10)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0), // Add padding for labels
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              data.length,
+              (i) => Text(labelBuilder(i), style: const TextStyle(fontSize: 10)),
+            ),
           ),
         ),
       ),
@@ -354,23 +404,53 @@ class _LineChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (data.isEmpty) return;
+
     final paint = Paint()
       ..color = color
       ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round; // Rounded line caps
+
+    final fillPaint = Paint() // For gradient fill under the line
+      ..color = color.withOpacity(0.2)
+      ..style = PaintingStyle.fill;
+
     final points = <Offset>[];
     for (int i = 0; i < data.length; i++) {
-      final x = i * size.width / (data.length - 1);
+      final x = i * size.width / (data.length - 1).clamp(1, double.infinity); // Handle single data point
       final y = size.height - (data[i] / maxVal) * size.height;
       points.add(Offset(x, y));
     }
-    final path = Path()..moveTo(points[0].dx, points[0].dy);
-    for (final p in points.skip(1)) {
-      path.lineTo(p.dx, p.dy);
+
+    if (points.length > 1) {
+      final path = Path()..moveTo(points[0].dx, points[0].dy);
+      for (final p in points.skip(1)) {
+        path.lineTo(p.dx, p.dy);
+      }
+      canvas.drawPath(path, paint);
+
+      // Draw fill under the line
+      final fillPath = Path.from(path)
+        ..lineTo(points.last.dx, size.height)
+        ..lineTo(points.first.dx, size.height)
+        ..close();
+      canvas.drawPath(fillPath, fillPaint);
+    } else if (points.length == 1) {
+      // Draw a single circle if only one data point
+      canvas.drawCircle(points[0], 4, paint..style = PaintingStyle.fill);
     }
-    canvas.drawPath(path, paint);
+
+    // Draw circles at each data point
+    final pointPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+    for (final p in points) {
+      canvas.drawCircle(p, 3, pointPaint);
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _LineChartPainter oldDelegate) {
+    return oldDelegate.data != data || oldDelegate.color != color || oldDelegate.maxVal != maxVal;
+  }
 }

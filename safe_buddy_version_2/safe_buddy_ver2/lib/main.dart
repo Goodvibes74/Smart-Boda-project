@@ -1,3 +1,4 @@
+// lib/main.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,11 +11,13 @@ import 'widgets/pages/initial.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/profile_image_provider.dart';
+import 'package:safe_buddy_ver2/widgets/map_overlay.dart'; // Import MapPingNotifier
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase App
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -23,6 +26,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ProfileImageProvider()),
+        //for map interaction across widgets
+        ChangeNotifierProvider(create: (_) => MapPingNotifier()),
       ],
       child: const SafeBuddyApp(),
     ),

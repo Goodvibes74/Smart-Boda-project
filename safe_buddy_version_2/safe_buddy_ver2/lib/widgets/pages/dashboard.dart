@@ -1,36 +1,65 @@
-// ignore_for_file: deprecated_member_use, unused_local_variable
+// lib/widgets/pages/dashboard.dart
+// Removed ignore_for_file: deprecated_member_use, unused_local_variable as they are no longer necessary with updated code
 
 import 'package:flutter/material.dart';
-import '../alert_card.dart';
-import '../map_overlay.dart';
-import 'package:safe_buddy_ver2/crash_algorithm.dart'; // Ensure this import is correct
+import 'package:firebase_auth/firebase_auth.dart'; // For getting current user
+import 'package:intl/intl.dart'; // For date formatting
+import '/crash_algorithm.dart'; // Import CrashData and CrashAlgorithmService
+import '../device.dart'; // Import Device and DeviceService
+import '../alert_card.dart'; // Import AlertCard
+import '../map_overlay.dart'; // Import CustomMapView (formerly MapOverlay)
 
-class DashboardPage extends StatelessWidget {
+// Removed getCrashData() as we will use StreamBuilder with CrashAlgorithmService
+
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    final cs = Theme.of(context).colorScheme;
-
-    return Scaffold(backgroundColor: cs.background, body: const Dashboard());
-  }
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class _DashboardPageState extends State<DashboardPage> {
+  final CrashAlgorithmService _crashService = CrashAlgorithmService();
+  final DeviceService _deviceService = DeviceService();
+  User? _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = FirebaseAuth.instance.currentUser;
+    // Listen for authentication state changes
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (mounted) {
+        setState(() {
+          _currentUser = user;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
-    // Use FutureBuilder to handle async crash data
-    final Future<Map> crashesFuture = getCrashData(); // getCrashData is from crash_algorithm.dart
+
+    if (_currentUser == null) {
+      return Center(
+        child: AlertCard(
+          title: 'Authentication Required',
+          message: 'Please log in to view the dashboard and recent alerts.',
+          type: AlertType.info,
+          onClose: () {
+            // Optionally navigate to auth page or just dismiss the message
+          },
+        ),
+      );
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth >= 800;
 
+        // Section for Recent Crash Alerts
         final alertsColumn = Expanded(
           flex: 2,
           child: Padding(
@@ -39,7 +68,7 @@ class Dashboard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Recent Alerts',
+                  'Recent Crash Alerts',
                   style: text.titleLarge?.copyWith(
                     color: cs.onSurface,
                     fontSize: 32,
@@ -47,68 +76,47 @@ class Dashboard extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 Expanded(
-                  child: FutureBuilder<Map>(
-                    future: crashesFuture,
+                  // StreamBuilder to listen for real-time crash data
+                  child: StreamBuilder<List<CrashData>>(
+                    stream: _crashService.getCrashStream(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        // Network error page
                         return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.wifi_off, size: 64, color: cs.error),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Network Error',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: cs.error,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Please check your internet connection.',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: cs.onSurface.withOpacity(0.7),
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                          child: AlertCard(
+                            title: 'Network Error',
+                            message: 'Could not load crash data: ${snapshot.error}. Please check your internet connection.',
+                            type: AlertType.error,
                           ),
                         );
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text('No alerts found'));
+                        return const Center(
+                          child: AlertCard(
+                            title: 'No Recent Alerts',
+                            message: 'No crash alerts have been detected recently.',
+                            type: AlertType.info,
+                          ),
+                        );
                       }
-                      final crashMap = snapshot.data!;
-                      final crashEntries = crashMap.entries.toList();
-                      return ListView.builder(
-                        itemCount: crashEntries.length,
-                        itemBuilder: (context, index) {
-                          final entry = crashEntries[index];
-                          // crashData is List<dynamic> from getAllFormattedData:
-                          // [simNumber, lat, lon, severity, speed, type]
-                          final List<dynamic> crashDataList = entry.value;
 
-                          // CORRECTED MAPPING:
-                          // Map the List<dynamic> to the Map<String, String> format
-                          // that AlertCard expects, using the correct keys.
-                          final Map<String, String> crashStringMap = {
-                            'sim_number': crashDataList[0]?.toString() ?? '',
-                            'latitude': crashDataList[1]?.toString() ?? '',
-                            'longitude': crashDataList[2]?.toString() ?? '',
-                            'severity': crashDataList[3]?.toString() ?? '',
-                            'speed_kmph': crashDataList[4]?.toString() ?? '',
-                            'crash_type': crashDataList[5]?.toString() ?? '',
-                            'timestamp': entry.key, // Timestamp is the map key
-                          };
+                      final recentCrashes = snapshot.data!;
+                      return ListView.builder(
+                        itemCount: recentCrashes.length,
+                        itemBuilder: (context, index) {
+                          final crash = recentCrashes[index];
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
-                            child: AlertCard(crash: crashStringMap),
+                            // Pass the CrashData object directly to AlertCard
+                            child: AlertCard(
+                              crashData: crash,
+                              onClose: () {
+                                // Implement logic to dismiss/acknowledge crash if needed
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Crash alert dismissed (logic not implemented)')),
+                                );
+                              },
+                            ),
                           );
                         },
                       );
@@ -120,13 +128,62 @@ class Dashboard extends StatelessWidget {
           ),
         );
 
+        // Map Section
         final mapSection = Expanded(
           flex: 3,
           child: Padding(
             padding: const EdgeInsets.all(24),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: const MapOverlay(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Live Map & Device Locations',
+                  style: text.titleLarge?.copyWith(
+                    color: cs.onSurface,
+                    fontSize: 32,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: StreamBuilder<List<CrashData>>(
+                      stream: _crashService.getCrashStream(),
+                      builder: (context, crashSnapshot) {
+                        // Also stream device data to show on map
+                        return StreamBuilder<List<Device>>(
+                          stream: _deviceService.getDevicesStream(_currentUser!.uid),
+                          builder: (context, deviceSnapshot) {
+                            if (crashSnapshot.connectionState == ConnectionState.waiting ||
+                                deviceSnapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                            if (crashSnapshot.hasError || deviceSnapshot.hasError) {
+                              return Center(
+                                child: AlertCard(
+                                  title: 'Map Error',
+                                  message: 'Could not load map data: ${crashSnapshot.error ?? deviceSnapshot.error}',
+                                  type: AlertType.error,
+                                ),
+                              );
+                            }
+
+                            final crashes = crashSnapshot.data ?? [];
+                            final devices = deviceSnapshot.data ?? [];
+
+                            return CustomMapView(
+                              crashLocations: crashes,
+                              deviceLocations: devices,
+                              showCrashMarkers: true,
+                              showDeviceMarkers: true,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -134,19 +191,18 @@ class Dashboard extends StatelessWidget {
         if (isWide) {
           return Row(children: [alertsColumn, mapSection]);
         } else {
-          // stack vertically on narrow screens
-          return Column(
-            children: [alertsColumn, const Divider(thickness: 1), mapSection],
+          // Stack vertically on narrow screens
+          return SingleChildScrollView( // Added SingleChildScrollView for narrow screens
+            child: Column(
+              children: [
+                alertsColumn,
+                const Divider(thickness: 1, indent: 24, endIndent: 24), // Add dividers
+                mapSection,
+              ],
+            ),
           );
         }
       },
     );
   }
-}
-
-// This function is correctly defined in crash_algorithm.dart and imported.
-// It fetches raw data and then formats it.
-Future<Map> getCrashData() async {
-  var crashes = await getAllFormattedData({}); // getAllFormattedData from crash_algorithm.dart
-  return crashes;
 }

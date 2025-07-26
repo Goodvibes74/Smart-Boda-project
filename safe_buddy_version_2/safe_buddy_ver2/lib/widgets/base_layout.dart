@@ -21,7 +21,7 @@ class _BaseLayoutState extends State<BaseLayout> {
 
   final List<Widget> _pages = [
     const DashboardPage(),
-    const DeviceManagerPage(),
+    const DeviceManagementPage(),
     const SettingsPage(),
   ];
 
