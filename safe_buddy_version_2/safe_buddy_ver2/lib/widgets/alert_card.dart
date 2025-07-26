@@ -1,5 +1,5 @@
 // lib/widgets/alert_card.dart
-// ignore_for_file: deprecated_member_use
+// Removed ignore_for_file: deprecated_member_use as modern widgets are used
 
 import 'package:flutter/material.dart';
 import '../crash_algorithm.dart'; // Import CrashData
@@ -16,7 +16,6 @@ enum AlertType {
 }
 
 class AlertCard extends StatelessWidget {
-  // Original crash map is replaced by CrashData object
   final CrashData? crashData; // Optional, if this card is used for generic alerts too
   final String? title; // Optional, for generic alerts
   final String? message; // Optional, for generic alerts
@@ -33,10 +32,10 @@ class AlertCard extends StatelessWidget {
     this.type = AlertType.info, // Default for generic use
     this.onClose,
   }) : assert(
-          (crashData != null && title == null && message == null) ||
-              (crashData == null && title != null && message != null),
-          'Either provide crashData OR title and message, but not both or neither.',
-        );
+  (crashData != null && title == null && message == null) ||
+      (crashData == null && title != null && message != null),
+  'Either provide crashData OR title and message, but not both or neither.',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,229 +43,237 @@ class AlertCard extends StatelessWidget {
 
     String displayTitle;
     String displayMessage;
-    AlertType effectiveType;
-    Color effectiveSeverityColor;
+    // AlertType effectiveType; // No longer explicitly needed as we derive colors directly
+    Color effectiveIconColor; // Color for the icon and main title
+    Color cardBackgroundColor;
+    Color cardBorderColor;
+    Color onCardSurfaceColor; // Color for text on the card surface
     double? lat;
     double? lon;
     String? deviceNo;
+    String? crashTimestampString; // To store formatted timestamp for crash
 
     if (crashData != null) {
       // Logic for crash data
       lat = crashData!.latitude;
-      lon = crashData!.longitude;
+      lon = crashData!.longitude; // Assuming deviceId is added to CrashData
       final severity = crashData!.severity;
       final speed = crashData!.speedKmph;
       final crashType = crashData!.crashType;
       final timestamp = crashData!.timestamp;
+      crashTimestampString = DateFormat('yyyy-MM-dd HH:mm').format(timestamp);
 
-      displayTitle = 'Crash Detected! (Severity: $severity)';
-      displayMessage =
-          'Device: ${deviceNo ?? 'N/A'}\n'
-          'Time: ${DateFormat.yMMMd().add_jm().format(timestamp)}\n'
-          'Speed: ${speed.toStringAsFixed(1)} km/h\n'
-          'Type: $crashType\n'
-          'Location: ${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}';
-      effectiveType = AlertType.crash;
 
-      // Determine severity color based on numerical severity
+      // Determine colors based on numerical severity for crash alerts
       if (severity >= 4) {
-        effectiveSeverityColor = Colors.red; // Critical/Severe
+        effectiveIconColor = cs.error; // Severe/Critical uses error color
+        cardBackgroundColor = cs.errorContainer; // Lighter error background
+        cardBorderColor = cs.error;
       } else if (severity == 3) {
-        effectiveSeverityColor = Colors.deepOrange; // Severe
+        effectiveIconColor = Colors.deepOrange; // Moderate-Severe
+        cardBackgroundColor = Colors.deepOrange.shade100;
+        cardBorderColor = Colors.deepOrange;
       } else if (severity == 2) {
-        effectiveSeverityColor = Colors.orange; // Moderate
+        effectiveIconColor = Colors.orange; // Moderate
+        cardBackgroundColor = Colors.orange.shade100;
+        cardBorderColor = Colors.orange;
       } else {
-        effectiveSeverityColor = Colors.green; // Minor or default
+        effectiveIconColor = Colors.green; // Minor or default
+        cardBackgroundColor = Colors.green.shade100;
+        cardBorderColor = Colors.green;
       }
+      onCardSurfaceColor = cs.onSurface; // General text color on card
+
+      displayTitle = 'Severity: ${crashData!.severity}'; // Display numerical severity
+      displayMessage =
+      'Device No: ${deviceNo ?? 'N/A'}\n'
+          'Speed: ${speed.toStringAsFixed(1)} km/h, Type: $crashType\n'
+          'Location: ${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}';
+
     } else {
-      // Logic for generic alerts
+      // Logic for generic alerts (using the 'type' property)
       displayTitle = title!;
       displayMessage = message!;
-      effectiveType = type;
 
-      switch (effectiveType) {
+      switch (type) {
         case AlertType.success:
-          effectiveSeverityColor = Colors.green.shade800;
+          effectiveIconColor = Colors.green.shade800;
+          cardBackgroundColor = Colors.green.shade100;
+          cardBorderColor = Colors.green.shade800;
           break;
         case AlertType.warning:
-          effectiveSeverityColor = Colors.orange.shade800;
+          effectiveIconColor = Colors.orange.shade800;
+          cardBackgroundColor = Colors.orange.shade100;
+          cardBorderColor = Colors.orange.shade800;
           break;
         case AlertType.error:
-          effectiveSeverityColor = Colors.red.shade800;
+          effectiveIconColor = Colors.red.shade800;
+          cardBackgroundColor = Colors.red.shade100;
+          cardBorderColor = Colors.red.shade800;
           break;
         case AlertType.crash: // Should not happen if crashData is null, but fallback
-          effectiveSeverityColor = Colors.red.shade900;
+          effectiveIconColor = Colors.red.shade900;
+          cardBackgroundColor = Colors.red.shade200;
+          cardBorderColor = Colors.red.shade900;
           break;
         case AlertType.info:
         default:
-          effectiveSeverityColor = Colors.blue.shade800;
+          effectiveIconColor = Colors.blue.shade800;
+          cardBackgroundColor = Colors.blue.shade100;
+          cardBorderColor = Colors.blue.shade800;
           break;
       }
+      onCardSurfaceColor = cs.onSurface; // General text color on card
     }
 
     void locateOnMap() {
       if (lat != null && lon != null) {
         final notifier = context.mapPingNotifier;
         if (notifier != null) {
-          notifier.pingMap(lat, lon, effectiveSeverityColor);
+          notifier.pingMap(lat, lon, effectiveIconColor); // Use effectiveIconColor for ping
         }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: [
-                Icon(Icons.location_on, color: effectiveSeverityColor),
+                Icon(Icons.location_on, color: effectiveIconColor),
                 const SizedBox(width: 8),
                 Text('Pinged location: (${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)})'),
               ],
             ),
-            backgroundColor: effectiveSeverityColor.withOpacity(0.9),
+            backgroundColor: effectiveIconColor.withOpacity(0.9),
             duration: const Duration(seconds: 2),
           ),
         );
       }
     }
 
-    // Determine background color based on effectiveType, similar to previous logic
-    Color cardBackgroundColor;
-        cardBackgroundColor = Colors.green.shade100;
-
     List<Widget> buildButtons(
-      ColorScheme cs,
-      Color color,
-      VoidCallback? onLocate,
-    ) {
+        ColorScheme cs,
+        Color buttonColor, // This will be the main color for "Locate"
+        VoidCallback? onLocate,
+        ) {
       final List<Widget> buttons = [];
-      if (crashData != null && onLocate != null) { // Only show Locate for crash alerts
+      if (crashData != null && onLocate != null) {
         buttons.add(
           ElevatedButton(
             onPressed: onLocate,
             style: ElevatedButton.styleFrom(
-              backgroundColor: color,
+              backgroundColor: buttonColor, // Use the derived color for Locate button
               foregroundColor: cs.onPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Rounded corners for buttons
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
             child: const Text('Locate'),
           ),
         );
       }
-      // Add a generic "Dismiss" or "Cancel" button if onClose is provided
-      if (onClose != null) {
-        buttons.add(
-          TextButton(
-            onPressed: onClose,
-            child: Text('Dismiss', style: TextStyle(color: cs.onSurface)),
-          ),
-        );
-      } else {
-        // If no specific onClose, keep the original "Cancel" for crash alerts
-        // This might be redundant if we always provide onClose for dismissible alerts
-        if (crashData != null) {
-           buttons.add(
-            TextButton(
-              onPressed: () { /* Do nothing or specific action */ },
-              child: Text('Cancel', style: TextStyle(color: cs.onSurface)),
+      // Add a generic "Cancel" or "Dismiss" button
+      buttons.add(
+        TextButton(
+          onPressed: onClose ?? () { /* Default action if no onClose provided */ },
+          style: TextButton.styleFrom(
+            foregroundColor: cs.onSurface.withOpacity(0.7), // Grey text for cancel
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: BorderSide(color: cs.onSurface.withOpacity(0.2)), // Light border
             ),
-          );
-        }
-      }
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          ),
+          child: const Text('Cancel'),
+        ),
+      );
       return buttons;
     }
 
 
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: cs.onSurface.withOpacity(0.2)),
+        side: BorderSide(color: cardBorderColor.withOpacity(0.3)), // Subtle border
       ),
-      color: cardBackgroundColor, // Use the derived background color
+      color: cs.surfaceContainerHighest, // Use a darker surface color from your theme for the card background
+      elevation: 4, // Add some elevation for a floating effect
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isNarrow = constraints.maxWidth < 300;
-            return Column(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(Icons.warning, color: effectiveSeverityColor), // Icon based on type
-                    const SizedBox(width: 8),
-                    Expanded( // Use Expanded to prevent overflow for long titles
-                      child: Text(
-                        displayTitle,
-                        style: TextStyle(color: effectiveSeverityColor, fontWeight: FontWeight.bold),
+                    // Icon with a red background circle, matching the image
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: effectiveIconColor.withOpacity(0.2), // Lighter background for icon
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.error_outline, // Exclamation mark icon
+                        color: effectiveIconColor,
+                        size: 28,
                       ),
                     ),
-                    if (onClose != null) // Add a close button if onClose is provided
-                      IconButton(
-                        icon: Icon(Icons.close, color: effectiveSeverityColor.withOpacity(0.7)),
-                        onPressed: onClose,
-                        tooltip: 'Dismiss',
-                      ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          displayTitle,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: cs.onSurface, // Text color on card surface
+                          ),
+                        ),
+                        if (crashData != null) // Display Device No only for crash data
+                          Text(
+                            'Device No: ${deviceNo ?? 'N/A'}',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: cs.onSurface.withOpacity(0.8),
+                            ),
+                          ),
+                      ],
+                    ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  displayMessage,
-                  style: TextStyle(color: cs.onSurface.withOpacity(0.7)),
-                ),
-                const SizedBox(height: 16),
-                isNarrow
-                    ? Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        alignment: WrapAlignment.end,
-                        children: buildButtons(
-                          cs,
-                          effectiveSeverityColor,
-                          crashData != null ? locateOnMap : null, // Only pass locateOnMap if crashData exists
-                        ),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: buildButtons(
-                          cs,
-                          effectiveSeverityColor,
-                          crashData != null ? locateOnMap : null, // Only pass locateOnMap if crashData exists
-                        ),
-                      ),
+                // Timestamp on the right
+                if (crashData != null)
+                  Text(
+                    crashTimestampString!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: cs.onSurface.withOpacity(0.6),
+                    ),
+                  ),
               ],
-            );
-          },
+            ),
+            const SizedBox(height: 16),
+            // Display additional crash details or generic message
+            Text(
+              crashData != null ? displayMessage : message!,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: cs.onSurface.withOpacity(0.7),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: buildButtons(
+                cs,
+                effectiveIconColor, // Pass the main color for the Locate button
+                crashData != null ? locateOnMap : null,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-// Ensure MapPingNotifier is accessible. If it's in map_overlay.dart,
-// it needs to be defined there as a ChangeNotifier or InheritedWidget.
-// For example, if it's a ChangeNotifier:
-/*
-class MapPingNotifier extends ChangeNotifier {
-  LatLng? _pingLocation;
-  Color? _pingColor;
-
-  LatLng? get pingLocation => _pingLocation;
-  Color? get pingColor => _pingColor;
-
-  void pingMap(double lat, double lon, Color color) {
-    _pingLocation = LatLng(lat, lon);
-    _pingColor = color;
-    notifyListeners();
-  }
-
-  // Static method to easily access the notifier
-  static MapPingNotifier? of(BuildContext context) {
-    try {
-      return Provider.of<MapPingNotifier>(context, listen: false);
-    } catch (e) {
-      // Handle case where provider is not found in the widget tree
-      return null;
-    }
-  }
-}
-*/
-// You would then wrap your app or a relevant part of it with ChangeNotifierProvider<MapPingNotifier>
-// in main.dart or a higher-level widget.
-// If MapPingNotifier is an InheritedWidget, its `of` method would be different.
-// I will assume it's a Provider-based ChangeNotifier for now.
