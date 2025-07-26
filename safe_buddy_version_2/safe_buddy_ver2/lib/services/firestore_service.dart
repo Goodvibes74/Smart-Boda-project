@@ -110,6 +110,4 @@ class FirestoreService {
     }
   }
 
-  // You might add other methods here, e.g., to delete old telemetry data,
-  // or to query telemetry for a specific time range (if you store historical telemetry).
 }

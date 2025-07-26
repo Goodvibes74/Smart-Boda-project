@@ -1,8 +1,4 @@
-// lib/widgets/device_registration_form.dart
 import 'package:flutter/material.dart';
-// Removed http dependency as we will use Firebase SDKs
-// import 'package:http/http.dart' as http;
-// import 'dart:convert'; // No longer directly encoding JSON for HTTP
 
 import 'package:firebase_auth/firebase_auth.dart'; // For getting current user ID
 import 'device.dart'; // Import the Device model and DeviceService

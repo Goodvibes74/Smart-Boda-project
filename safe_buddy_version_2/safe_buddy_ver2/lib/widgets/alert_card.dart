@@ -166,6 +166,7 @@ class AlertCard extends StatelessWidget {
           ),
         );
       }
+      const SizedBox(width: 8); // Space between buttons
       // Add a generic "Cancel" or "Dismiss" button
       buttons.add(
         TextButton(

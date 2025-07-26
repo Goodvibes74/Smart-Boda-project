@@ -1,8 +1,4 @@
-// lib/widgets/pages/device_management.dart
-// Removed ignore_for_file: deprecated_member_use as modern widgets will be used
-
-// ignore_for_file: deprecated_member_use
-
+// File: lib/widgets/pages/device_management.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // For authentication
 import 'package:intl/intl.dart'; // For date formatting
@@ -10,7 +6,7 @@ import '../device.dart'; // Import Device model and DeviceService
 import '../alert_card.dart'; // Import AlertCard for messages
 import '../device_registration_form.dart'; // For the registration form
 
-// Removed global databaseRef and stream as we will use DeviceService (Firestore)
+
 
 /// A page for managing registered devices.
 /// Users can view, update, and delete their devices here.
