@@ -1,15 +1,13 @@
 // lib/widgets/map_overlay.dart
 // Removed ignore_for_file: deprecated_member_use as modern practices are used
 
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart'; // For Realtime Database
 import 'package:safe_buddy_ver2/crash_algorithm.dart'; // Import CrashData
 import 'device.dart'; // Import Device and DeviceService
-import 'package:provider/provider.dart'; // <--- ADD THIS IMPORT
+import 'package:provider/provider.dart'; // <--- ADDED THIS IMPORT
 
 /// Notifier for map pings, using Provider for better state management.
 /// This replaces the InheritedWidget for more standard Flutter practice.
@@ -55,19 +53,9 @@ class _CustomMapViewState extends State<CustomMapView> {
   final Set<Marker> _markers = {};
   final Set<Circle> _circles = {};
 
-  // No longer directly listening to Realtime Database here.
-  // Data is passed via widget properties.
-  // The MapPingNotifier will be listened to for camera animations.
-
   @override
   void initState() {
     super.initState();
-    // Listen to MapPingNotifier for external pings
-    // This assumes MapPingNotifier is provided higher up in the widget tree.
-    // If not, you'd need to adjust how pingMap is called or remove this listener.
-    // For now, we'll assume it's available via Provider.
-    // Provider.of<MapPingNotifier>(context, listen: false) will be used in build method
-    // or accessed via a Consumer/Selector if needed to rebuild.
   }
 
   @override
@@ -87,10 +75,8 @@ class _CustomMapViewState extends State<CustomMapView> {
     _updateMarkers(); // Initial marker update
 
     // Listen to the MapPingNotifier for camera movements
-    // This allows other parts of the app (like AlertCard) to "ping" the map
-    // We use a post-frame callback to ensure context is valid for Provider.of
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final mapPingNotifier = context.mapPingNotifier; // Access via static helper
+      final mapPingNotifier = context.mapPingNotifier; // Access via extension
       if (mapPingNotifier != null) {
         mapPingNotifier.addListener(() {
           if (mapPingNotifier.pingLocation != null) {
@@ -114,7 +100,8 @@ class _CustomMapViewState extends State<CustomMapView> {
     if (widget.showCrashMarkers) {
       for (var crash in widget.crashLocations) {
         final position = LatLng(crash.latitude, crash.longitude);
-        final markerId = MarkerId('crash_${crash.timestamp.millisecondsSinceEpoch}');
+        // Use deviceId and timestamp for unique marker ID
+        final markerId = MarkerId('crash_${crash.deviceId}_${crash.timestamp.millisecondsSinceEpoch}');
 
         // Determine marker hue and circle color based on severity
         Color severityColor;
@@ -139,7 +126,7 @@ class _CustomMapViewState extends State<CustomMapView> {
             position: position,
             infoWindow: InfoWindow(
               title: 'Crash: ${crash.crashType}',
-              snippet: 'Severity: ${crash.severity}, Speed: ${crash.speedKmph.toStringAsFixed(1)} km/h',
+              snippet: 'Device: ${crash.deviceId}, Severity: ${crash.severity}, Speed: ${crash.speedKmph.toStringAsFixed(1)} km/h',
             ),
             icon: BitmapDescriptor.defaultMarkerWithHue(markerHue),
           ),
@@ -147,7 +134,7 @@ class _CustomMapViewState extends State<CustomMapView> {
 
         _circles.add(
           Circle(
-            circleId: CircleId('crash_circle_${crash.timestamp.millisecondsSinceEpoch}'),
+            circleId: CircleId('crash_circle_${crash.deviceId}_${crash.timestamp.millisecondsSinceEpoch}'),
             center: position,
             radius: 150, // Example radius
             fillColor: severityColor.withOpacity(0.3),
@@ -247,7 +234,6 @@ class _CustomMapViewState extends State<CustomMapView> {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap the map in a Provider for MapPingNotifier
     return GoogleMap(
       initialCameraPosition: CameraPosition(
         target: widget.initialCameraPosition ?? const LatLng(0.3476, 32.5825), // Default to Kampala
@@ -279,21 +265,3 @@ extension MapPingNotifierExtension on BuildContext {
     }
   }
 }
-
-// You will need to add the `provider` package to your pubspec.yaml:
-// dependencies:
-//   provider: ^6.x.x
-//
-// And wrap your MaterialApp or a higher-level widget with ChangeNotifierProvider:
-/*
-import 'package:provider/provider.dart';
-// ...
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => MapPingNotifier(),
-      child: const MyApp(),
-    ),
-  );
-}
-*/

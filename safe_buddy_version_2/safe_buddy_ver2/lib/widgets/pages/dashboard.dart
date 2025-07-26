@@ -4,12 +4,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // For getting current user
 import 'package:intl/intl.dart'; // For date formatting
-import '/crash_algorithm.dart'; // Import CrashData and CrashAlgorithmService
+import '../../crash_algorithm.dart'; // Import CrashData and CrashAlgorithmService
 import '../device.dart'; // Import Device and DeviceService
 import '../alert_card.dart'; // Import AlertCard
 import '../map_overlay.dart'; // Import CustomMapView (formerly MapOverlay)
-
-// Removed getCrashData() as we will use StreamBuilder with CrashAlgorithmService
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -78,7 +76,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 Expanded(
                   // StreamBuilder to listen for real-time crash data
                   child: StreamBuilder<List<CrashData>>(
-                    stream: _crashService.getCrashStream(),
+                    stream: _crashService.getCrashStream(), // This now listens to the new structure
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());

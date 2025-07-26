@@ -43,11 +43,9 @@ class AlertCard extends StatelessWidget {
 
     String displayTitle;
     String displayMessage;
-    // AlertType effectiveType; // No longer explicitly needed as we derive colors directly
     Color effectiveIconColor; // Color for the icon and main title
     Color cardBackgroundColor;
     Color cardBorderColor;
-    Color onCardSurfaceColor; // Color for text on the card surface
     double? lat;
     double? lon;
     String? deviceNo;
@@ -56,7 +54,8 @@ class AlertCard extends StatelessWidget {
     if (crashData != null) {
       // Logic for crash data
       lat = crashData!.latitude;
-      lon = crashData!.longitude; // Assuming deviceId is added to CrashData
+      lon = crashData!.longitude;
+      deviceNo = crashData!.deviceId; // Get deviceId from CrashData
       final severity = crashData!.severity;
       final speed = crashData!.speedKmph;
       final crashType = crashData!.crashType;
@@ -82,12 +81,10 @@ class AlertCard extends StatelessWidget {
         cardBackgroundColor = Colors.green.shade100;
         cardBorderColor = Colors.green;
       }
-      onCardSurfaceColor = cs.onSurface; // General text color on card
 
-      displayTitle = 'Severity: ${crashData!.severity}'; // Display numerical severity
+      displayTitle = 'Severity: $severity'; // Display numerical severity
       displayMessage =
-      'Device No: ${deviceNo ?? 'N/A'}\n'
-          'Speed: ${speed.toStringAsFixed(1)} km/h, Type: $crashType\n'
+      'Speed: ${speed.toStringAsFixed(1)} km/h, Type: $crashType\n'
           'Location: ${lat.toStringAsFixed(4)}, ${lon.toStringAsFixed(4)}';
 
     } else {
@@ -123,7 +120,6 @@ class AlertCard extends StatelessWidget {
           cardBorderColor = Colors.blue.shade800;
           break;
       }
-      onCardSurfaceColor = cs.onSurface; // General text color on card
     }
 
     void locateOnMap() {

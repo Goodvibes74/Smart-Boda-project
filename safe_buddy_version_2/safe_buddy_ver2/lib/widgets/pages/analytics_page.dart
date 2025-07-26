@@ -1,7 +1,5 @@
 // lib/widgets/pages/analytics_page.dart
-// Removed ignore_for_file: deprecated_member_use as modern widgets will be used
-
-// ignore_for_file: deprecated_member_use
+// Removed ignore_for_file: deprecated_member_use as modern widgets are used
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // For getting current user
@@ -12,7 +10,7 @@ import 'dart:math';
 import 'dart:convert'; // For jsonEncode
 
 import '../alert_card.dart'; // For displaying error/info messages
-import '../map_overlay.dart'; // For displaying historical crash locations on a map
+import '../map_overlay.dart'; // For displaying historical crash locations
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -42,14 +40,15 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   /// Exports crash data as CSV or JSON.
   void _exportCrashes(
-    BuildContext context,
-    List<CrashData> crashList, { // Now takes List<CrashData>
-    required bool asCsv,
-  }) {
+      BuildContext context,
+      List<CrashData> crashList, { // Now takes List<CrashData>
+        required bool asCsv,
+      }) {
     // Convert CrashData objects to a list of maps for export
     final List<Map<String, dynamic>> exportableList = crashList.map((crash) {
       return {
         'timestamp': crash.timestamp.toIso8601String(), // ISO 8601 for consistent timestamp
+        'deviceId': crash.deviceId, // Include deviceId
         'latitude': crash.latitude,
         'longitude': crash.longitude,
         'severity': crash.severity,
@@ -118,7 +117,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       ),
       backgroundColor: cs.background,
       body: StreamBuilder<List<CrashData>>( // Use StreamBuilder for real-time data
-        stream: _crashService.getCrashStream(),
+        stream: _crashService.getCrashStream(), // This now listens to the new structure
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -148,11 +147,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _buildAnalytics(
-    BuildContext context,
-    List<CrashData> crashList, // Now takes List<CrashData>
-    ColorScheme cs,
-    TextTheme text,
-  ) {
+      BuildContext context,
+      List<CrashData> crashList, // Now takes List<CrashData>
+      ColorScheme cs,
+      TextTheme text,
+      ) {
     // Crash type counts
     final typeCounts = <String, int>{};
     for (var crash in crashList) {
@@ -255,7 +254,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           Text('Top 3 Highest Speed Locations', style: text.titleMedium),
           const SizedBox(height: 8),
           ...topLocations.map(
-            (c) => ListTile(
+                (c) => ListTile(
               leading: Icon(Icons.location_on, color: cs.error),
               title: Text('Lat: ${c.latitude.toStringAsFixed(4)}, Lon: ${c.longitude.toStringAsFixed(4)}'),
               subtitle: Text(
@@ -368,10 +367,10 @@ class _LineChart extends StatelessWidget {
   final String Function(int) labelBuilder;
   final Color color;
   const _LineChart(
-    this.data, {
-    required this.labelBuilder,
-    required this.color,
-  });
+      this.data, {
+        required this.labelBuilder,
+        required this.color,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +385,7 @@ class _LineChart extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
               data.length,
-              (i) => Text(labelBuilder(i), style: const TextStyle(fontSize: 10)),
+                  (i) => Text(labelBuilder(i), style: const TextStyle(fontSize: 10)),
             ),
           ),
         ),
