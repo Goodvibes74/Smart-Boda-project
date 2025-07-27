@@ -72,7 +72,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         backgroundColor: cs.primary,
         foregroundColor: cs.onPrimary,
       ),
-      backgroundColor: cs.background,
+      backgroundColor: cs.surface,
       body: FutureBuilder<Map<String, List<dynamic>>>(
         future: _crashesFuture,
         builder: (context, snapshot) {
