@@ -94,7 +94,8 @@ The Smart Boda system is composed of three core components: the physical device,
 
 Below are screenshots of the Smart Boda web application demonstrating key interface views.
 
-![Authentication Page](Smart_Boda_Project\Login.png)
+[![Authentication Page](Smart_Boda_Project\Login.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png)
+
 ![Live Dashboard](Smart_Boda_Project\Dashboard.png)
 ![Device Registration](Smart_Boda_Project\Device_Registration.png)
 ![Real-time Ping](Smart_Boda_Project\Realtime.png)
