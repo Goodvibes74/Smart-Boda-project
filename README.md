@@ -96,7 +96,8 @@ Below are screenshots of the Smart Boda web application demonstrating key interf
 
 [![Authentication Page](Smart_Boda_Project\Login.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png)
 
-![Live Dashboard](Smart_Boda_Project\Dashboard.png)
+[![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
+
 ![Device Registration](Smart_Boda_Project\Device_Registration.png)
 ![Real-time Ping](Smart_Boda_Project\Realtime.png)
 
