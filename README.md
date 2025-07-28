@@ -98,7 +98,8 @@ Below are screenshots of the Smart Boda web application demonstrating key interf
 
 [![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
 
-![Device Registration](Smart_Boda_Project\Device_Registration.png)
+[![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
+
 ![Real-time Ping](Smart_Boda_Project\Realtime.png)
 
 #### Our Basis for Accident Detection
