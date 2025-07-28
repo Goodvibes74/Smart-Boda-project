@@ -1,4 +1,6 @@
 // File: lib/widgets/pages/device_management.dart
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // For authentication
 import 'package:intl/intl.dart'; // For date formatting

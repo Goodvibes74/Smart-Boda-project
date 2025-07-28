@@ -1,6 +1,8 @@
 // lib/widgets/alert_card.dart
 // Removed ignore_for_file: deprecated_member_use as modern widgets are used
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../crash_algorithm.dart'; // Import CrashData
 import 'map_overlay.dart'; // Assuming MapPingNotifier is defined here or accessible

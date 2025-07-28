@@ -1,6 +1,8 @@
 // lib/widgets/pages/analytics_page.dart
 // Removed ignore_for_file: deprecated_member_use as modern widgets are used
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // For getting current user
 import 'package:safe_buddy_ver2/crash_algorithm.dart'; // Import CrashData and CrashAlgorithmService

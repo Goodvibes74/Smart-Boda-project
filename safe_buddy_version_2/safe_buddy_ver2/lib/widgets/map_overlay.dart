@@ -1,6 +1,8 @@
 // lib/widgets/map_overlay.dart
 // Removed ignore_for_file: deprecated_member_use as modern practices are used
 
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
