@@ -5,7 +5,8 @@
 \usepackage{titlesec}
 \usepackage{caption}
 \usepackage{booktabs}
-\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref} % for clickable links
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+\usepackage{float} % For [H] precise float placement
 
 \title{\textbf{Technical Report - The Smart Boda Device}}
 \author{
@@ -27,11 +28,11 @@
 
 \maketitle
 
-\vspace{-1em} % tighten spacing after title
+\vspace{-1em}
 
 \tableofcontents
 
-\vspace{1em} % space after ToC for neatness
+\vspace{1em}
 
 \begin{abstract}
 Uganda faces a high rate of road traffic accidents, with emergency response and reporting often delayed due to a lack of real-time detection and communication tools. The Smart Boda Device is a low-cost, sensor-based solution designed to detect likely accidents involving boda bodas in real time. By fusing data from accelerometers, gyroscopes, force sensors, and GPS, the device identifies crash events and transmits critical data to a Flutter-based web platform using Firebase and Firestore \cite{firebase}. This enables emergency responders and authorities to monitor incidents, analyze accident hotspots, and inform infrastructure improvements. The system is scalable and accessible, with potential for integration into fleet management and urban safety planning.
@@ -40,7 +41,6 @@ Uganda faces a high rate of road traffic accidents, with emergency response and 
 \newpage
 
 \section{Introduction}
-This report outlines the development and implementation of the Smart Boda Device, a real-time accident detection and alert system for boda bodas. The document details the user challenges, project goals, system requirements, and final outcomes. It also presents future work required to scale and improve the product.
 
 \subsection{User Challenge}
 Uganda's urban transport sector, particularly the boda boda industry, suffers from frequent accidents and delayed emergency responses. Current interventions lack real-time, automated detection and reporting, making it difficult for emergency services to respond promptly and for authorities to gather actionable data for policy and infrastructure improvements.
@@ -65,6 +65,7 @@ Uganda's urban transport sector, particularly the boda boda industry, suffers fr
 \section{Project Results}
 
 \subsection{Product Design}
+
 \textbf{Hardware Components:}
 \begin{itemize}
   \item MPU6050 Sensor: 3-axis accelerometer and gyroscope for motion and orientation sensing \cite{mpu6050}.
@@ -82,8 +83,23 @@ Uganda's urban transport sector, particularly the boda boda industry, suffers fr
   \item Backend: Firebase and Firestore for secure, scalable data storage and management \cite{firebase}.
 \end{itemize}
 
-\textbf{System Architecture:} 
-Sensors collect data $\rightarrow$ ESP32 processes and evaluates thresholds $\rightarrow$ If an accident is detected, data is sent via GSM to Firebase $\rightarrow$ Web app visualizes and stores incidents.
+\textbf{System Architecture:}
+
+The Smart Boda system is composed of three core components: the physical device, the Firebase cloud backend, and a Flutter-based web interface. Crash events detected by the device are uploaded to the cloud in real-time. The web interface then retrieves and displays this information for emergency response and monitoring.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{System Diagram.jpg}
+  \caption{System Architecture: Smart Boda Device and Web Platform}
+  \label{fig:architecture}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{PHOTO-2025-07-28-12-34-26.jpg}
+  \caption{Hardware setup and sensor placement on the Smart Boda device.}
+  \label{fig:new_image}
+\end{figure}
 
 \subsection{Product Functionality}
 \begin{itemize}
@@ -93,42 +109,63 @@ Sensors collect data $\rightarrow$ ESP32 processes and evaluates thresholds $\ri
   \item \textbf{User Management:} Access control for emergency responders, authorities, and analysts.
 \end{itemize}
 
+\subsubsection{Web Application Interface and Screenshots}
+
+Below are screenshots of the Smart Boda web application demonstrating key interface views.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Login.png}
+  \caption{Login screen of the Smart Boda web application.}
+  \label{fig:login}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Dashboard.png}
+  \caption{Home dashboard showing alerts and real-time data summary.}
+  \label{fig:dashboard}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Device Registration.png}
+  \caption{Device registration interface for adding new Smart Boda units.}
+  \label{fig:registration}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Realtime.png}
+  \caption{Real-time data visualization showing accident alerts and location.}
+  \label{fig:realtime}
+\end{figure}
+
 \subsubsection{Our basis for accident detection}
 Our accident detection is based upon the following sensor readings and logic:
 
 \begin{itemize}
-  \item \textbf{Impact-force Readings:}  
-  Readings above 3g (29.43 m/s\textsuperscript{2}) detected by the force sensor indicate a significant impact, likely caused by a collision rather than normal riding conditions. Such impacts include head-on collisions or collisions with stationary or moving objects.
-  \begin{itemize}
-    \item \textbf{Gyroscope Readings:}  
-    A sudden sharp spike in angular velocity combined with accelerometer data suggests abnormal rotational movement typically experienced during a crash. This helps differentiate accidents from other movements.
-    \item \textbf{Accelerometer Readings:}  
-    High acceleration combined with force sensor triggers and gyro spikes confirms an accident event. Isolated acceleration spikes (e.g., over bumps) without corresponding gyro data are filtered out.
-    \item \textbf{Sensor Fusion Logic:}  
-    To reduce false positives, the system considers:  
-    \begin{itemize}
-      \item \textit{Speed bumps:} Cause acceleration spikes but no significant gyro spikes or force sensor impact.  
-      \item \textit{Sharp turns:} Cause gyro spikes without large force impact or acceleration spikes indicating collisions.  
-      \item \textit{Accident detection:} Requires concurrent detection of significant impact force, abnormal angular velocity (gyro spike), and sudden acceleration changes.  
-    \end{itemize}
-  \end{itemize}
+  \item \textbf{Impact-force Readings:} Readings above 3g (29.43 m/s\textsuperscript{2}) indicate a significant impact, likely caused by a collision.
+  \item \textbf{Gyroscope Readings:} A sharp spike in angular velocity suggests abnormal rotation typical during a crash.
+  \item \textbf{Accelerometer Readings:} High acceleration paired with force and gyro data confirms an accident event.
+  \item \textbf{Sensor Fusion Logic:} Combines data to eliminate false positives from bumps or sharp turns.
 \end{itemize}
 
 \section{Limitations and Next Steps}
 
 \subsection{Limitations}
 \begin{itemize}
-  \item Device operation depends on reliable cellular network coverage for real-time data transmission.
-  \item False positives may occur due to extreme terrain vibrations, though mitigated by force sensor thresholding.
-  \item Pilot deployment is limited in scale; broader testing is needed for full validation.
+  \item Device operation depends on reliable cellular network coverage.
+  \item False positives may occur due to terrain vibration, though mitigated by sensor fusion.
+  \item Current testing is limited in scope and geography.
 \end{itemize}
 
 \subsection{Next Steps}
 \begin{itemize}
-  \item Refine detection algorithms and calibrate sensor thresholds using real-world feedback.
-  \item Explore integration of alternative communication protocols for improved coverage.
-  \item Expand deployment to a larger fleet and gather stakeholder input for further development.
-  \item Investigate AI-based analytics and predictive modeling for proactive safety interventions.
+  \item Calibrate detection thresholds based on real-world data.
+  \item Expand pilot testing across different regions and terrain types.
+  \item Explore AI-enhanced pattern detection.
+  \item Integrate automated dispatch notification system.
 \end{itemize}
 
 \section*{References}
@@ -148,7 +185,7 @@ Our accident detection is based upon the following sensor readings and logic:
 
 \section*{Appendix A: Project Work Plan}
 
-\begin{figure}[h!]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{Gantt_Chart.pdf}
   \caption{Gantt Chart showing the SafeBuddy Recess Project Timeline}
@@ -170,12 +207,13 @@ Mawanda John Paul & Database integration \& Firebase \\
 
 \section*{Appendix C: Project Links}
 
-Below are the links to the project’s online presence and functionality:
+Below are the links to the project’s online presence and development resources:
 
 \begin{itemize}
   \item \textbf{Project Website (Showcase and Documentation):} \href{https://safe-buddy-showcase.web.app}{https://safe-buddy-showcase.web.app}
   \item \textbf{Live Web App (Real-time Accident Dashboard):} \href{https://safe-buddy-141a4.web.app}{https://safe-buddy-141a4.web.app}
-  \item \textbf{Simulation Script(Python-GitHub):} \href{https://github.com/Goodvibes74/web_app-test-data}{https://github.com/Goodvibes74/web_app-test-data}
+  \item \textbf{Simulation Script (Python - GitHub):} \href{https://github.com/Goodvibes74/web_app-test-data}{https://github.com/Goodvibes74/web_app-test-data}  
+  This script was used during testing to simulate accident events and feed mock data into the web application for demonstration and analysis purposes.
 \end{itemize}
 
 \end{document}
