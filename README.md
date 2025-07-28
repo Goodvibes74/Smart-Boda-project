@@ -147,5 +147,6 @@ Our accident detection is based upon the following sensor readings and logic:
 
 - **Project Website (Showcase and Documentation):** [https://safe-buddy-showcase.web.app](https://safe-buddy-showcase.web.app)
 - **Live Web App (Real-time Accident Dashboard):** [https://safe-buddy-141a4.web.app](https://safe-buddy-141a4.web.app)
+- **Main Repository (GitHub):** [https://github.com/Goodvibes74/Smart-Boda-project](https://github.com/Goodvibes74/Smart-Boda-project)
 - **Simulation Script (Python - GitHub):** [https://github.com/Goodvibes74/web_app-test-data](https://github.com/Goodvibes74/web_app-test-data)  
   This script was used during testing to simulate accident events and feed mock data into the web application for demonstration and analysis purposes.
