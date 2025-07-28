@@ -100,8 +100,8 @@ Below are screenshots of the Smart Boda web application demonstrating key interf
 
 [![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
 
-![Real-time Ping](Smart_Boda_Project\Realtime.png)
-
+[![Real-time Ping](Smart_Boda_Project\Realtime.png)
+](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
 #### Our Basis for Accident Detection
 
 Our accident detection is based upon the following sensor readings and logic:
