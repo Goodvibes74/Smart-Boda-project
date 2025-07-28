@@ -93,13 +93,13 @@ The Smart Boda system is composed of three core components: the physical device,
 
 Below are screenshots of the Smart Boda web application demonstrating key interface views.
 
-[![Authentication Page](Smart_Boda_Project\Login.png)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png>)
+[![Authentication Page](Smart_Boda_Project\Login.png)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png>)]
 
-[![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
+[![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)]
 
-[![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
+[![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)]
 
-[![Real-time Ping](Smart_Boda_Project\Realtime.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
+[![Real-time Ping](Smart_Boda_Project\Realtime.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)]
 
 #### Our Basis for Accident Detection
 
