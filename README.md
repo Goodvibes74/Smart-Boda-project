@@ -1,6 +1,7 @@
 # Technical Report - The Smart Boda Device
 
 **Group 7**  
+
 - Watts Ryan Eric -- 24/U/20732/EVE -- 2400720732  
 - Ssentaba Brian Kirabo -- 24/U/24769/PSA -- 2400724769  
 - Akoragye Neville -- 24/U/03195/EVE -- 2400703195  
@@ -30,9 +31,8 @@
   - [Limitations](#limitations)
   - [Next Steps](#next-steps)
 - [References](#references)
-- [Appendix A: Project Work Plan](#appendix-a-project-work-plan)
-- [Appendix B: Contribution by Team Members](#appendix-b-contribution-by-team-members)
-- [Appendix C: Project Links](#appendix-c-project-links)
+- [Contribution by Team Members](#contribution-by-team-members)
+- [Project Links](#project-links)
 
 ## Introduction
 
@@ -80,8 +80,8 @@ The Smart Boda system is composed of three core components: the physical device,
 
 [![System Architecture](Smart_Boda_Project/System_Diagram.jpg)](https://github.com/Goodvibes74/Smart-Boda-project/blob/bbcb8fb45cc0956d83b2990cc30074dd0c88012c/Smart_Boda_Project/System%20Diagram.jpg)
 
-[![Smart Boda Device and Web Platform](Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
-](https://github.com/Goodvibes74/Smart-Boda-project/blob/f6448008c53a6d0082fd890840f2e848aa825685/Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
+![Smart Boda Device and Web Platform](Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
+](<https://github.com/Goodvibes74/Smart-Boda-project/blob/f6448008c53a6d0082fd890840f2e848aa825685/Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg>)
 
 ### Product Functionality
 
@@ -94,14 +94,14 @@ The Smart Boda system is composed of three core components: the physical device,
 
 Below are screenshots of the Smart Boda web application demonstrating key interface views.
 
-[![Authentication Page](Smart_Boda_Project\Login.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png)
+[![Authentication Page](Smart_Boda_Project\Login.png)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png>)
 
 [![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
 
 [![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
 
-[![Real-time Ping](Smart_Boda_Project\Realtime.png)
-](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
+[![Real-time Ping](Smart_Boda_Project\Realtime.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
+
 #### Our Basis for Accident Detection
 
 Our accident detection is based upon the following sensor readings and logic:
