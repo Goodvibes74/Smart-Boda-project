@@ -79,8 +79,8 @@ Uganda's urban transport sector, particularly the boda boda industry, suffers fr
 The Smart Boda system is composed of three core components: the physical device, the Firebase cloud backend, and a Flutter-based web interface. Crash events detected by the device are uploaded to the cloud in real-time. The web interface then retrieves and displays this information for emergency response and monitoring.
 
 [![System Architecture](Smart_Boda_Project/System%20Diagram.jpg)](https://github.com/Goodvibes74/Smart-Boda-project/blob/bbcb8fb45cc0956d83b2990cc30074dd0c88012c/Smart_Boda_Project/System%20Diagram.jpg)
-![Smart Boda Device and Web Platform](Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
-
+[![Smart Boda Device and Web Platform](Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
+](https://github.com/Goodvibes74/Smart-Boda-project/blob/f6448008c53a6d0082fd890840f2e848aa825685/Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)
 ### Product Functionality
 
 - **Real-Time Alerts:** Immediate notification of detected accidents on the web platform.
