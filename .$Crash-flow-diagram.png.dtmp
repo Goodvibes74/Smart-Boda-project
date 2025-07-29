@@ -1,0 +1,69 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6">
+  <diagram name="Page-1" id="zprwOc6atw6HwFgdv7Q9">
+    <mxGraphModel dx="1489" dy="963" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lURNLTOhkeccRYP5r3oU-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-1" target="lURNLTOhkeccRYP5r3oU-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-1" value="START" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;rounded=1;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="320" y="10" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-2" target="lURNLTOhkeccRYP5r3oU-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-2" value="GET SENSOR DATA" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="280" y="130" width="280" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0.931;exitY=0.527;exitDx=0;exitDy=0;exitPerimeter=0;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-3" target="lURNLTOhkeccRYP5r3oU-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="335" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="549" y="355" />
+              <mxPoint x="670" y="355" />
+              <mxPoint x="670" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-3" target="lURNLTOhkeccRYP5r3oU-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-3" value="IMPACT FORCE &amp;gt;2000&lt;div&gt;SPEED &amp;gt; 36kmph&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;rounded=1;arcSize=34;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="230" y="240" width="380" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-7" target="lURNLTOhkeccRYP5r3oU-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-7" value="CALCULATE G-FORCE, ANGULAR VELOCITY" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="240" y="480" width="360" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-9" target="lURNLTOhkeccRYP5r3oU-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-9" value="GET CRASH SEVERITY FROM G-FORCE" style="whiteSpace=wrap;html=1;rounded=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="240" y="640" width="360" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-11" target="lURNLTOhkeccRYP5r3oU-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-11" value="GET CRASH TYPE FROM ANGULAR VELOCITY" style="whiteSpace=wrap;html=1;rounded=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="240" y="800" width="360" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#182E3E;fontSize=25;" edge="1" parent="1" source="lURNLTOhkeccRYP5r3oU-13" target="lURNLTOhkeccRYP5r3oU-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="990" />
+              <mxPoint x="190" y="180" />
+              <mxPoint x="270" y="180" />
+              <mxPoint x="270" y="175" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lURNLTOhkeccRYP5r3oU-13" value="PERFORM UPLOAD" style="whiteSpace=wrap;html=1;rounded=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillColor=#F08E81;strokeColor=#FFFFFF;fontColor=#1A1A1A;fontFamily=Comic Sans MS;fontStyle=1;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="240" y="960" width="360" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
