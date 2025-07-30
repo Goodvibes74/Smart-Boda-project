@@ -9,10 +9,13 @@ import '../providers/profile_image_provider.dart';
 import 'avatar_uploader.dart';
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
+  // Callbacks for search functionality
   final ValueChanged<String>? onSearchChanged;
   final ValueChanged<String>? onSearchSubmitted;
+  // Callback for avatar tap
   final VoidCallback? onAvatarTap;
 
+  // Constructor for HeaderWidget
   const HeaderWidget({
     Key? key,
     this.onSearchChanged,
@@ -21,14 +24,19 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
+  // Defines the preferred height of the header
   Size get preferredSize => const Size.fromHeight(64);
 
   @override
   Widget build(BuildContext context) {
+    // Get the current authenticated user
     final user = FirebaseAuth.instance.currentUser;
+    // If no user is logged in, return an empty widget
     if (user == null) return const SizedBox.shrink();
 
+    // Watch for changes in the user's profile image URL
     final photoUrl = context.watch<ProfileImageProvider>().imageUrl;
+    // Get the current color scheme and text theme from the ThemeData
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
 
@@ -41,6 +49,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
           height: preferredSize.height,
           child: Row(
             children: [
+              // Display a greeting with the user's display name
               Text(
                 'Hi, ${user.displayName ?? 'User'}',
                 style: text.titleMedium?.copyWith(
@@ -48,12 +57,16 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              // Spacer to push the avatar to the right
               const Spacer(),
+              // Popup menu for user actions (profile, logout)
               PopupMenuButton<String>(
                 onSelected: (value) {
+                  // Handle logout action
                   if (value == 'logout') {
                     FirebaseAuth.instance.signOut();
                     Navigator.pushReplacementNamed(context, '/initial');
+                    // Handle profile action
                   } else if (value == 'profile') {
                     if (onAvatarTap != null) onAvatarTap!();
                   }
@@ -64,6 +77,7 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
                   onTap: onAvatarTap,
                 ),
                 itemBuilder: (_) => [
+                  // Profile menu item
                   PopupMenuItem<String>(
                     value: 'profile',
                     child: Row(
@@ -78,7 +92,9 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
+                  // Divider between menu items
                   const PopupMenuDivider(),
+                  // Logout menu item
                   PopupMenuItem<String>(
                     value: 'logout',
                     child: Row(

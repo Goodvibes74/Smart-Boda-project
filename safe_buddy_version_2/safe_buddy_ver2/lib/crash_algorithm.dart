@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart'; // For @required
 /// Represents a crash event detected by the embedded device.
 /// This model mirrors the JSON structure uploaded by the device to Firebase Realtime Database.
 class CrashData {
-  final String deviceId; // Added deviceId to the model
+  final String deviceId; // Unique identifier for the device that reported the crash.
   final double latitude;
   final double longitude;
   final int severity;
   final double speedKmph;
   final String crashType;
-  final DateTime timestamp; // Added to track when the crash occurred
+  final DateTime timestamp; // Timestamp when the crash occurred, in UTC.
 
   CrashData({
     required this.deviceId,
@@ -25,12 +25,13 @@ class CrashData {
   /// Factory constructor to create a CrashData object from a Firebase Realtime Database snapshot value.
   /// The snapshot value is expected to be a Map<String, dynamic> representing a single crash event.
   factory CrashData.fromMap(Map<dynamic, dynamic> map, String deviceId) {
+    // Extracts data from the map and constructs a CrashData object.
     return CrashData(
-      deviceId: deviceId, // Pass deviceId from the parent node
-      latitude: (map['latitude'] as num).toDouble(),
-      longitude: (map['longitude'] as num).toDouble(),
-      severity: (map['severity'] as num).toInt(),
-      speedKmph: (map['speed_kmph'] as num).toDouble(),
+      deviceId: deviceId, // Device ID passed from the parent node in the database structure.
+      latitude: (map['latitude'] as num).toDouble(), // Latitude of the crash location.
+      longitude: (map['longitude'] as num).toDouble(), // Longitude of the crash location.
+      severity: (map['severity'] as num).toInt(), // Severity of the crash (e.g., 1-5).
+      speedKmph: (map['speed_kmph'] as num).toDouble(), // Speed of the device at the time of crash.
       crashType: map['crash_type'] as String,
       // Use the timestamp field from within the data, falling back to current time if missing
       timestamp: map['timestamp'] != null
@@ -41,6 +42,7 @@ class CrashData {
 
   /// Converts this CrashData object into a map, suitable for Firebase.
   Map<String, dynamic> toMap() {
+    // Converts the CrashData object back into a map for database storage.
     return {
       'deviceId': deviceId,
       'latitude': latitude,
@@ -54,6 +56,7 @@ class CrashData {
 
   @override
   String toString() {
+    // Provides a string representation of the CrashData object for debugging.
     return 'CrashData(deviceId: $deviceId, latitude: $latitude, longitude: $longitude, severity: $severity, speedKmph: $speedKmph, crashType: $crashType, timestamp: $timestamp)';
   }
 }
@@ -61,12 +64,13 @@ class CrashData {
 /// A service class to interact with the Firebase Realtime Database for crash data.
 /// It now expects data structured under deviceId nodes.
 class CrashAlgorithmService {
+  // Reference to the root of the Firebase Realtime Database.
   final DatabaseReference _rootRef = FirebaseDatabase.instance.ref();
 
   /// Listens for new crash events from the Realtime Database across all devices.
   /// Returns a stream of lists of CrashData objects.
   Stream<List<CrashData>> getCrashStream() {
-    // Listen to the root, then process all device children
+    // Listens to changes at the root of the database.
     return _rootRef.onValue.map((event) {
       final List<CrashData> crashes = [];
       final data = event.snapshot.value;
@@ -76,11 +80,11 @@ class CrashAlgorithmService {
         data.forEach((deviceIdKey, deviceCrashesData) {
           if (deviceCrashesData is Map) {
             // Iterate through each crash event under the device ID
-            deviceCrashesData.forEach((crashTimestampKey, crashDetails) {
+            deviceCrashesData.forEach((crashTimestampKey, crashDetails) { // Each crash event is keyed by its timestamp.
               try {
                 if (crashDetails is Map<dynamic, dynamic>) {
                   // Pass the deviceIdKey to the fromMap constructor
-                  crashes.add(CrashData.fromMap(crashDetails, deviceIdKey.toString()));
+                  crashes.add(CrashData.fromMap(crashDetails, deviceIdKey.toString())); // Create CrashData object and add to list.
                 }
               } catch (e) {
                 if (kDebugMode) {
@@ -90,12 +94,13 @@ class CrashAlgorithmService {
             });
           }
         });
-      }
-      // Sort crashes by timestamp, newest first
-      crashes.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      } // Sort crashes by timestamp, newest first.
+      crashes.sort((a, b) => b.timestamp.compareTo(a.timestamp)); 
       return crashes;
     });
   }
+
+  /// Fetches all crash data (if any) from the Realtime Database for all devices.
 
   /// Fetches all crash data (if any) from the Realtime Database for all devices.
   Future<List<CrashData>> getLatestCrashes() async {
@@ -106,7 +111,7 @@ class CrashAlgorithmService {
     if (data != null && data is Map) {
       data.forEach((deviceIdKey, deviceCrashesData) {
         if (deviceCrashesData is Map) {
-          deviceCrashesData.forEach((crashTimestampKey, crashDetails) {
+          deviceCrashesData.forEach((crashTimestampKey, crashDetails) { // Iterate through each crash event.
             try {
               if (crashDetails is Map<dynamic, dynamic>) {
                 crashes.add(CrashData.fromMap(crashDetails, deviceIdKey.toString()));
@@ -120,7 +125,7 @@ class CrashAlgorithmService {
         }
       });
     }
-    crashes.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    crashes.sort((a, b) => b.timestamp.compareTo(a.timestamp)); // Sort the fetched crashes by timestamp.
     return crashes;
   }
 

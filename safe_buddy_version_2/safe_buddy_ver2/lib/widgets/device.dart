@@ -1,6 +1,5 @@
 // lib/device.dart
 // Removed ignore_for_file: deprecated_member_use as modern practices are used
-
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
@@ -10,16 +9,31 @@ import 'package:flutter/foundation.dart'; // For @required
 /// Represents a registered device in the system.
 /// This model is primarily used for device management in Firestore.
 /// It includes fields for device metadata and last known status/location.
+// ignore: must_be_immutable
 class Device {
-  final String deviceId; // Unique ID for the device (e.g., SIM number from embedded system)
+  /// Unique ID for the device (e.g., SIM number from embedded system).
+  final String deviceId;
+
+  /// User-friendly name for the device.
   final String name;
+
+  /// Optional description for the device.
   final String description;
-  final String ownerId; // The Firebase User ID of the user who registered the device
-  final String status; // e.g., 'active', 'inactive', 'offline'
-  final double? lastKnownLatitude; // Last reported location from the device
-  final double? lastKnownLongitude;
+
+  /// The Firebase User ID of the user who registered the device.
+  final String ownerId;
+
+  /// Current status of the device (e.g., 'active', 'inactive', 'offline').
+  String status;
+
+  /// Last reported latitude from the device.
+  double? lastKnownLatitude;
+  /// Last reported longitude from the device.
+  double? lastKnownLongitude;
+  /// Date and time when the device was registered.
   final DateTime registrationDate;
-  final DateTime? lastActive; // Last time the device reported any data
+  /// Last time the device reported any data.
+  DateTime? lastActive;
 
   Device({
     required this.deviceId,
@@ -33,6 +47,7 @@ class Device {
     this.lastActive,
   });
 
+  /// Creates a [Device] object from a Firestore [DocumentSnapshot].
   /// Factory constructor to create a Device object from a Firestore DocumentSnapshot.
   factory Device.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -49,6 +64,7 @@ class Device {
     );
   }
 
+  /// Converts this [Device] object into a map, suitable for Firestore.
   /// Converts this Device object into a map, suitable for Firestore.
   Map<String, dynamic> toFirestore() {
     return {
@@ -63,6 +79,7 @@ class Device {
     };
   }
 
+  /// Provides a string representation of the [Device] object.
   @override
   String toString() {
     return 'Device(deviceId: $deviceId, name: $name, ownerId: $ownerId, status: $status)';
@@ -73,8 +90,9 @@ class Device {
 class DeviceService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  /// Returns a [CollectionReference] for devices specific to a user.
   // Collection reference for devices.
-  // Devices will be stored under /artifacts/{appId}/users/{userId}/devices
+  /// Devices will be stored under /artifacts/{appId}/users/{userId}/devices
   // This ensures devices are private to the user who registered them.
   CollectionReference<Device> _devicesCollection(String userId) {
     // __app_id is provided by the Canvas environment.
@@ -93,6 +111,7 @@ class DeviceService {
         );
   }
 
+  /// Registers a new device in Firestore for a given user.
   /// Registers a new device in Firestore.
   /// The deviceId will be used as the document ID.
   Future<void> registerDevice(String userId, Device device) async {
@@ -110,6 +129,7 @@ class DeviceService {
   }
 
   /// Fetches a single device by its ID for a specific user.
+  /// Fetches a single device by its ID for a specific user.
   Future<Device?> getDevice(String userId, String deviceId) async {
     try {
       final doc = await _devicesCollection(userId).doc(deviceId).get();
@@ -126,12 +146,14 @@ class DeviceService {
   }
 
   /// Streams all registered devices for a specific user.
+  /// Streams all registered devices for a specific user.
   Stream<List<Device>> getDevicesStream(String userId) {
     return _devicesCollection(userId).snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => doc.data()).toList();
     });
   }
 
+  /// Updates an existing device's information in Firestore.
   /// Updates an existing device's information.
   Future<void> updateDevice(String userId, Device device) async {
     try {
@@ -147,6 +169,7 @@ class DeviceService {
     }
   }
 
+  /// Deletes a device from Firestore for a specific user.
   /// Deletes a device from Firestore.
   Future<void> deleteDevice(String userId, String deviceId) async {
     try {
@@ -164,8 +187,10 @@ class DeviceService {
 }
 
 // The DeviceCard widget from the user's original file, adapted to use the Device model.
+/// A widget to display a single device's information in a card format.
 class DeviceCard extends StatelessWidget {
-  final Device device; // Now takes a Device object directly
+  /// The [Device] object containing the information to display.
+  final Device device;
   // Removed location and isOnline as they are properties of the Device object
 
   const DeviceCard({
@@ -178,7 +203,7 @@ class DeviceCard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
 
-    // Determine status color based on device.status
+    /// Determine status color based on device.status
     Color statusColor = Colors.grey;
     String statusText = 'Unknown';
     if (device.status == 'active') {
@@ -193,7 +218,7 @@ class DeviceCard extends StatelessWidget {
       statusText = device.status; // Display the actual status
     }
 
-    // Format location if available
+    /// Format location if available
     String locationText = 'Location: N/A';
     if (device.lastKnownLatitude != null && device.lastKnownLongitude != null) {
       locationText = 'Location: ${device.lastKnownLatitude!.toStringAsFixed(4)}, ${device.lastKnownLongitude!.toStringAsFixed(4)}';

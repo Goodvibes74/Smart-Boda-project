@@ -1,6 +1,7 @@
 // lib/widgets/map_overlay.dart
 // Removed ignore_for_file: deprecated_member_use as modern practices are used
 
+// ignore_for_file: public_member_api_docs
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
@@ -16,10 +17,13 @@ import 'package:provider/provider.dart'; // <--- ADDED THIS IMPORT
 class MapPingNotifier extends ChangeNotifier {
   LatLng? _pingLocation;
   Color? _pingColor;
-
+ 
+  /// The geographical coordinates of the last ping.
   LatLng? get pingLocation => _pingLocation;
+  /// The color associated with the last ping.
   Color? get pingColor => _pingColor;
-
+ 
+  /// Pings the map at the given coordinates with a specified color.
   void pingMap(double lat, double lon, Color color) {
     _pingLocation = LatLng(lat, lon);
     _pingColor = color;
@@ -31,10 +35,15 @@ class MapPingNotifier extends ChangeNotifier {
 /// This widget now takes `crashLocations` and `deviceLocations` directly,
 /// allowing its parent to manage the data streams.
 class CustomMapView extends StatefulWidget {
+  /// A list of [CrashData] objects to be displayed as markers on the map.
   final List<CrashData> crashLocations;
+  /// A list of [Device] objects to be displayed as markers on the map.
   final List<Device> deviceLocations;
+  /// A boolean indicating whether crash markers should be shown.
   final bool showCrashMarkers;
+  /// A boolean indicating whether device markers should be shown.
   final bool showDeviceMarkers;
+  /// The initial geographical position for the map camera.
   final LatLng? initialCameraPosition; // Optional initial camera position
 
   const CustomMapView({
@@ -72,6 +81,7 @@ class _CustomMapViewState extends State<CustomMapView> {
     }
   }
 
+  /// Callback function when the Google Map is created.
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
     _updateMarkers(); // Initial marker update
@@ -147,6 +157,7 @@ class _CustomMapViewState extends State<CustomMapView> {
       }
     }
 
+    // Add device markers if enabled
     if (widget.showDeviceMarkers) {
       for (var device in widget.deviceLocations) {
         if (device.lastKnownLatitude != null && device.lastKnownLongitude != null) {
@@ -256,7 +267,7 @@ class _CustomMapViewState extends State<CustomMapView> {
   }
 }
 
-// Helper extension to get MapPingNotifier from context using Provider
+/// Helper extension to get [MapPingNotifier] from context using [Provider].
 extension MapPingNotifierExtension on BuildContext {
   MapPingNotifier? get mapPingNotifier {
     try {

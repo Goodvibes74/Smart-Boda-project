@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:safe_buddy_ver2/theme.dart';
 
+// A StatefulWidget that creates a hover-expandable sidebar.
 class HoverSidebar extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
   final int selectedIndex;
@@ -18,16 +19,19 @@ class HoverSidebar extends StatefulWidget {
   _HoverSidebarState createState() => _HoverSidebarState();
 }
 
+// The state class for HoverSidebar.
 class _HoverSidebarState extends State<HoverSidebar> {
+  // Controls whether the sidebar is currently hovered and expanded.
   bool _isHovered = false;
 
-  static const _collapsedWidth = 60.0; // Slimmer collapsed width
-  static const _expandedWidth = 200.0; // Adjusted expanded width
+  static const _collapsedWidth = 60.0; // Width when collapsed (slim).
+  static const _expandedWidth = 200.0; // Width when expanded.
   static const _animationDuration = Duration(milliseconds: 200);
   static const _animationCurve = Curves.easeInOut;
 
+  // Callback for mouse hover events to update the _isHovered state.
   void _onHover(bool hovering) => setState(() => _isHovered = hovering);
-
+ 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -36,12 +40,15 @@ class _HoverSidebarState extends State<HoverSidebar> {
     final isExpanded = _isHovered;
 
     return MouseRegion(
+      // Detects when the mouse enters or exits the sidebar area.
       onEnter: (_) => _onHover(true),
       onExit: (_) => _onHover(false),
       child: AnimatedContainer(
         duration: _animationDuration,
         curve: _animationCurve,
+        // Animates the width based on the hover state.
         width: isExpanded ? _expandedWidth : _collapsedWidth,
+        // Sets the background color from the theme.
         color: cs.surface, // Dark background from theme
         child: AnimatedSwitcher(
           duration: _animationDuration,
@@ -49,6 +56,7 @@ class _HoverSidebarState extends State<HoverSidebar> {
           switchOutCurve: _animationCurve,
           child: isExpanded
               ? _SidebarContent.expanded(
+                  // Displays the expanded content when hovered.
                   key: const ValueKey('expanded'),
                   cs: cs,
                   custom: custom,
@@ -56,6 +64,7 @@ class _HoverSidebarState extends State<HoverSidebar> {
                   onItemSelected: widget.onItemSelected,
                 )
               : _SidebarContent.collapsed(
+                  // Displays the collapsed content when not hovered.
                   key: const ValueKey('collapsed'),
                   cs: cs,
                   custom: custom,
@@ -68,6 +77,7 @@ class _HoverSidebarState extends State<HoverSidebar> {
   }
 }
 
+// A StatelessWidget that renders the actual content of the sidebar.
 class _SidebarContent extends StatelessWidget {
   final ColorScheme cs;
   final CustomTheme custom;
@@ -75,6 +85,7 @@ class _SidebarContent extends StatelessWidget {
   final ValueChanged<int> onItemSelected;
   final bool expanded;
 
+  // Private constructor for the collapsed state.
   const _SidebarContent.collapsed({
     Key? key,
     required this.cs,
@@ -84,6 +95,7 @@ class _SidebarContent extends StatelessWidget {
   })  : expanded = false,
         super(key: key);
 
+  // Private constructor for the expanded state.
   const _SidebarContent.expanded({
     Key? key,
     required this.cs,
@@ -93,6 +105,7 @@ class _SidebarContent extends StatelessWidget {
   })  : expanded = true,
         super(key: key);
 
+  // Helper widget to display the SVG logo.
   Widget _logo(double size) => SvgPicture.asset(
         'assets/svg/icon.svg', 
         width: size,
@@ -139,13 +152,15 @@ class _SidebarContent extends StatelessWidget {
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             color: isSelected ? cs.primary : cs.onSurface,
           ),
+          // Styles the text based on selection state.
         ),
         onTap: () => onItemSelected(index),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+        // Calls onItemSelected when tapped.
       ),
     );
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     if (!expanded) {
@@ -156,10 +171,12 @@ class _SidebarContent extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
               Center(child: _logo(40)),
+              // Displays the logo.
               const SizedBox(height: 24),
               _iconButton(Icons.dashboard, 0, tooltip: 'Home'),
               _iconButton(Icons.devices, 1, tooltip: 'Devices'),
               _iconButton(Icons.settings, 2, tooltip: 'Settings'),
+              // Displays icon buttons for navigation.
             ],
           ),
           Padding(
@@ -171,6 +188,7 @@ class _SidebarContent extends StatelessWidget {
                     color: cs.onSurface.withOpacity(0.6),
                     fontSize: 10,
                   ),
+              // Displays copyright information.
             ),
           ),
         ],
@@ -182,12 +200,14 @@ class _SidebarContent extends StatelessWidget {
       children: [
         const SizedBox(height: 16),
         Center(child: _logo(40)),
+        // Displays the logo.
         const SizedBox(height: 12),
         Center(
           child: Text(
             'Safe Buddy',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(color: cs.onSurface),
           ),
+          // Displays the app title.
         ),
         const SizedBox(height: 4),
         Center(
@@ -197,12 +217,14 @@ class _SidebarContent extends StatelessWidget {
                   color: cs.onSurface.withOpacity(0.7),
                 ),
           ),
+          // Displays a tagline.
         ),
         const SizedBox(height: 16),
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+              // Displays list items for navigation.
               _listItem(Icons.dashboard, 'Home', 0),
               _listItem(Icons.devices, 'Devices', 1),
               _listItem(Icons.settings, 'Settings', 2),
@@ -218,6 +240,7 @@ class _SidebarContent extends StatelessWidget {
                   color: cs.onSurface.withOpacity(0.6),
                   fontSize: 10,
                 ),
+            // Displays copyright information.
           ),
         ),
       ],
