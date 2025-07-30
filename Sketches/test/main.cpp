@@ -1,155 +1,177 @@
 #include <Wire.h>
-#include <HardwareSerial.h>
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h> // Now explicitly used for Serial1 and Serial2
 #include <TinyGPS++.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 
-#define SIM_RX_PIN 26
-#define SIM_TX_PIN 27
+#include <time.h> // Include for time manipulation functions
+
 #define FSR_PIN 35
-#define GPS_RX_PIN 34
-#define GPS_TX_PIN 32
+#define GPS_RX_PIN 34 // Connect GPS TX to ESP32 RX (GPIO34)
+#define GPS_TX_PIN 32 // Connect GPS RX to ESP32 TX (GPIO32)
+
+// SIM800L HardwareSerial Pins (Adjust these based on your ESP32 wiring)
+#define SIM_RX_PIN 26 // Connect SIM800L TX to ESP32 RX (GPIO26)
+#define SIM_TX_PIN 27 // Connect SIM800L RX to ESP32 TX (GPIO27)
+
+// Emergency Contact Number (REPLACE WITH ACTUAL PHONE NUMBER)
+const char* EMERGENCY_PHONE_NUMBER = "0766192699"; // e.g., "+1234567890"
 
 // Function Declarations
-void sendAT(String command, const char* expectedResponse = "OK", int timeout = 5000);
-String getISO8601Time();
-void detectAndUploadCrash();
+String getGPSISO8601Time();
+void detectAndUploadCrash(); // Renamed to reflect general crash handling
+void sendSMS(String phoneNumber, String message);
 
-HardwareSerial sim800l(Serial2);
-SoftwareSerial gpsSS(GPS_RX_PIN, GPS_TX_PIN);
+// Use HardwareSerial for GPS and SIM800L
+// Serial1 and Serial2 are available on ESP32. Serial0 is typically for USB/debugging.
+HardwareSerial gpsSerial(1); // Use UART1 for GPS
+HardwareSerial sim800lSerial(2); // Use UART2 for SIM800L
+
 TinyGPSPlus gps;
 Adafruit_MPU6050 mpu;
-
-// Firebase configuration
-const String FIREBASE_HOST = "safe-buddy-141a4-default-rtdb.firebaseio.com";
-const String FIREBASE_AUTH = "AIzaSyAkY6qkVOfuXhns81HwTICd41ts-LnBQ0Q";
-const String FIREBASE_USER_ID = "0766192699";
-// Base path for crash data under the user ID
-const String FIREBASE_BASE_CRASH_PATH = "/" + FIREBASE_USER_ID + "/";
-
-// GSM specific definitions
-String apn = "internet";
 
 // Global variables for crash detection state
 bool potentialCrash = false;
 unsigned long potentialCrashStartTime = 0;
-const unsigned long CRASH_DURATION_THRESHOLD_MS = 10; // 10 milliseconds
+// Increased duration threshold to filter out transient spikes, typical crashes last longer.
+const unsigned long CRASH_DURATION_THRESHOLD_MS = 100; // Increased from 10ms to 100ms
 
-// Constants for crash detection thresholds (adjusted based on Dart code)
-const int FSR_CRASH_THRESHOLD = 500; // FSR value below this indicates biker off seat
-const float ACCEL_CRASH_THRESHOLD_G = 1.215; // Acceleration in G's (from Dart crashGThreshold)
-const float GYRO_CRASH_THRESHOLD_DEG_PER_SEC = 25.8; // Angular velocity in degrees per second (0.45 rad/s converted to deg/s)
-const float SPEED_CRASH_THRESHOLD_KMPH = 10.0; // Minimum GPS speed for crash detection (from Dart speed > 10)
+// Constants for crash detection thresholds
+// FSR: Assuming lower value means more pressure/impact. Calibrate this value based on your specific FSR and setup.
+const int FSR_CRASH_THRESHOLD = 2000; // FSR reading greater than 2000 triggers the algorithm.
 
-// PI constant for radians to degrees conversion
+// Acceleration (G-force) thresholds for severity (1-5)
+const float ACCEL_SEVERITY_1_G = 6.0; // Minimum G-force for severity 1
+const float ACCEL_SEVERITY_2_G = 7.0;
+const float ACCEL_SEVERITY_3_G = 8.0;
+const float ACCEL_SEVERITY_4_G = 9.0;
+const float ACCEL_SEVERITY_5_G = 10.0; // G-force for severity 5 (very severe)
+
+// Gyroscope (angular velocity) thresholds for crash type (spin detection)
+// These thresholds apply to the magnitude of rotation around individual axes.
+const float GYRO_TYPE_MINOR_DEG_PER_SEC = 50.0;   // Minimum angular velocity for a specific spin type
+
+// Speed threshold for algorithm trigger (10 m/s = 36 km/h)
+const float SPEED_CRASH_THRESHOLD_KMPH = 36.0; // 10 m/s converted to km/h
+
+const int TIME_ZONE_OFFSET_SECONDS = 3 * 3600; // EAT is UTC+3 hours
+
 #ifndef PI
 #define PI 3.14159265358979323846
 #endif
 
-// Helper function to send AT commands and wait for response
-void sendAT(String command, const char* expectedResponse, int timeout) {
-    sim800l.println(command);
-    unsigned long startTime = millis();
-    String response;
+/**
+ * @brief Sends an SMS message using the SIM800L module.
+ * @param phoneNumber The recipient's phone number (e.g., "+2567xxxxxxxx").
+ * @param message The text message to send.
+ */
+void sendSMS(String phoneNumber, String message) {
+    Serial.println("Attempting to send SMS...");
+    sim800lSerial.print("AT+CMGF=1\r\n"); // Set SMS to text mode
+    delay(100);
+    sim800lSerial.print("AT+CMGS=\"");
+    sim800lSerial.print(phoneNumber);
+    sim800lSerial.print("\"\r\n");
+    delay(100);
+    sim800lSerial.print(message);
+    delay(100);
+    sim800lSerial.write((char)26); // End of SMS message (CTRL+Z)
+    delay(2000); // Give SIM800L time to send
 
-    while (millis() - startTime < timeout) {
-        while (sim800l.available()) {
-            char c = sim800l.read();
-            response += c;
-        }
-
-        if (response.indexOf(expectedResponse) != -1) {
-            Serial.println("AT OK: " + command);
-            Serial.println("Response: " + response);
-            return;
-        }
+    // Read response from SIM800L
+    while (sim800lSerial.available()) {
+        Serial.write(sim800lSerial.read());
     }
-
-    Serial.println("AT command failed or timed out: " + command);
-    Serial.println("Response: " + response);
+    Serial.println("SMS send command initiated. Check Serial for SIM800L response.");
 }
 
-// Function to get the current time from the SIM800L module and format it
-// in a simplified ISO 8601-like format for the database key.
-String getISO8601Time() {
-    sendAT("AT+CCLK?", "+CCLK:", 5000);
-    String response;
-    unsigned long startTime = millis();
-    while (millis() - startTime < 2000 && sim800l.available()) {
-        response += (char)sim800l.read();
-    }
+/**
+ * @brief Gets the current time from the GPS module, adjusts for local time zone,
+ * and formats it into a simplified ISO 8601-like string (YYYY-MM-DD-HH-MM-SS).
+ * @return A String representing the formatted current time, or an error placeholder.
+ */
+String getGPSISO8601Time() {
+    // Check if both date and time are valid from the GPS module
+    if (gps.date.isValid() && gps.time.isValid()) {
+        struct tm ptm = {0}; // Initialize to all zeros
+        // Populate the tm struct from GPS data (which is UTC)
+        ptm.tm_year = gps.date.year() - 1900;
+        ptm.tm_mon = gps.date.month() - 1;
+        ptm.tm_mday = gps.date.day();
+        ptm.tm_hour = gps.time.hour();
+        ptm.tm_min = gps.time.minute();
+        ptm.tm_sec = gps.time.second();
 
-    // Example response: "+CCLK: "25/07/25,13:43:55+03""
-    int startIndex = response.indexOf("\"") + 1;
-    if (startIndex > 0) {
-        String timeString = response.substring(startIndex);
-        // Extract year, month, day, hour, minute, second
-        String year = timeString.substring(0, 2);
-        String month = timeString.substring(3, 5);
-        String day = timeString.substring(6, 8);
-        String hour = timeString.substring(9, 11);
-        String minute = timeString.substring(12, 14);
-        String second = timeString.substring(15, 17);
+        // Convert tm struct to Unix epoch time (seconds since 1970)
+        time_t epochTime = mktime(&ptm);
+        
+        // Add the time zone offset in seconds
+        epochTime += TIME_ZONE_OFFSET_SECONDS;
 
-        // Format into YYYY-MM-DD-HH-MM-SS
-        String formattedTime = "20" + year + "-" + month + "-" + day + "-" + hour + "-" + minute + "-" + second;
-        return formattedTime;
+        // Convert the adjusted epoch time back to a tm struct for formatting
+        struct tm *ptm_local = localtime(&epochTime);
+        
+        char formattedTime[20]; // YYYY-MM-DD-HH-MM-SS\0
+        sprintf(formattedTime, "%04d-%02d-%02d-%02d-%02d-%02d",
+                ptm_local->tm_year + 1900,
+                ptm_local->tm_mon + 1,
+                ptm_local->tm_mday,
+                ptm_local->tm_hour,
+                ptm_local->tm_min,
+                ptm_local->tm_sec);
+        
+        return String(formattedTime);
+    } else {
+        // If GPS time is not yet valid, use a placeholder
+        return "GPS-Time-Not-Ready";
     }
-    return "";
 }
 
-// Function to detect and upload crash data
-void detectAndUploadCrash() {
-    // 1. Read MPU6050 data
+void detectAndUploadCrash() { // Function name remains, but now it sends SMS
+    // 1. Read Sensor Data
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
-    // Calculate total acceleration magnitude in G's
+    // Calculate total acceleration in G's
     float totalAcceleration_mps2 = sqrt(pow(a.acceleration.x, 2) + pow(a.acceleration.y, 2) + pow(a.acceleration.z, 2));
     float totalAcceleration_g = totalAcceleration_mps2 / 9.80665; // Convert m/s^2 to G's
 
-    // Calculate total angular velocity magnitude in degrees per second
+    // Calculate total angular velocity in degrees/second (magnitude of 3D vector)
     float totalAngularVelocity_radps = sqrt(pow(g.gyro.x, 2) + pow(g.gyro.y, 2) + pow(g.gyro.z, 2));
-    float totalAngularVelocity_degps = totalAngularVelocity_radps * (180.0 / PI);
+    float totalAngularVelocity_degps = totalAngularVelocity_radps * (180.0 / PI); // Convert rad/s to deg/s
 
-    // 2. Read FSR data
+    // Read FSR value
     int fsrValue = analogRead(FSR_PIN);
 
-    // 3. Read GPS data
-    while (gpsSS.available() > 0) {
-        gps.encode(gpsSS.read());
+    // Process GPS data
+    while (gpsSerial.available() > 0) {
+        gps.encode(gpsSerial.read());
     }
-
     double latitude = gps.location.isValid() ? gps.location.lat() : 0.0;
     double longitude = gps.location.isValid() ? gps.location.lng() : 0.0;
     double speed_kmph = gps.speed.isValid() ? gps.speed.kmph() : 0.0;
 
-    // Determine crash type based on rotational change
-    String crashType = "Unknown";
-    int severity = 0; // Default severity
-    if (totalAngularVelocity_degps >= 90.0) {
-        crashType = "Severe Rotational Impact";
-        severity = 3; // Severe
-    } else if (totalAngularVelocity_degps >= 50.0) {
-        crashType = "Moderate Rotational Impact";
-        severity = 2; // Moderate
-    } else if (totalAngularVelocity_degps >= GYRO_CRASH_THRESHOLD_DEG_PER_SEC) {
-        crashType = "Minor Rotational Impact";
-        severity = 1; // Minor
-    }
+    // 2. Determine Algorithm Trigger Conditions
+    // Algorithm is triggered if speed is greater than 10 m/s (36 km/h) OR FSR reads less than 500
+    bool speedOrFSRTriggered = (speed_kmph >= SPEED_CRASH_THRESHOLD_KMPH || fsrValue > FSR_CRASH_THRESHOLD);
 
-    // Check current crash conditions, now incorporating speed and OR logic for accel/gyro
-    bool conditionsMet = (fsrValue < FSR_CRASH_THRESHOLD &&
-                          speed_kmph > SPEED_CRASH_THRESHOLD_KMPH &&
-                          (totalAcceleration_g >= ACCEL_CRASH_THRESHOLD_G || totalAngularVelocity_degps >= GYRO_CRASH_THRESHOLD_DEG_PER_SEC));
+    // Determine if there's any significant sensor activity (impact or rotation)
+    // This acts as a filter to ensure the trigger isn't from minor bumps without actual impact/rotation.
+    bool significantImpact = (totalAcceleration_g >= ACCEL_SEVERITY_1_G);
+    bool significantRotation = (totalAngularVelocity_degps >= GYRO_TYPE_MINOR_DEG_PER_SEC);
 
+    // A potential crash needs to meet the primary trigger AND have significant sensor activity
+    bool conditionsMet = speedOrFSRTriggered && (significantImpact || significantRotation);
+
+    // 3. Manage Potential Crash State
     if (conditionsMet) {
         if (!potentialCrash) {
+            // First time conditions are met, start the timer
             potentialCrash = true;
             potentialCrashStartTime = millis();
             Serial.println("Potential crash conditions met. Starting timer...");
         } else {
+            // Conditions are still met, check if duration threshold is reached
             if (millis() - potentialCrashStartTime >= CRASH_DURATION_THRESHOLD_MS) {
                 // CRASH CONFIRMED!
                 Serial.println("CRASH DETECTED!");
@@ -159,48 +181,87 @@ void detectAndUploadCrash() {
                 Serial.println("Latitude: " + String(latitude, 6));
                 Serial.println("Longitude: " + String(longitude, 6));
                 Serial.println("Speed (km/h): " + String(speed_kmph, 2));
+
+                // 4. Categorize Crash Severity (based on G-force, 1-5 scale)
+                int severity = 0;
+                if (totalAcceleration_g >= ACCEL_SEVERITY_5_G) {
+                    severity = 5;
+                } else if (totalAcceleration_g >= ACCEL_SEVERITY_4_G) {
+                    severity = 4;
+                } else if (totalAcceleration_g >= ACCEL_SEVERITY_3_G) {
+                    severity = 3;
+                } else if (totalAcceleration_g >= ACCEL_SEVERITY_2_G) {
+                    severity = 2;
+                } else if (totalAcceleration_g >= ACCEL_SEVERITY_1_G) {
+                    severity = 1;
+                }
+                
+                // 5. Determine Crash Type (based on angular velocity axis/polarity, or stationary hit)
+                String crashType = "Unclassified Impact"; // Default type if none of the specific types match
+
+                // Stationary Hit: Speed below 36kmph AND FSR below 500 AND there's actual acceleration (impact)
+                if (speed_kmph < SPEED_CRASH_THRESHOLD_KMPH && fsrValue < FSR_CRASH_THRESHOLD && significantImpact) {
+                    crashType = "Stationary Hit";
+                }
+                // If not a Stationary Hit, check for Rotational Spins if there's significant rotation
+                else if (significantRotation) {
+                    // Assuming MPU is mounted such that:
+                    // +X = Roll Right, -X = Roll Left
+                    // +Y = Pitch Down (Forward Spin), -Y = Pitch Up (Backward Spin)
+                    // Z is the axis of forward travel, so rotation around Z is Yaw (not a requested specific type)
+                    // You might need to adjust the polarity (positive/negative sign) based on your MPU's physical orientation.
+
+                    float absGyroX = abs(g.gyro.x);
+                    float absGyroY = abs(g.gyro.y);
+                    float absGyroZ = abs(g.gyro.z);
+
+                    // Prioritize dominant rotation (Pitch or Roll) for classification
+                    if (absGyroY >= absGyroX && absGyroY >= absGyroZ && absGyroY >= GYRO_TYPE_MINOR_DEG_PER_SEC) {
+                        // Dominant is Y-axis (Pitch)
+                        if (g.gyro.y > 0) {
+                            crashType = "Forward Spin"; // Positive Y-gyro for forward pitch (e.g., nose dipping)
+                        } else {
+                            crashType = "Backward Spin"; // Negative Y-gyro for backward pitch (e.g., nose lifting)
+                        }
+                    } else if (absGyroX >= absGyroY && absGyroX >= absGyroZ && absGyroX >= GYRO_TYPE_MINOR_DEG_PER_SEC) {
+                        // Dominant is X-axis (Roll)
+                        if (g.gyro.x > 0) {
+                            crashType = "Right Spin"; // Positive X-gyro for right roll (e.g., tilting right)
+                        } else {
+                            crashType = "Left Spin"; // Negative X-gyro for left roll (e.g., tilting left)
+                        }
+                    }
+                    // If dominant is Z-axis (Yaw) or no single axis (X/Y) is dominant above threshold,
+                    // it will remain "Unclassified Impact" if not already set by stationary hit.
+                    // This is because Yaw is not one of the 5 requested specific spin types.
+                }
+                // If neither stationary hit nor significant rotation, and conditionsMet was true due to significantImpact only,
+                // it will remain "Unclassified Impact" (i.e., a linear impact without specific spin or stationary status).
+
+                Serial.println("Severity: " + String(severity));
                 Serial.println("Crash Type: " + crashType);
 
+                // Get timestamp
+                String crashTimestamp = getGPSISO8601Time();
 
-                // **NEW: GET TIMESTAMP AND CONSTRUCT DYNAMIC URL**
-                String crashTimestamp = getISO8601Time();
-                String crashPath = FIREBASE_BASE_CRASH_PATH + crashTimestamp + ".json?auth=" + FIREBASE_AUTH;
-                String fullURL = "http://" + FIREBASE_HOST + crashPath;
+                // Construct the SMS message
+                String smsMessage = "CRASH ALERT! Severity: " + String(severity) + ", Type: " + crashType +
+                                    ". Location: " + String(latitude, 6) + "," + String(longitude, 6) +
+                                    ". Speed: " + String(speed_kmph, 2) + " km/h. Time: " + crashTimestamp;
+                
+                Serial.println("Sending SMS with message: " + smsMessage);
+                sendSMS(EMERGENCY_PHONE_NUMBER, smsMessage);
 
-                // Construct JSON string
-                String jsonData = "{";
-                jsonData += "\"latitude\":" + String(latitude, 6) + ",";
-                jsonData += "\"longitude\":" + String(longitude, 6) + ",";
-                jsonData += "\"severity\":" + String(severity) + ",";
-                jsonData += "\"speed_kmph\":" + String(speed_kmph, 2) + ",";
-                jsonData += "\"crash_type\":\"" + crashType + "\"";
-                jsonData += "}";
-
-                Serial.println("Uploading crash data to: " + fullURL);
-                Serial.println("JSON: " + jsonData);
-
-                // --- Firebase Upload Logic for Crash Data ---
-                sendAT("AT+HTTPPARA=\"URL\",\"" + fullURL + "\"");
-                sendAT("AT+HTTPPARA=\"CONTENT\",\"application/json\"");
-
-                sendAT("AT+HTTPDATA=" + String(jsonData.length()) + ",10000", "DOWNLOAD", 10000);
-                delay(100);
-                sim800l.print(jsonData);
-                delay(2000);
-
-                sendAT("AT+HTTPACTION=1", "+HTTPACTION:", 10000); // HTTP POST
-
-                // HTTPREAD to view response (optional, for debugging)
-                sendAT("AT+HTTPREAD", "OK", 10000);
-
-                // Reset crash detection state
+                // Reset crash detection state after successful SMS attempt
                 potentialCrash = false;
                 potentialCrashStartTime = 0;
-                Serial.println("Crash data uploaded. Resetting detection.");
-                delay(5000);
+                Serial.println("Crash data processed. Resetting detection.");
+                // Add a small delay after a confirmed crash to prevent immediate re-triggering
+                delay(5000); // Wait 5 seconds before allowing new detection
             }
         }
     } else {
+        // Conditions are not met, reset potential crash state
         potentialCrash = false;
         potentialCrashStartTime = 0;
     }
@@ -208,38 +269,48 @@ void detectAndUploadCrash() {
 
 void setup() {
     Serial.begin(115200);
-    sim800l.begin(9600);
-    gpsSS.begin(9600);
-    Wire.begin(21, 22);
-    pinMode(FSR_PIN, INPUT);
+    
+    // Initialize GPS HardwareSerial with pin remapping
+    gpsSerial.begin(9600, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN); 
 
+    // Initialize SIM800L HardwareSerial with pin remapping
+    sim800lSerial.begin(9600, SERIAL_8N1, SIM_RX_PIN, SIM_TX_PIN); // SIM800L typically uses 9600 baud
+    
+    Serial.println("Initializing SIM800L...");
+    delay(10000); // Give SIM800L time to power up and register on the network
+
+    // Configure SIM800L for SMS text mode
+    sim800lSerial.print("AT\r\n"); // Check if SIM800L is responding
+    delay(100);
+    while (sim800lSerial.available()) {
+        Serial.write(sim800lSerial.read());
+    }
+    Serial.println("Sent AT command.");
+
+    sim800lSerial.print("AT+CMGF=1\r\n"); // Set SMS to text mode
+    delay(100);
+    while (sim800lSerial.available()) {
+        Serial.write(sim800lSerial.read());
+    }
+    Serial.println("Set SMS to text mode (AT+CMGF=1).");
+
+    Wire.begin(21, 22); // Initialize I2C for MPU6050 (SDA, SCL for ESP32)
+    pinMode(FSR_PIN, INPUT); // Set FSR pin as input
+
+    // Initialize MPU6050
     if (!mpu.begin()) {
         Serial.println("Failed to find MPU6050 chip. Continuing without MPU.");
+        // Consider adding a flag here to disable MPU-dependent crash detection if MPU fails
     } else {
         Serial.println("MPU6050 Found!");
+        mpu.setAccelerometerRange(MPU6050_RANGE_8_G); // Set accelerometer range to 8G
+        mpu.setGyroRange(MPU6050_RANGE_500_DEG);      // Set gyro range to 500 deg/s
+        mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);   // Set filter bandwidth to reduce noise
     }
-
-    // --- GSM Initialization ---
-    delay(3000);
-    Serial.println("Initializing SIM800L...");
-
-    sendAT("AT");
-    sendAT("ATE0");
-    sendAT("AT+CSQ");
-    sendAT("AT+CPIN?");
-    sendAT("AT+CREG?");
-
-    Serial.println("Setting up GPRS...");
-    sendAT("AT+CSTT=\"" + apn + "\"");
-    sendAT("AT+CIICR");
-    sendAT("AT+CIFSR", ".", 10000);
-
-    Serial.println("Initializing HTTP...");
-    sendAT("AT+HTTPINIT");
-    sendAT("AT+HTTPPARA=\"CID\",1");
 }
 
 void loop() {
+    // Continuously check for crash conditions
     detectAndUploadCrash();
-    delay(100);
+    delay(100); // Small delay to prevent overwhelming the CPU and allow other tasks
 }
