@@ -78,9 +78,9 @@ Uganda's urban transport sector, particularly the boda boda industry, suffers fr
 
 The Smart Boda system is composed of three core components: the physical device, the Firebase cloud backend, and a Flutter-based web interface. Crash events detected by the device are uploaded to the cloud in real-time. The web interface then retrieves and displays this information for emergency response and monitoring.
 
-[![System Architecture](Smart_Boda_Project/System_Diagram.jpg)](https://github.com/Goodvibes74/Smart-Boda-project/blob/bbcb8fb45cc0956d83b2990cc30074dd0c88012c/Smart_Boda_Project/System%20Diagram.jpg)
+[![System Architecture](Smart_Boda_Project_Report/System_Diagram.jpg)](https://github.com/Goodvibes74/Smart-Boda-project/blob/bbcb8fb45cc0956d83b2990cc30074dd0c88012c/Smart_Boda_Project/System%20Diagram.jpg)
 
-[![Smart Boda Device and Web Platform](Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/f6448008c53a6d0082fd890840f2e848aa825685/Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg>)
+[![Smart Boda Device and Web Platform](Smart_Boda_Project_Report/PHOTO-2025-07-28-12-34-26.jpg)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/f6448008c53a6d0082fd890840f2e848aa825685/Smart_Boda_Project/PHOTO-2025-07-28-12-34-26.jpg>)
 
 ### Product Functionality
 
@@ -93,13 +93,13 @@ The Smart Boda system is composed of three core components: the physical device,
 
 Below are screenshots of the Smart Boda web application demonstrating key interface views.
 
-[![Authentication Page](Smart_Boda_Project\Login.png)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png>)
+[![Authentication Page](Smart_Boda_Project_Report\Login.png)](<https://github.com/Goodvibes74/Smart-Boda-project/blob/3b2b626ab0ad1c1907ff15474955a19236397091/Smart_Boda_Project/Login.png>)
 
-[![Live Dashboard](Smart_Boda_Project\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
+[![Live Dashboard](Smart_Boda_Project_Report\Dashboard.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/7de53a9280c7bce434f3a233aa129c16e470b061/Smart_Boda_Project/Dashboard.png)
 
-[![Device Registration](Smart_Boda_Project\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
+[![Device Registration](Smart_Boda_Project_Report\Device_Registration.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/a04e802dc2c57d0355868cf9777eecd4eebb6690/Smart_Boda_Project/Device_Registration.png)
 
-[![Real-time Ping](Smart_Boda_Project\Realtime.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
+[![Real-time Ping](Smart_Boda_Project_Report\Realtime.png)](https://github.com/Goodvibes74/Smart-Boda-project/blob/ec5470fac6d09b61990d18a34aa1f7e287597b66/Smart_Boda_Project/Realtime.png)
 
 #### Our Basis for Accident Detection
 
