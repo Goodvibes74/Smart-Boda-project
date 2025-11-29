@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_image_provider.dart';
-import 'avatar_uploader.dart';
+// import 'avatar_uploader.dart'; // Removed
 
 class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
   final ValueChanged<String>? onSearchChanged;
@@ -58,20 +58,27 @@ class HeaderWidget extends StatelessWidget implements PreferredSizeWidget {
                     if (onAvatarTap != null) onAvatarTap!();
                   }
                 },
-                icon: AvatarUploader(
+                icon: CircleAvatar(
                   radius: 20,
-                  allowUpload: false,
-                  onTap: onAvatarTap,
+                  backgroundColor: cs.primaryContainer,
+                  backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
+                  child: photoUrl == null
+                      ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                      : null,
                 ),
                 itemBuilder: (_) => [
                   PopupMenuItem<String>(
                     value: 'profile',
                     child: Row(
                       children: [
-                        AvatarUploader(
+                        CircleAvatar(
                           radius: 20,
-                          allowUpload: false,
-                          onTap: () {},
+                          backgroundColor: cs.primaryContainer,
+                          backgroundImage:
+                              photoUrl != null ? NetworkImage(photoUrl) : null,
+                          child: photoUrl == null
+                              ? Icon(Icons.person, color: cs.onPrimaryContainer)
+                              : null,
                         ),
                         const SizedBox(width: 10),
                         Text('Profile', style: text.bodyMedium),

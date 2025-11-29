@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:safe_buddy_ver2/widgets/avatar_uploader.dart';
+import '../../providers/profile_image_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../change_password_form.dart';
 
@@ -172,9 +172,23 @@ class SettingsPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Center(
-                child: AvatarUploader(
-                  radius: 60,
-                  allowUpload: true, // Explicitly set to true for clarity
+                child: Consumer<ProfileImageProvider>(
+                  builder: (context, provider, child) {
+                    final imageUrl = provider.imageUrl;
+                    return CircleAvatar(
+                      radius: 60,
+                      backgroundColor: cs.primaryContainer,
+                      backgroundImage:
+                          imageUrl != null ? NetworkImage(imageUrl) : null,
+                      child: imageUrl == null
+                          ? Icon(
+                              Icons.person,
+                              size: 60,
+                              color: cs.onPrimaryContainer,
+                            )
+                          : null,
+                    );
+                  },
                 ),
               ),
             ],
